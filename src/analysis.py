@@ -37,10 +37,12 @@ TABLES_DIR = ROOT / "tables"
 FIGURES_DIR.mkdir(exist_ok=True)
 TABLES_DIR.mkdir(exist_ok=True)
 
-# ===========================
-# 1.1 Load the tab-delimited labMT dataset
-# ===========================
-# Read the tab-delimited file, skipping metadata
+# -----------------------------------------------------------------------------
+# 1. LOAD, CLEAN, AND DESCRIBE THE DATASET
+# -----------------------------------------------------------------------------
+
+print_section("1.1 Load the dataset (Data_Set_S1.txt)")
+
 df = pd.read_csv(
     "data/raw/Data_Set_S1.txt",
     sep="\t",        # <--- file is tab-separated
@@ -66,9 +68,7 @@ print(df.dtypes)  # <--- comment: ensure numeric columns are numeric
 # Confirm the number of rows and columns
 print("Dataset shape:", df.shape)
 
-# ===========================
-# 1.2 Create a Data Dictionary
-# ===========================
+print_section("1.2 Data dictionary + missing values")
 
 # List each column and its data type
 print("Column names and data types:")
@@ -99,10 +99,7 @@ data_dict = pd.DataFrame({
 print("\nData Dictionary:")
 print(data_dict)  # <--- comment: show the data dictionary in a table format
 
-# -------------------------------
-# 1.3 Sanity Checks
-# -------------------------------
-
+print_section("1.3 Sanity checks")
 
 # Check for duplicated words
 duplicated_words = df[df.duplicated(subset="word")]  # English comment: Check if any words are repeated

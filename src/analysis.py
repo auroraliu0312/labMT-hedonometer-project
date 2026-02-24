@@ -1,5 +1,13 @@
 from pathlib import Path
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# -----------------------------------------------------------------------------
+# Small helpers
+# -----------------------------------------------------------------------------
+# These are the only functions in this file. Everything else runs sequentially.
+# We use helpers only for repeated patterns (printing sections, saving outputs).
 
 def print_section(title: str) -> None:
     """Print a clear section divider in the terminal."""
@@ -116,3 +124,67 @@ print("Top 10 positive words:\n", top_10_positive)
 # Identify the 10 most negative words
 bottom_10_negative = df.nsmallest(10, "happiness_average")[["word", "happiness_average"]]  # English comment: Top 10 lowest happiness scores
 print("Top 10 negative words:\n", bottom_10_negative)
+
+# -----------------------------------------------------------------------------
+# 2. QUANTITATIVE EXPLORATION
+# -----------------------------------------------------------------------------
+
+print_section("2.1 Distribution of happiness_average")
+
+h = df["happiness_average"].dropna()
+summary_stats = pd.DataFrame(
+    {
+        "metric": [
+            "count",
+            "mean",
+            "median",
+            "std",
+            "p05 (5th percentile)",
+            "p95 (95th percentile)",
+        ],
+        "value": [
+            float(h.shape[0]),
+            float(h.mean()),
+            float(h.median()),
+            float(h.std()),
+            float(h.quantile(0.05)),
+            float(h.quantile(0.95)),
+        ],
+    }
+)
+
+print(summary_stats.to_string(index=False))
+save_csv(summary_stats, "happiness_average_summary_stats.csv", index=False)
+
+# Histogram
+plt.figure()
+plt.hist(h, bins=40)
+plt.title("Distribution of happiness_average (labMT 1.0)")
+plt.xlabel("happiness_average (1–9)")
+plt.ylabel("number of words")
+plt.tight_layout()
+save_figure("happiness_average_hist.png")
+plt.close()
+
+print_section("2.2 Disagreement: happiness_standard_deviation")
+
+# Scatter: happiness score vs standard deviation
+plt.figure()
+plt.scatter(
+    df["happiness_average"],
+    df["happiness_standard_deviation"],
+    s=10,
+    alpha=0.35,
+)
+plt.title("Disagreement vs score: happiness_average vs happiness_standard_deviation")
+plt.xlabel("happiness_average")
+plt.ylabel("happiness_standard_deviation")
+plt.tight_layout()
+save_figure("happiness_vs_std_scatter.png")
+plt.close()
+
+# Which words do people disagree about most?
+most_contested_15 = df.sort_values("happiness_standard_deviation", ascending=False).head(15)[show_cols]
+print("Top 15 most 'contested' words (highest standard deviation):")
+print(most_contested_15.to_string(index=False))
+save_csv(most_contested_15, "top_15_contested_words.csv", index=False)

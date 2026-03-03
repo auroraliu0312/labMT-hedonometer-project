@@ -478,8 +478,8 @@ highly_contested = (
         .assign(category="highly_contested")
     )
 
-    # 5 “weird / surprising / historically dated / culturally loaded” (your choice)
-    # IMPORTANT: you must edit this list yourself (this is the humanities part).
+    # 5 “weird" or "culturally loaded" words
+
 weird_words = [
         "capitalism",
         "churches",
@@ -494,30 +494,29 @@ weird = (
         .assign(category="weird_or_culturally_loaded")
     )
 
-    # If some of your weird words were not found, you'll get <5 rows here.
-    # That’s fine: fix by choosing words that actually exist in df["word"].
+
 if len(weird) < 5:
         missing = [w for w in weird_words if w not in set(df["word"])]
         print("WARNING: These weird_words were not found in the dataset:", missing)
 
-    # Combine into one exhibit table
+# Combine into one exhibit table
 exhibit = pd.concat([very_positive, very_negative, highly_contested, weird], ignore_index=True)
 
-    # Keep the most relevant columns for the exhibit
+# Keep the most relevant columns for the exhibit
 exhibit = exhibit[["category", "word", "happiness_average", "happiness_standard_deviation",
                     "twitter_rank", "google_rank", "nyt_rank", "lyrics_rank"]]
 
 print("\nExhibit table (preview):")
 print(exhibit)
 
-    # Save to tables/
+# Save to tables/
 from pathlib import Path
 TABLES_DIR = Path("tables")
 TABLES_DIR.mkdir(parents=True, exist_ok=True)
 out_path = TABLES_DIR / "exhibit_words.csv"
 exhibit.to_csv(out_path, index=False)
 print(f"\nSaved exhibit table to: {out_path}")
-    
+
 # -----------------------------------------------------------------------------
 # Done
 # -----------------------------------------------------------------------------

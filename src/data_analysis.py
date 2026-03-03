@@ -517,9 +517,6 @@ TABLES_DIR.mkdir(parents=True, exist_ok=True)
 out_path = TABLES_DIR / "exhibit_words.csv"
 exhibit.to_csv(out_path, index=False)
 print(f"\nSaved exhibit table to: {out_path}")
-
-if __name__ == "__main__":
-    main()
     
 # -----------------------------------------------------------------------------
 # Done

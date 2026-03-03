@@ -109,18 +109,17 @@ The words with the lowest happiness scores correspond to negative or sensitive t
 
 2. **Quantitative exploration: distributions and relationships**
 
-- 2.1 Distribution of Happiness Scores
+### 2.1 Distribution of Happiness Scores
 
 ![Figure 1: Distribution of Happiness Scores](figures/happiness_average_hist.png)
 
-**Summary Statistics:**
+Summary Statistics:
 - Mean: 5.38
 - Median: 5.44
 - Standard Deviation: 1.08
 - 5th Percentile: 3.18
 - 95th Percentile: 7.08
 
-**Interpretation:**
 The distribution of happiness scores is centered slightly above 5, with mean and median very close (5.38 and 5.44), indicating approximate symmetry. Most words fall between 4 and 6.5, suggesting that everyday English vocabulary leans mildly positive. Extremely positive and extremely negative words are relatively rare, with only 5% of words scoring below 3.18 and 5% scoring above 7.08. This pattern suggests that common language tends toward moderate positivity, with strong emotional words occupying the tails of the distribution. One interesting pattern is that strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
 
 ### 2.2 Disagreement: Words with High Standard Deviation
@@ -134,7 +133,7 @@ happiness_standard_deviation on the y-axis
 
 Most words cluster in the middle of the plot. Their average happiness lies between roughly 4 and 7, and their standard deviation is around 1.0. This indicates that for the majority of words, annotators broadly agree on whether the word feels positive, neutral, or negative. In contrast, a small group of words have very high standard deviations (above ~2.4). These “contested” words are those where annotators’ ratings strongly disagree.
 
-# Five examples include:
+Five examples include:
 1. fucking / fuck / fuckin / fucked
 These are very frequent swear words in contemporary English. They can signal strong negative emotion (“fucking awful”), but also serve as intensifiers in positive or humorous contexts (“that was fucking amazing”). Some annotators may rate them as very negative because of their taboo/insulting usage, while others may focus on their role as casual emphasis and assign more neutral or even mildly positive ratings. This mixture of offensiveness and playful emphasis likely produces the very high standard deviations we see.
 
@@ -157,9 +156,29 @@ Overall, these words may be contested because:
 - Some may function as slang
 - Some may carry irony or mixed connotations
 
-The quantitative pattern (high standard deviation) reflects qualitative ambiguity: words that allow multiple interpretations naturally produce more disagreement among raters.
+The quantitative pattern (high standard deviation) reflects qualitative ambiguity: words that allow multiple interpretations naturally produce more disagreement among raters. In this sense, standard deviation does not merely capture rating noise; it indexes cultural contestation and semantic instability.
 
--  2.3 Corpus comparison: rank coverage and overlaps
+### 2.3 Corpus comparison: rank coverage and overlaps
+
+We created a heatmap to present the overlaps between corpora
+![Figure 3: Corpus Overlap Heatmap](figures/corpus_overlap_heatmap.png)
+This is a heatmap-like overlap matrix. Diagonal cells are 5000 by construction (top-5000 size). Off-diagonal cells show how many words appear in both corpora’s top-5000 lists.
+
+The corpora share a substantial “core vocabulary,” but overlaps vary a lot depending on the pair:
+•	NYT ∩ Google Books is relatively high (3414) → both are more formal/edited writing, so their frequent vocabulary overlaps more.
+•	NYT ∩ Lyrics is relatively low (2241) → lyrics include more colloquial, stylized, and genre-specific vocabulary that doesn’t appear as often in newspaper prose.
+•	Twitter overlaps strongly with Lyrics (3127) → both contexts are more conversational and informal, so they share more common slang / everyday terms.
+
+We also created a Scatterplot of Twitter rank vs NYT rank for words that appear in both corpora. Lower rank means more frequent.
+![Figure 4: Twitter vs NYT Rank](figures/twitter_vs_nyt_rank_scatter.png)
+
+If the same words were similarly “common” across corpora, points would cluster near a diagonal trend. Instead, the plot shows wide spread: many words are very common in Twitter but not in NYT (and vice versa). That suggests “common language” is not an absolute property of a word—it is contextual, shaped by genre, platform norms, and institutional style (e.g., conversational talk vs editorial writing).
+
+Concrete example of corpus-specific difference: “capitalism.”
+It appears in Twitter and NYT but is much less prominent in Lyrics. This reflects communicative differences:
+	•	Twitter and NYT contain political and institutional discourse.
+	•	Lyrics foreground personal emotion, identity, and narrative voice rather than institutional vocabulary.
+Similarly, slang or profanity terms (e.g., “fucking”) tend to appear in Twitter and Lyrics but are less common in formal corpora like Google Books, reflecting editorial filtering and stylistic norms.
 
 # Qualitative “exhibit” of words
 
@@ -167,9 +186,8 @@ The quantitative pattern (high standard deviation) reflects qualitative ambiguit
 
 - 3.1 Build a small “exhibit” of words
 
-### Critical Reflection
 
-4. **Critical reflection: how was this dataset generated, and why does it matter?**
+### Critical Reflection
 
 - 4.1 Reconstruct the pipeline (data provenance)
 
@@ -281,6 +299,12 @@ The corpora and ratings reflect language usage around 2008–2011. The lexicon a
 For example, words like rt, lol, blog appear as very frequent on Twitter in our 2011-era rankings. More recent slang (e.g., “yeet”, “stan”) is absent from labMT entirely. If we used labMT today without updating it, we would mis-measure or ignore large parts of current online language.
 
 - 4.3 If you were to use this dataset as an instrument today…
+
+The LabMT dataset is best understood as a lexical affect instrument rather than a measure of lived emotional experience. We would trust it to approximate large-scale trends in average lexical valence across corpora, especially when analyzing aggregate shifts in tone (e.g., comparing overall positivity in news versus song lyrics). Because it is standardized and reproducible, it works well for macro-level comparisons and computational modeling of sentiment trends.
+
+However, we would refuse to claim that it captures “true emotion” or contextual meaning. The dataset assigns a single scalar value to words presented in isolation, ignoring irony, sarcasm, genre, identity, and pragmatic use. Our disagreement analysis showed that words such as fucking, whiskey, and capitalism produce high standard deviation scores, indicating that affect depends heavily on interpretation. Therefore, LabMT should not be used to draw conclusions about speaker intention, community identity, or moral stance.
+
+If we were to rebuild this instrument today, we would introduce three improvements. First, we would collect contextualized ratings (short sentence fragments rather than isolated words). Second, we would diversify the rater pool across regions and sociolinguistic backgrounds to reduce cultural bias. Third, we would move beyond a single “happiness” dimension toward a multidimensional affect model (e.g., valence, arousal, dominance). These changes would make the dataset more sensitive to ambiguity and social context while retaining its usefulness for large-scale analysis.
 
 
 ### How to Run the Code

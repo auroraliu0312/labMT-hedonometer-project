@@ -450,8 +450,8 @@ plt.close()
 # -----------------------------------------------------------------------------
 
 # ---------------------------
-    # 3.1 Build a small “exhibit” of words (20 words)
-    # ---------------------------
+# 3.1 Build a small “exhibit” of words (20 words)
+# ---------------------------
 print("\n--- 3.1 Exhibit of words (20-word table) ---")
 
     # 5 very positive / 5 very negative

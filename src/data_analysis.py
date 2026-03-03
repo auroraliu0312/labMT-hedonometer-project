@@ -449,4 +449,79 @@ plt.close()
 # 3. Qualitative exploration: close reading the lexicon as a cultural artifact
 # -----------------------------------------------------------------------------
 
-print_section("TASK 3.1: Build a small “exhibit” of words")
+# ---------------------------
+    # 3.1 Build a small “exhibit” of words (20 words)
+    # ---------------------------
+print("\n--- 3.1 Exhibit of words (20-word table) ---")
+
+    # 5 very positive / 5 very negative
+very_positive = (
+        df.sort_values("happiness_average", ascending=False)
+        .head(5)
+        .assign(category="very_positive")
+    )
+
+very_negative = (
+        df.sort_values("happiness_average", ascending=True)
+        .head(5)
+        .assign(category="very_negative")
+    )
+
+    # 5 highly contested (highest std dev)
+    # (Optional: avoid overlap with positive/negative by filtering them out)
+exclude = set(very_positive["word"]) | set(very_negative["word"])
+
+highly_contested = (
+        df[~df["word"].isin(exclude)]
+        .sort_values("happiness_standard_deviation", ascending=False)
+        .head(5)
+        .assign(category="highly_contested")
+    )
+
+    # 5 “weird / surprising / historically dated / culturally loaded” (your choice)
+    # IMPORTANT: you must edit this list yourself (this is the humanities part).
+weird_words = [
+        "capitalism",
+        "churches",
+        "whiskey",
+        "porn",
+        "weekend"
+    ]
+
+weird = (
+        df[df["word"].isin(weird_words)]
+        .copy()
+        .assign(category="weird_or_culturally_loaded")
+    )
+
+    # If some of your weird words were not found, you'll get <5 rows here.
+    # That’s fine: fix by choosing words that actually exist in df["word"].
+if len(weird) < 5:
+        missing = [w for w in weird_words if w not in set(df["word"])]
+        print("WARNING: These weird_words were not found in the dataset:", missing)
+
+    # Combine into one exhibit table
+exhibit = pd.concat([very_positive, very_negative, highly_contested, weird], ignore_index=True)
+
+    # Keep the most relevant columns for the exhibit
+exhibit = exhibit[["category", "word", "happiness_average", "happiness_standard_deviation",
+                    "twitter_rank", "google_rank", "nyt_rank", "lyrics_rank"]]
+
+print("\nExhibit table (preview):")
+print(exhibit)
+
+    # Save to tables/
+from pathlib import Path
+TABLES_DIR = Path("tables")
+TABLES_DIR.mkdir(parents=True, exist_ok=True)
+out_path = TABLES_DIR / "exhibit_words.csv"
+exhibit.to_csv(out_path, index=False)
+print(f"\nSaved exhibit table to: {out_path}")
+
+if __name__ == "__main__":
+    main()
+    
+# -----------------------------------------------------------------------------
+# Done
+# -----------------------------------------------------------------------------
+print_section("Done")

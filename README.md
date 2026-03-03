@@ -31,7 +31,7 @@ We created a data dictionary to summarize each column's content, type, and missi
 
 We performed the following analyses using Python with pandas, matplotlib, and numpy:
 
- - 1.1 Load the File
+- ## 1.1 Load the File
 
 We loaded the labMT 1.0 dataset using pandas `read_csv`. The dataset is tab-delimited and contains three lines of metadata at the top, which we skipped using `skiprows=3`. We also treated '--' as missing values (`NaN`) using `na_values="--"`.
 
@@ -39,9 +39,9 @@ The dataset contains 10222 rows and 8 columns.
 
 A missing rank (`--`) indicates that the word does not appear in that particular corpus.
 
-- 1.2 Data Dictionary (See "DataSet": Data Dictionary)
+- ## 1.2 Data Dictionary (See "DataSet": Data Dictionary)
 
-- 1.3 Sanity Checks
+## 1.3 Sanity Checks
 
  We performed several sanity checks to ensure the dataset is clean and reasonable.
 
@@ -105,7 +105,7 @@ The words with the lowest happiness scores correspond to negative or sensitive t
 
 # Results
 
-## 2.1 Distribution of Happiness Scores
+- ## 2.1 Distribution of Happiness Scores
 
 ![Figure 1: Distribution of Happiness Scores](figures/happiness_average_hist.png)
 
@@ -118,7 +118,7 @@ Summary Statistics:
 
 The distribution of happiness scores is centered slightly above 5, with mean and median very close (5.38 and 5.44), indicating approximate symmetry. Most words fall between 4 and 6.5, suggesting that everyday English vocabulary leans mildly positive. Extremely positive and extremely negative words are relatively rare, with only 5% of words scoring below 3.18 and 5% scoring above 7.08. This pattern suggests that common language tends toward moderate positivity, with strong emotional words occupying the tails of the distribution. One interesting pattern is that strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
 
-## 2.2 Disagreement: Words with High Standard Deviation
+- ## 2.2 Disagreement: Words with High Standard Deviation
 
 We used happiness_standard_deviation to measure how much people disagreed when rating each word.
 ![Figure 2: Happiness Average vs Standard Deviation](figures/happiness_vs_std_scatter.png)
@@ -154,7 +154,7 @@ Overall, these words may be contested because:
 
 The quantitative pattern (high standard deviation) reflects qualitative ambiguity. Words that allow multiple interpretations naturally produce more disagreement among raters. In this sense, standard deviation does not merely capture rating noise, it indexes cultural contestation and semantic instability.
 
-## 2.3 Corpus comparison: rank coverage and overlaps
+- ## 2.3 Corpus comparison: rank coverage and overlaps
 
 We created a heatmap to present the overlaps between corpora
 ![Figure 3: Corpus Overlap Heatmap](figures/corpus_overlap_heatmap.png)
@@ -178,7 +178,7 @@ Similarly, slang or profanity terms (e.g., “fucking”) tend to appear in Twit
 
 # Qualitative “exhibit” of words
 
-- 3.1 Build a small “exhibit” of words
+- ## 3.1 Build a small “exhibit” of words
 
 | category | word | happiness_average | happiness_standard_deviation | twitter_rank | google_rank | nyt_rank | lyrics_rank |
 |----------|------|-------------------|------------------------------|--------------|-------------|----------|--------------|
@@ -218,7 +218,7 @@ Upon examination of these 20 words across four categories, it reveals how happin
 
 # Critical Reflection
 
-- 4.1 Reconstruct the pipeline (data provenance)
+- ## 4.1 Reconstruct the pipeline (data provenance)
 
 The labMT 1.0 dataset was constructed through a multi-stage process that transformed raw text collections into the numerical happiness scores we've been analyzing. Based on Dodds et al. (2011) and our examination of the data structure, here is the reconstruction of how this dataset came to be:
 
@@ -291,7 +291,7 @@ This generation process explains several features we observed in our analysis:
 
 Overall, this pipeline transforms messy and context-dependent human language into clean numerical data. It is a powerful simplification, but one that comes with important limitations we'll explore in the next section.
 
-- 4.2 Consequences and limitations
+- ## 4.2 Consequences and limitations
 
 ## Only high-frequency words (top 5000 per corpus)
 Each source corpus only contributed its top 5,000 words by frequency. Words outside these frequency bands never enter labMT at all. The dataset focuses on mainstream, high-frequency vocabulary and largely ignores rare, technical, or niche words. This makes it easier to measure the emotional tone of “ordinary” language across large corpora but makes it hard to analyze specialized domains (e.g., medical jargon, fandom slang, minority dialects). 
@@ -326,7 +326,7 @@ The corpora and ratings reflect language usage around 2008–2011. The lexicon a
 
 For example, words like rt, lol, blog appear as very frequent on Twitter in our 2011-era rankings. More recent slang (e.g., “yeet”, “stan”) is absent from labMT entirely. If we used labMT today without updating it, we would mis-measure or ignore large parts of current online language.
 
-- 4.3 If you were to use this dataset as an instrument today…
+- ## 4.3 If you were to use this dataset as an instrument today…
 
 The LabMT dataset is best understood as a lexical affect instrument rather than a measure of lived emotional experience. We would trust it to approximate large-scale trends in average lexical valence across corpora, especially when analyzing aggregate shifts in tone (e.g., comparing overall positivity in news versus song lyrics). Because it is standardized and reproducible, it works well for macro-level comparisons and computational modeling of sentiment trends.
 

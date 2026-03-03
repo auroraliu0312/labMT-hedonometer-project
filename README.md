@@ -39,7 +39,7 @@ The dataset contains 10222 rows and 8 columns.
 
 A missing rank (`--`) indicates that the word does not appear in that particular corpus.
 
-- 1.2 Data Dictionary (See "DataSet")
+- 1.2 Data Dictionary (See "DataSet": Data Dictionary)
 
 - 1.3 Sanity Checks
 
@@ -152,7 +152,7 @@ Overall, these words may be contested because:
 - Some may function as slang
 - Some may carry irony or mixed connotations
 
-The quantitative pattern (high standard deviation) reflects qualitative ambiguity: words that allow multiple interpretations naturally produce more disagreement among raters. In this sense, standard deviation does not merely capture rating noise; it indexes cultural contestation and semantic instability.
+The quantitative pattern (high standard deviation) reflects qualitative ambiguity. Words that allow multiple interpretations naturally produce more disagreement among raters. In this sense, standard deviation does not merely capture rating noise, it indexes cultural contestation and semantic instability.
 
 ## 2.3 Corpus comparison: rank coverage and overlaps
 
@@ -179,6 +179,29 @@ Similarly, slang or profanity terms (e.g., “fucking”) tend to appear in Twit
 # Qualitative “exhibit” of words
 
 - 3.1 Build a small “exhibit” of words
+
+| category | word | happiness_average | happiness_standard_deviation | twitter_rank | google_rank | nyt_rank | lyrics_rank |
+|----------|------|-------------------|------------------------------|--------------|-------------|----------|--------------|
+| very_positive | laughter | 8.50 | 0.9313 | 3600.0 | NaN | NaN | 1728.0 |
+| very_positive | happiness | 8.44 | 0.9723 | 1853.0 | 2458.0 | NaN | 1230.0 |
+| very_positive | love | 8.42 | 1.1082 | 25.0 | 317.0 | 328.0 | 23.0 |
+| very_positive | happy | 8.30 | 0.9949 | 65.0 | 1372.0 | 1313.0 | 375.0 |
+| very_positive | laughed | 8.26 | 1.1572 | 3334.0 | 3542.0 | NaN | 2332.0 |
+| very_negative | terrorist | 1.30 | 0.9091 | 3576.0 | NaN | 3026.0 | NaN |
+| very_negative | suicide | 1.30 | 0.8391 | 2124.0 | 4707.0 | 3319.0 | 2107.0 |
+| very_negative | rape | 1.44 | 0.7866 | 3133.0 | NaN | 4115.0 | 2977.0 |
+| very_negative | terrorism | 1.48 | 0.9089 | NaN | NaN | 3192.0 | NaN |
+| very_negative | murder | 1.48 | 1.0150 | 2762.0 | 3110.0 | 1541.0 | 1059.0 |
+| highly_contested | fucking | 4.64 | 2.9260 | 448.0 | NaN | NaN | 620.0 |
+| highly_contested | fuckin | 3.86 | 2.7405 | 1077.0 | NaN | NaN | 688.0 |
+| highly_contested | fucked | 3.56 | 2.7117 | 1840.0 | NaN | NaN | 904.0 |
+| highly_contested | pussy | 4.80 | 2.6650 | 2019.0 | NaN | NaN | 949.0 |
+| highly_contested | whiskey | 5.72 | 2.6422 | NaN | NaN | NaN | 2208.0 |
+| weird_or_culturally_loaded | weekend | 8.00 | 1.2936 | 317.0 | NaN | 833.0 | 2256.0 |
+| weird_or_culturally_loaded | whiskey | 5.72 | 2.6422 | NaN | NaN | NaN | 2208.0 |
+| weird_or_culturally_loaded | churches | 5.70 | 2.4599 | NaN | 2281.0 | NaN | NaN |
+| weird_or_culturally_loaded | capitalism | 5.16 | 2.4524 | NaN | 4648.0 | NaN | NaN |
+| weird_or_culturally_loaded | porn | 4.18 | 2.4302 | 1801.0 | NaN | NaN | NaN |
 
 Upon examination of these 20 words across four categories, it reveals how happiness scores are more than numbers, they depict cultural values, social contexts, and historical moments. 
 
@@ -229,7 +252,7 @@ This is the most crucial step where raw text became emotional data. The research
  - Scale: 1 (sad) to 9 (happy) - a 9-point Likert scale
  - Process: Words were presented in random order, one at a time, without context
 
-The choice of 50 raters per word represents a balance between statistical reliability and cost. With fewer raters, individual biases would have too much influence; with more, the cost would become prohibitive.
+The choice of 50 raters per word represents a balance between statistical reliability and cost. With fewer raters, individual biases would have too much influence. With more raters, the cost would become prohibitive.
 
 ## Step 4: Statistical Aggregation
 
@@ -254,29 +277,28 @@ This integration created the dataset structure we've been working with: one row 
 
 The resulting dataset was published as supplementary material alongside the 2011 paper "Temporal Patterns of Happiness and Information in a Global Social Network" in PLOS ONE. The dataset includes:
  - 10,222 words
- - 7 data columns (word, happiness_rank, happiness_average, happiness_standard_deviation, and four corpus ranks)
+ - 8 data columns (word, happiness_rank, happiness_average, happiness_standard_deviation, and four corpus ranks)
  - Tab-separated format with metadata headers
 
 ## What This Pipeline Reveals
 
 This generation process explains several features we observed in our analysis:
 
-1. Missing ranks occur because a word wasn't frequent enough in a particular corpus to make its top 5000 - not because the word doesn't exist in that domain.
-2. Standard deviation measures genuine disagreement among raters, not ambiguity in the word itself (though these often correlate).
+1. Missing ranks occur because a word wasn't frequent enough in a particular corpus to make its top 5000. It is not because the word doesn't exist in that domain.
+2. Standard deviation measures genuine disagreement among raters, not ambiguity in the word itself.
 3. The 2011 time stamp means all ratings and frequency data reflect language use from approximately 2008-2010. Words like "tweet" (rank 107 on Twitter, missing from NYT) had different meanings.
-4. Cultural bias is baked in from the start - all raters were US-based English speakers, so the happiness scores reflect American emotional associations, not universal human response.
+4. Cultural bias is baked in from the start. All raters were US-based English speakers, so the happiness scores reflect American emotional associations, not universal human response.
 
-Overall, this pipeline transforms messy, context-dependent human language into clean numerical data. It is a powerful simplification, but one that comes with important limitations we'll explore in the next section.
+Overall, this pipeline transforms messy and context-dependent human language into clean numerical data. It is a powerful simplification, but one that comes with important limitations we'll explore in the next section.
 
 - 4.2 Consequences and limitations
 
 ## Only high-frequency words (top 5000 per corpus)
-Each source corpus only contributed its top 5,000 words by frequency. Words outside these frequency bands never enter labMT at all. The dataset focuses on mainstream, high-frequency vocabulary and largely ignores rare, technical, or niche words.
-This makes it easier to measure the emotional tone of “ordinary” language across large corpora but makes it hard to analyze specialized domains (e.g., medical jargon, fandom slang, minority dialects). 
+Each source corpus only contributed its top 5,000 words by frequency. Words outside these frequency bands never enter labMT at all. The dataset focuses on mainstream, high-frequency vocabulary and largely ignores rare, technical, or niche words. This makes it easier to measure the emotional tone of “ordinary” language across large corpora but makes it hard to analyze specialized domains (e.g., medical jargon, fandom slang, minority dialects). 
 
 For example, every rank column (twitter_rank, google_rank, nyt_rank, lyrics_rank) has exactly 5,000 non-missing values, and together they cover about 48.9% of the lexicon per corpus. Our overlap analysis shows 327 words (3.2%) that appear in none of the four top-5000 lists. Tthese words are present in labMT (because they came from at least one corpus’s 5000 list before merging), but in practice we cannot tie them strongly to any particular corpus. If we wanted to study less frequent, emerging slang or technical terms, labMT would simply not “see” them.
 
-## Rating words in isolation, without context
+## Rating words in isolation, without cultural context
 Mechanical Turk workers rated words alone, with no sentence or situational context. This makes the dataset easier to collect and apply (we only need word → score), but it ignores polysemy (multiple meanings) and contextual usage. Some words can be positive in one context and negative in another; rating them out of context collapses these into a single average, often hiding the underlying disagreement.
 
 For example, we plotted happiness_average vs happiness_standard_deviation and found a set of highly “contested” words with very high standard deviation. Words like “fucking”, “pussy”, “whiskey”, “churches”, “capitalism” all have standard deviations above 2.4. “fucking” can be a hostile insult or an emphatic positive (“fucking amazing”); “pussy” mixes sexual and gendered insult meanings; “whiskey” can be associated with social drinking or addiction; “churches” and “capitalism” have strong ideological and personal connotations. The high disagreement indicates that different raters “saw” different senses of the same word—context that the dataset cannot capture.
@@ -299,7 +321,7 @@ The lexicon is derived only from four English-language corpora. The dataset is h
 
 For example, our overlap matrix shows that Google Books & NY Times are the most similar pair (3,414 words in common; 33.4% of the lexicon), while NY Times & Lyrics are the least similar (2,241 words; 21.9%). Words like rt, lol, haha, gonna, wanna are highly frequent on Twitter but do not appear in the NYT top-5000 at all. Conversely, NYT and Google Books likely share more formal, topic-specific words that are rare on Twitter or in lyrics. This means labMT is excellent for measuring sentiment in these four genres, but might miss important vocabulary in, say, scientific forums, gaming chat, or multilingual communities.
 
-## Time-bound snapshot of language
+## Snapshot of language for certain time period only
 The corpora and ratings reflect language usage around 2008–2011. The lexicon and ratings do not automatically update as language evolves. New slang, memes, and shifting connotations (e.g., of political terms) are not captured.
 
 For example, words like rt, lol, blog appear as very frequent on Twitter in our 2011-era rankings. More recent slang (e.g., “yeet”, “stan”) is absent from labMT entirely. If we used labMT today without updating it, we would mis-measure or ignore large parts of current online language.

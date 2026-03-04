@@ -381,8 +381,8 @@ git clone https://github.com/auroraliu0312/labMT-hedonometer-project
 2. Data wrangler: Mohan Liu
 3. Quantitative analyst: Mohan Liu, Anny Li
 4. Qualitative / close-reading lead: Angelina Roman Rosales
-5. Provenance & critique lead: 
-6. Editor & figure curator: 
+5. Provenance & critique lead: Simone van Moerkerk
+6. Editor & figure curator: Jaena Danaram
 
 ## Citation of papers:
 Dodds, Peter Sheridan, Kameron Decker Harris, Isabel M. Kloumann, Catherine A. Bliss, and Christopher M. Danforth. 2011. “Temporal Patterns of Happiness and Information in a Global Social Network: Hedonometrics and Twitter.” Edited by Johan Bollen. PLoS ONE 6 (12): e26752. https://doi.org/10.1371/journal.pone.0026752.

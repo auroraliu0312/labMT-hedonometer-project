@@ -347,6 +347,7 @@ These changes would make the dataset more sensitive to ambiguity, social variati
 
  - `src/` — Python analysis scripts for raw Data_Set_1.txt
  - `data/raw/` — input data (Data_Set_1.txt)
+ - `data/processed/` - cleaned dataset used for analysis
  - `figures/` — PNG plots
  - `tables/` — CSV tables/summaries
  - README.md

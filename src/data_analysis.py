@@ -518,6 +518,19 @@ exhibit.to_csv(out_path, index=False)
 print(f"\nSaved exhibit table to: {out_path}")
 
 # -----------------------------------------------------------------------------
+# Save labMT word list for future use
+# -----------------------------------------------------------------------------
+print("\nSaving labMT word list for future use...")
+
+# Create a clean version with just word and happiness score
+labMT_clean = df[['word', 'happiness_average']].copy()
+
+# Save to processed folder
+labMT_clean_path = Path("data/processed") / "labMT_cleaned.csv"
+labMT_clean.to_csv(labMT_clean_path, index=False)
+print(f"Saved labMT word list to: {labMT_clean_path}")
+
+# -----------------------------------------------------------------------------
 # Done
 # -----------------------------------------------------------------------------
 print_section("Done")

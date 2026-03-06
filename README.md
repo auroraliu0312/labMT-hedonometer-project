@@ -51,23 +51,23 @@ A missing rank (`--`) indicates that the word does not appear in that particular
 ## Random sample of 15 rows:
  We inspected a random subset of 15 rows to verify that values appear consistent and correct. Example sample:
 
-| word | happiness_rank | happiness_average | google_rank | nyt_rank | lyrics_rank |
-|------|----------------|-------------------|-------------|----------|--------------|
-| prom | 2883 | 5.94 | NaN | NaN | NaN |
-| on | 4515 | 5.56 | 16.0 | 10.0 | 14.0 |
-| mis | 7718 | 4.88 | NaN | NaN | 1292.0 |
-| friendship | 34 | 7.96 | 3098.0 | 3669.0 | 3980.0 |
-| naval | 4925 | 5.48 | 3295.0 | 4436.0 | NaN |
-| grand | 533 | 7.06 | 1709.0 | 944.0 | 1575.0 |
-| wen | 8029 | 4.80 | NaN | NaN | NaN |
-| extract | 5861 | 5.28 | 4832.0 | NaN | NaN |
-| harry | 6055 | 5.24 | 3856.0 | 1692.0 | NaN |
-| designers | 1544 | 6.38 | NaN | 3890.0 | NaN |
-| external | 4895 | 5.48 | 1259.0 | NaN | NaN |
-| screwed | 9685 | 3.24 | NaN | NaN | 4908.0 |
-| pittsburgh | 6533 | 5.14 | NaN | 2038.0 | NaN |
-| vital | 3609 | 5.76 | 2732.0 | 2165.0 | NaN |
-| obedience | 5327 | 5.40 | 4840.0 | NaN | NaN |
+| word | happiness_rank | happiness_average | happiness_standard_deviation | twitter_rank | google_rank | nyt_rank | lyrics_rank |
+|------|----------------|-------------------|------------------------------|--------------|-------------|----------|--------------|
+| prom | 2883 | 5.94 | 1.3763 | 4876.0 | NaN | NaN | NaN |
+| on | 4515 | 5.56 | 1.0721 | 13.0 | 16.0 | 10.0 | 14.0 |
+| mis | 7718 | 4.88 | 1.0999 | 4517.0 | NaN | NaN | 1292.0 |
+| friendship | 34 | 7.96 | 1.1241 | 4273.0 | 3098.0 | 3669.0 | 3980.0 |
+| naval | 4925 | 5.48 | 1.2493 | NaN | 3295.0 | 4436.0 | NaN |
+| grand | 533 | 7.06 | 1.3614 | 1685.0 | 1709.0 | 944.0 | 1575.0 |
+| wen | 8029 | 4.80 | 1.0498 | 1345.0 | NaN | NaN | NaN |
+| extract | 5861 | 5.28 | 1.4574 | NaN | 4832.0 | NaN | NaN |
+| harry | 6055 | 5.24 | 1.2545 | 2313.0 | 3856.0 | 1692.0 | NaN |
+| designers | 1544 | 6.38 | 1.4831 | NaN | NaN | 3890.0 | NaN |
+| external | 4895 | 5.48 | 1.2162 | NaN | 1259.0 | NaN | NaN |
+| screwed | 9685 | 3.24 | 1.6107 | 4145.0 | NaN | NaN | 4908.0 |
+| pittsburgh | 6533 | 5.14 | 1.3852 | NaN | NaN | 2038.0 | NaN |
+| vital | 3609 | 5.76 | 1.5592 | NaN | 2732.0 | 2165.0 | NaN |
+| obedience | 5327 | 5.40 | 1.6162 | NaN | 4840.0 | NaN | NaN |
 
 
 ## Top 10 positive words:

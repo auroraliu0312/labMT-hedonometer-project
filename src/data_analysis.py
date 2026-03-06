@@ -118,6 +118,23 @@ print("Duplicated words:\n", duplicated_words)
 sample_rows = df.sample(15, random_state=42)  # English comment: Randomly sample 15 rows to review data
 print("Random sample of 15 rows:\n", sample_rows)
 
+cols_to_show = ['word', 'happiness_rank', 'happiness_average', 
+                'happiness_standard_deviation', 'twitter_rank',
+                'google_rank', 'nyt_rank', 'lyrics_rank']
+
+sample_table = sample_rows[cols_to_show].copy()
+
+
+sample_table.to_csv('tables/random_sample_15_rows.csv', index=False)
+
+
+for idx, row in sample_table.iterrows():
+    google = f"{row['google_rank']:.1f}" if pd.notna(row['google_rank']) else "NaN"
+    nyt = f"{row['nyt_rank']:.1f}" if pd.notna(row['nyt_rank']) else "NaN"
+    lyrics = f"{row['lyrics_rank']:.1f}" if pd.notna(row['lyrics_rank']) else "NaN"
+    
+    print(f"| {row['word']} | {int(row['happiness_rank'])} | {row['happiness_average']:.2f} | {google} | {nyt} | {lyrics} |")
+
 # Identify the 10 most positive words
 top_10_positive = df.nlargest(10, "happiness_average")[["word", "happiness_average"]]  # English comment: Top 10 highest happiness scores
 print("Top 10 positive words:\n", top_10_positive)

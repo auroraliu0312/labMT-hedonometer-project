@@ -51,23 +51,24 @@ A missing rank (`--`) indicates that the word does not appear in that particular
 ## Random sample of 15 rows:
  We inspected a random subset of 15 rows to verify that values appear consistent and correct. Example sample:
 
-| word        | happiness_rank | happiness_average | ... | lyrics_rank |
-|------------|----------------|-----------------|-----|------------|
-| prom       | 2883           | 5.94            | ... | NaN        |
-| on         | 4515           | 5.56            | ... | 14.0       |
-| mis        | 7718           | 4.88            | ... | 1292.0     |
-| friendship | 34             | 7.96            | ... | 3980.0     |
-| naval      | 4925           | 5.48            | ... | NaN        |
-| grand      | 533            | 7.06            | ... | 1575.0     |
-| wen        | 8029           | 4.80            | ... | NaN        |
-| extract    | 5861           | 5.28            | ... | NaN        |
-| harry      | 6055           | 5.24            | ... | NaN        |
-| designers  | 1544           | 6.38            | ... | NaN        |
-| external   | 4895           | 5.48            | ... | NaN        |
-| screwed    | 9685           | 3.24            | ... | 4908.0     |
-| pittsburgh | 6533           | 5.14            | ... | NaN        |
-| vital      | 3609           | 5.76            | ... | NaN        |
-| obedience  | 5327           | 5.40            | ... | NaN        |
+| word | happiness_rank | happiness_average | google_rank | nyt_rank | lyrics_rank |
+|------|----------------|-------------------|-------------|----------|--------------|
+| prom | 2883 | 5.94 | NaN | NaN | NaN |
+| on | 4515 | 5.56 | 16.0 | 10.0 | 14.0 |
+| mis | 7718 | 4.88 | NaN | NaN | 1292.0 |
+| friendship | 34 | 7.96 | 3098.0 | 3669.0 | 3980.0 |
+| naval | 4925 | 5.48 | 3295.0 | 4436.0 | NaN |
+| grand | 533 | 7.06 | 1709.0 | 944.0 | 1575.0 |
+| wen | 8029 | 4.80 | NaN | NaN | NaN |
+| extract | 5861 | 5.28 | 4832.0 | NaN | NaN |
+| harry | 6055 | 5.24 | 3856.0 | 1692.0 | NaN |
+| designers | 1544 | 6.38 | NaN | 3890.0 | NaN |
+| external | 4895 | 5.48 | 1259.0 | NaN | NaN |
+| screwed | 9685 | 3.24 | NaN | NaN | 4908.0 |
+| pittsburgh | 6533 | 5.14 | NaN | 2038.0 | NaN |
+| vital | 3609 | 5.76 | 2732.0 | 2165.0 | NaN |
+| obedience | 5327 | 5.40 | 4840.0 | NaN | NaN |
+
 
 ## Top 10 positive words:
 The words with the highest happiness scores are logical and correspond to highly positive terms. 
@@ -116,7 +117,9 @@ Summary Statistics:
 - 5th Percentile: 3.18
 - 95th Percentile: 7.08
 
-The distribution of happiness scores is centered slightly above 5, with mean and median very close (5.38 and 5.44), indicating approximate symmetry. Most words fall between 4 and 6.5, suggesting that everyday English vocabulary leans mildly positive. Extremely positive and extremely negative words are relatively rare, with only 5% of words scoring below 3.18 and 5% scoring above 7.08. This pattern suggests that common language tends toward moderate positivity, with strong emotional words occupying the tails of the distribution. One interesting pattern is that strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
+The distribution of happiness scores is centered slightly above 5, with mean and median very close (5.38 and 5.44), indicating approximate symmetry. Most words fall between 4 and 6.5, suggesting that everyday English vocabulary leans mildly positive. Extremely positive and extremely negative words are relatively rare, with only 5% of words scoring below 3.18 and 5% scoring above 7.08. This pattern suggests that common language tends toward moderate positivity, with strong emotional words occupying the tails of the distribution.
+
+ One interesting pattern is the distribution reveals the negative tail (scores below 3.18) is slightly longer than the positive tail (scores above 7.08). This means that when words do deviate from the neutral range, they are slightly more likely to be negative than positive. However, the overall mass of the distribution sits in the 5-6 range, indicating that everyday language maintains a mild positivity bias. This suggests that English vocabulary has a wider range of mildly negative words, but the most intensely positive words are more extremely positive than the most intensely negative words are extremely negative. The strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
 
 ## 2.2 Disagreement: Words with High Standard Deviation
 
@@ -127,7 +130,7 @@ We plotted a scatterplot with:
 happiness_average on the x-axis
 happiness_standard_deviation on the y-axis
 
-Most words cluster in the middle of the plot. Their average happiness lies between roughly 4 and 7, and their standard deviation is around 1.0. This indicates that for the majority of words, annotators broadly agree on whether the word feels positive, neutral, or negative. In contrast, a small group of words have very high standard deviations (above ~2.4). These “contested” words are those where annotators’ ratings strongly disagree.
+Most words cluster in the middle of the plot. Their average happiness lies between roughly 4 and 7, and their standard deviation is around 1.0. This indicates that for the majority of words, annotators broadly agree on whether the word feels positive, neutral, or negative. In contrast, a small group of words have very high standard deviations (above 2.4). These “contested” words are those where annotators’ ratings strongly disagree.
 
 Five examples include:
 1. fucking / fuck / fuckin / fucked
@@ -211,9 +214,9 @@ Upon examination of these 20 words across four categories, it reveals how happin
 
 **Highly Contested Words:** The highest standard deviation’s words are “fucking”, “fuckin”, “fucked”, “pussy”, and “whiskey” which are all linguistic fault lines that can intensify joy such as “fucking amazing” or express aggression “fuck you”. On the other side “whiskey” appears only in the lyrics' corpus, which reveals how alcohol in songs carries dual meaning. It could mean celebration in some contexts, heartbreak in others. These words portray how context is everything. 
 
-**Weird or Culturally Loaded Words:** weekend, whiskey, churches, capitalism, porn. This category includes words that are either culturally loaded, surprising in their scores, or carry complex social connotations that resist simple emotional classification. Unlike the clear consensus seen in very positive or very negative words, these terms reveal how cultural context, personal experience, and ideological position shape emotional response. "Weekend" scores surprisingly high (8.00), nearly matching words like "love" and "laughter," reflecting the universal human association of weekends with rest, leisure, and a rare moment of cross-cultural consensus in this otherwise contested group. In contrast, "whiskey" (5.72) and "churches" (5.70) sit near the middle but carry polarized meanings. "whiskey" can represent celebration or addiction, while churches evoke spiritual comfort for some and exclusion or historical oppression for others. "Capitalism" (5.16) and "porn" (4.18) are even more politically and morally charged—their emotional valence depends entirely on the speaker's ideology, generation, and community norms. These words demonstrate that happiness scores often mask deeper cultural battles; they are not simply positive or negative, but rather sites of contested meaning where different communities project radically different values onto the same term.
+**Weird or Culturally Loaded Words:** weekend, whiskey, churches, capitalism, porn. This category includes words that are either culturally loaded, surprising in their scores, or carry complex social connotations that resist simple emotional classification. Unlike the clear consensus seen in very positive or very negative words, these terms reveal how cultural context, personal experience, and ideological position shape emotional response. "Weekend" scores surprisingly high (8.00), nearly matching words like "love" and "laughter," reflecting the universal human association of weekends with rest, leisure, and a rare moment of cross-cultural consensus in this otherwise contested group. In contrast, "whiskey" (5.72) and "churches" (5.70) sit near the middle but carry polarized meanings. "whiskey" can represent celebration or addiction, while churches evoke spiritual comfort for some and exclusion or historical oppression for others. "Capitalism" (5.16) and "porn" (4.18) are even more politically and morally charged—their emotional valence depends entirely on the speaker's ideology, generation, and community norms. These words demonstrate that happiness scores often mask deeper cultural battle. they are not simply positive or negative, but rather sites of contested meaning where different communities project radically different values onto the same term.
 
-**Conclusion:** This exercise portrays that the word's happiness scores are cultural artifacts. They are a reflection of the values, fears, and disagreements of a specific time frame-  2011, and a specific population- Mechanical Turk workers. The corpus presence patterns show how words depict a different meaning across news, songs or casual conversation. A word’s happiness is a reflection about who uses it, where and why.
+**Conclusion:** This exercise portrays that the word's happiness scores are cultural artifacts. There is a reflection of the values, fears, and disagreements of a specific time frame-  2011, and a specific population- Mechanical Turk workers. The corpus presence patterns show how words depict a different meaning across news, songs or casual conversation. A word’s happiness is a reflection about who uses it, where and why.
 
 
 # Critical Reflection

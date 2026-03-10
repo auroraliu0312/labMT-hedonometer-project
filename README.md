@@ -414,7 +414,7 @@ Additionally, all interpretive claims, methodological decisions, and critical re
 
 ---
 
-#### 📋 Acquisition Pipeline
+####  Acquisition Pipeline
 
 **Step 1: Search Strategy**
 - **API Endpoint**: `https://collectionapi.metmuseum.org/public/collection/v1/search`
@@ -448,13 +448,13 @@ Additionally, all interpretive claims, methodological decisions, and critical re
 548273,"War and Peace",Modern Art,Sculpture,American,1952,1952 
 ---
 
-#### 🌍 Provenance Statement
+#### Provenance Statement
 
 The dataset comprises approximately 250-300 artworks from the Metropolitan Museum of Art's permanent collection, accessed via their public API in March 2025. The Met's collection spans 5,000+ years of world culture, from ancient Egyptian artifacts to contemporary art, with particular strengths in European painting, American art, and Asian art. However, this dataset does **not** represent a random or comprehensive sample of the Met's collection. Rather, it is a **keyword-convenience sample** selected using emotionally charged search terms (love, death, war, peace, etc.). This introduces significant selection bias: the dataset overrepresents artworks with emotionally expressive titles and underrepresents those with descriptive, abstract, or non-English titles. The collection itself reflects historical collecting practices that have favored Western European art, meaning non-Western cultures are underrepresented relative to their global significance. Users should interpret findings as reflecting "artworks with emotionally resonant English titles in the Met's collection" rather than "art" or "human expression" broadly.
 
 ---
 
-#### 🔒 Ethics Note
+####  Ethics Note
 
 **Privacy & Consent:** All data collected is from the Met's public API, which provides information about artworks in the museum's permanent collection. No personal data about museum visitors, donors, or staff was collected. Artists represented are historical figures whose information is publicly documented; no living artists were identified or contacted.
 
@@ -476,7 +476,7 @@ The dataset comprises approximately 250-300 artworks from the Metropolitan Museu
 
 ---
 
-#### 📊 Data Dictionary: `met_artworks_processed.csv`
+####  Data Dictionary: `met_artworks_processed.csv`
 
 | Column | Type | Description | Missing Values |
 |--------|------|-------------|----------------|
@@ -506,7 +506,7 @@ The dataset comprises approximately 250-300 artworks from the Metropolitan Museu
 
 ---
 
-#### 🚀 How to Reproduce
+####  How to Reproduce
 
 ```bash
 # 1. Clone the repository
@@ -518,4 +518,9 @@ pip install requests pandas
 
 # 3. Run the fetch script
 python src/met_fetch.py
+
+
+
+
+
 

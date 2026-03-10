@@ -399,3 +399,46 @@ In the early stages of development, we consulted DeepSeek to help debug code and
 All code included in the repository was revised and verified by us. We understand the logic and functionality of each script and are able to explain the analytical steps, statistical calculations, and design choices in detail. AI tools were used as writing and debugging support rather than as a substitute for conceptual understanding or interpretive reasoning.
 
 Additionally, all interpretive claims, methodological decisions, and critical reflections represent our own academic judgment and responsibility.
+
+
+## Mini-Project 2: Met Museum Happiness Analysis
+
+### Data Acquisition
+
+**Role: Data Acquisition Lead**  
+*Responsible for API integration, data fetching, and provenance documentation*
+
+#### Data Source
+- **API**: Metropolitan Museum of Art Collection API ([documentation](https://metmuseum.github.io/))
+- **Collection**: Artworks from the Met's permanent collection
+- **Access**: Free, no API key required, rate limits apply (respect 10 requests per second)
+
+#### Fetch Script: `src/met_fetch.py`
+
+This script programmatically collects artwork data from the Met API using emotional keywords.
+
+**What the script does:**
+1. **Searches** for objects using emotional keywords: love, death, war, peace, nature, beauty, sorrow, joy, flowers, landscape, portrait, religious, happiness, sadness, victory, defeat, celebration, mourning
+2. **Filters** for objects with images (`hasImages=true`) to ensure quality data
+3. **Collects** object IDs from search results (15 objects per keyword)
+4. **Fetches** detailed metadata for each unique object including:
+   - Title, department, classification
+   - Culture, period, date information
+   - Artist details and nationality
+   - Medium and accession information
+5. **Saves** raw data to `data/raw/met/met_artworks_raw.csv`
+6. **Processes** data with basic cleaning:
+   - Removes entries without titles
+   - Creates `century` column from object dates
+   - Cleans titles for text analysis
+7. **Outputs** processed data to `data/processed/met_artworks_processed.csv`
+
+#### How to Run the Data Acquisition
+
+```bash
+# From the project root directory
+python src/met_fetch.py
+
+
+
+

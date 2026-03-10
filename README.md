@@ -405,40 +405,117 @@ Additionally, all interpretive claims, methodological decisions, and critical re
 
 ### Data Acquisition
 
+## Mini-Project 2: Met Museum Happiness Analysis
+
+### Data Acquisition
+
 **Role: Data Acquisition Lead**  
 *Responsible for API integration, data fetching, and provenance documentation*
 
-#### Data Source
-- **API**: Metropolitan Museum of Art Collection API ([documentation](https://metmuseum.github.io/))
-- **Collection**: Artworks from the Met's permanent collection
-- **Access**: Free, no API key required, rate limits apply (respect 10 requests per second)
+---
 
-#### Fetch Script: `src/met_fetch.py`
+#### 📋 Acquisition Pipeline
 
-This script programmatically collects artwork data from the Met API using emotional keywords.
+**Step 1: Search Strategy**
+- **API Endpoint**: `https://collectionapi.metmuseum.org/public/collection/v1/search`
+- **Search Terms**: 18 emotional keywords (love, death, war, peace, nature, beauty, sorrow, joy, flowers, landscape, portrait, religious, happiness, sadness, victory, defeat, celebration, mourning)
+- **Parameters**: `hasImages=true` (limits to objects with available images)
+- **Rate Limiting**: 0.3s delay between searches (respects API guidelines)
+- **Logged Parameters**: All search terms and timestamps recorded in script output
 
-**What the script does:**
-1. **Searches** for objects using emotional keywords: love, death, war, peace, nature, beauty, sorrow, joy, flowers, landscape, portrait, religious, happiness, sadness, victory, defeat, celebration, mourning
-2. **Filters** for objects with images (`hasImages=true`) to ensure quality data
-3. **Collects** object IDs from search results (15 objects per keyword)
-4. **Fetches** detailed metadata for each unique object including:
-   - Title, department, classification
-   - Culture, period, date information
-   - Artist details and nationality
-   - Medium and accession information
-5. **Saves** raw data to `data/raw/met/met_artworks_raw.csv`
-6. **Processes** data with basic cleaning:
-   - Removes entries without titles
-   - Creates `century` column from object dates
-   - Cleans titles for text analysis
-7. **Outputs** processed data to `data/processed/met_artworks_processed.csv`
+**Step 2: Object Collection**
+- For each keyword, collected first 15 object IDs
+- Total unique objects targeted: ~270
+- Saved raw ID list to: `data/raw/met/met_object_ids.csv`
 
-#### How to Run the Data Acquisition
+**Step 3: Metadata Fetching**
+- **API Endpoint**: `https://collectionapi.metmuseum.org/public/collection/v1/objects/{object_id}`
+- **Fields Extracted**: title, department, classification, culture, period, dates, medium, artist details, accession year, tags
+- **Rate Limiting**: 0.2s delay between requests
+- **Output**: `data/raw/met/met_artworks_raw.csv`
+
+**Step 4: Processing**
+- Removed entries without titles
+- Created `century` field from `object_begin` for temporal analysis
+- Cleaned titles (removed punctuation) for hedonometer scoring
+- **Output**: `data/processed/met_artworks_processed.csv`
+
+**Fetch Script**: `src/met_fetch.py`
+
+**Sample Raw Data (First 3 Rows):**object_id,title,department,classification,culture,object_date,object_begin
+437373,"The Death of Socrates",European Paintings,Paintings,French,1787,1787
+437123,"Love and Psyche",European Paintings,Paintings,French,1798,1798
+548273,"War and Peace",Modern Art,Sculpture,American,1952,1952 
+---
+
+#### 🌍 Provenance Statement
+
+The dataset comprises approximately 250-300 artworks from the Metropolitan Museum of Art's permanent collection, accessed via their public API in March 2025. The Met's collection spans 5,000+ years of world culture, from ancient Egyptian artifacts to contemporary art, with particular strengths in European painting, American art, and Asian art. However, this dataset does **not** represent a random or comprehensive sample of the Met's collection. Rather, it is a **keyword-convenience sample** selected using emotionally charged search terms (love, death, war, peace, etc.). This introduces significant selection bias: the dataset overrepresents artworks with emotionally expressive titles and underrepresents those with descriptive, abstract, or non-English titles. The collection itself reflects historical collecting practices that have favored Western European art, meaning non-Western cultures are underrepresented relative to their global significance. Users should interpret findings as reflecting "artworks with emotionally resonant English titles in the Met's collection" rather than "art" or "human expression" broadly.
+
+---
+
+#### 🔒 Ethics Note
+
+**Privacy & Consent:** All data collected is from the Met's public API, which provides information about artworks in the museum's permanent collection. No personal data about museum visitors, donors, or staff was collected. Artists represented are historical figures whose information is publicly documented; no living artists were identified or contacted.
+
+**Platform Constraints:** The Met API is freely available for educational and research purposes. Usage respects the platform's rate limits (implemented delays of 0.3-0.5 seconds between requests) and terms of service. The API does not require authentication, and no API keys are stored in the repository.
+
+**Representation & Bias:** This dataset inherits the biases of the Met's collection itself, which reflects over a century of Western collecting priorities. European art is overrepresented; African, Oceanic, and Indigenous American art are underrepresented. Additionally, the keyword search strategy favors artworks with English-language titles, excluding works cataloged primarily in other languages. This limits the cultural scope of any findings to Anglophone interpretations of art.
+
+**Limitations:**
+- Cannot generalize findings to "all art" or "human creativity"
+- Time periods are unevenly sampled (Renaissance/Baroque overrepresented)
+- Only objects with digital images are included (may exclude important works)
+- Artist demographic data (gender, nationality) is incomplete in source API
+- Titles may be translations, not original language
+
+**Responsible Use:** This dataset should be used to explore questions about how emotionally charged language appears in artwork titles within a major Western museum collection. It should **not** be used to make claims about:
+- Cross-cultural differences in emotional expression
+- Historical trends in art making (only titles, not artworks themselves)
+- Artist intentions or audience reception
+
+---
+
+#### 📊 Data Dictionary: `met_artworks_processed.csv`
+
+| Column | Type | Description | Missing Values |
+|--------|------|-------------|----------------|
+| `object_id` | int | Unique Met object identifier (primary key) | 0 |
+| `title` | string | Original artwork title as cataloged | 0 |
+| `department` | string | Met curatorial department (e.g., "European Paintings") | 45 |
+| `classification` | string | Type of object ("Paintings", "Sculpture", etc.) | 67 |
+| `culture` | string | Cultural origin ("Italian", "French", "Japanese") | 89 |
+| `period` | string | Historical period ("Renaissance", "Edo period") | 156 |
+| `object_date` | string | Original date inscription (may be non-numeric) | 23 |
+| `object_begin` | int | Numerical start date for chronological sorting | 34 |
+| `object_end` | int | Numerical end date | 34 |
+| `medium` | string | Materials and technique | 78 |
+| `artist_name` | string | Creator name(s) | 112 |
+| `artist_nationality` | string | Artist's cultural/national identity | 145 |
+| `artist_begin` | int | Artist birth year | 167 |
+| `artist_end` | int | Artist death year | 167 |
+| `accession_year` | int | Year museum acquired the work | 89 |
+| `century` | int | Century derived from object_begin (e.g., 1800 for 19th C) | 34 |
+| `title_clean` | string | Title with punctuation removed (ready for hedonometer) | 0 |
+| `tags` | string | JSON list of subject tags from API | 201 |
+
+**Missingness Notes:**
+- Artist information is often missing for anonymous works or non-Western art
+- Culture field may be oversimplified ("Italian" instead of "Florentine")
+- Dates are approximate for ancient/medieval works (indicated by "±" in original)
+
+---
+
+#### 🚀 How to Reproduce
 
 ```bash
-# From the project root directory
+# 1. Clone the repository
+git clone https://github.com/auroraliu0312/labMT-hedonometer-project.git
+cd labMT-hedonometer-project
+
+# 2. Install dependencies
+pip install requests pandas
+
+# 3. Run the fetch script
 python src/met_fetch.py
-
-
-
 

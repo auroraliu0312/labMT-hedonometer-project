@@ -143,8 +143,9 @@ print("Top 10 positive words:\n", top_10_positive)
 bottom_10_negative = df.nsmallest(10, "happiness_average")[["word", "happiness_average"]]  # English comment: Top 10 lowest happiness scores
 print("Top 10 negative words:\n", bottom_10_negative)
 
+
 # -----------------------------------------------------------------------------
-# 2. QUANTITATIVE EXPLORATION
+# 2.1 Distribution of happiness_average (Single Enhanced Histogram)
 # -----------------------------------------------------------------------------
 
 print_section("2.1 Distribution of happiness_average")
@@ -161,7 +162,7 @@ summary_stats = pd.DataFrame(
             "p95 (95th percentile)",
         ],
         "value": [
-            float(h.shape[0]), #row
+            float(h.shape[0]),
             float(h.mean()),
             float(h.median()),
             float(h.std()),
@@ -171,18 +172,115 @@ summary_stats = pd.DataFrame(
     }
 )
 
-print(summary_stats.to_string(index=False)) #save table
+print(summary_stats.to_string(index=False))
 save_csv(summary_stats, "happiness_average_summary_stats.csv", index=False)
 
-# Histogram：how many words in each percentile, not cumulative
-plt.figure()
-plt.hist(h, bins=40)
-plt.title("Distribution of happiness_average (labMT 1.0)")
-plt.xlabel("happiness_average (1–9)")
-plt.ylabel("number of words")
+# -----------------------------------------------------------------------------
+# Find the actual words for extremes
+# -----------------------------------------------------------------------------
+most_negative_word = df.loc[df['happiness_average'].idxmin(), 'word']
+most_positive_word = df.loc[df['happiness_average'].idxmax(), 'word']
+
+print(f"Most negative word: '{most_negative_word}' with score {h.min():.2f}")
+print(f"Most positive word: '{most_positive_word}' with score {h.max():.2f}")
+
+# -----------------------------------------------------------------------------
+# SINGLE ENHANCED HISTOGRAM with all annotations
+# -----------------------------------------------------------------------------
+plt.figure(figsize=(14, 10))
+
+# Calculate key values
+p05 = h.quantile(0.05)      # 3.18
+p95 = h.quantile(0.95)      # 7.08
+min_val = h.min()            # 1.30
+max_val = h.max()            # 8.50
+mean_val = h.mean()          # 5.38
+median_val = h.median()      # 5.44
+
+# Plot histogram
+n, bins, patches = plt.hist(h, bins=40, color='skyblue', edgecolor='black', alpha=0.7)
+
+# Color the tails differently to highlight them
+for i, (left, right) in enumerate(zip(bins[:-1], bins[1:])):
+    if left < p05:  # Negative tail
+        patches[i].set_facecolor('lightcoral')
+        patches[i].set_alpha(0.8)
+    elif right > p95:  # Positive tail
+        patches[i].set_facecolor('lightgreen')
+        patches[i].set_alpha(0.8)
+
+# Add vertical lines for key percentiles
+plt.axvline(p05, color='red', linestyle='--', linewidth=2.5, alpha=0.8,
+            label=f'5th percentile: {p05:.2f} (start of negative tail)')
+plt.axvline(p95, color='green', linestyle='--', linewidth=2.5, alpha=0.8,
+            label=f'95th percentile: {p95:.2f} (start of positive tail)')
+
+# Add vertical lines for extreme values
+plt.axvline(min_val, color='darkred', linestyle=':', linewidth=2.5, alpha=0.8,
+            label=f'Minimum: {min_val:.2f} (most negative word)')
+plt.axvline(max_val, color='darkgreen', linestyle=':', linewidth=2.5, alpha=0.8,
+            label=f'Maximum: {max_val:.2f} (most positive word)')
+
+# Add mean and median for reference
+plt.axvline(mean_val, color='blue', linestyle='-', linewidth=2, alpha=0.6,
+            label=f'Mean: {mean_val:.2f}')
+plt.axvline(median_val, color='purple', linestyle='-', linewidth=2, alpha=0.6,
+            label=f'Median: {median_val:.2f}')
+
+# Add shaded regions for tails
+plt.axvspan(1, p05, alpha=0.1, color='red')
+plt.axvspan(p95, 9, alpha=0.1, color='green')
+
+# Add annotations for the words
+max_count = max(n)
+
+# Annotate most negative word
+plt.annotate(f'Most negative: "{most_negative_word}"\nScore: {min_val:.2f}',
+             xy=(min_val, 5), xytext=(min_val - 0.8, max_count * 0.8),
+             arrowprops=dict(arrowstyle='->', color='darkred', lw=2),
+             fontsize=11, color='darkred',
+             bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.9))
+
+# Annotate most positive word
+plt.annotate(f'Most positive: "{most_positive_word}"\nScore: {max_val:.2f}',
+             xy=(max_val, 5), xytext=(max_val + 0.5, max_count * 0.7),
+             arrowprops=dict(arrowstyle='->', color='darkgreen', lw=2),
+             fontsize=11, color='darkgreen',
+             bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.9))
+
+# Add text box with your exact finding
+finding_text = (
+    f"KEY FINDING:\n"
+    f"• Negative tail width: 1 to {p05:.2f} = {p05-1:.2f} points\n"
+    f"• Positive tail width: {p95:.2f} to 9 = {9-p95:.2f} points\n"
+    f"• Negative tail is {(p05-1) - (9-p95):.2f} points LONGER\n"
+    f"  → More mildly negative words in vocabulary\n\n"
+    f"• Most negative word '{most_negative_word}': {min_val:.2f}\n"
+    f"  Distance from mean: {mean_val-min_val:.2f}\n"
+    f"• Most positive word '{most_positive_word}': {max_val:.2f}\n"
+    f"  Distance from mean: {max_val-mean_val:.2f}\n"
+    f"• Positive extreme is {(max_val-mean_val) - (mean_val-min_val):.2f} points FURTHER\n"
+    f"  → Most positive words are more extremely positive"
+)
+
+plt.text(0.98, 0.98, finding_text, transform=plt.gca().transAxes,
+         fontsize=10, verticalalignment='top', horizontalalignment='right',
+         bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.95),
+         linespacing=1.5)
+
+# Title and labels
+plt.title('Figure 1: Distribution of Happiness Scores\nwith Highlighted Tails and Extremes', 
+          fontsize=16, fontweight='bold', pad=20)
+plt.xlabel('Happiness Score (1-9)', fontsize=13, labelpad=10)
+plt.ylabel('Number of Words', fontsize=13, labelpad=10)
+plt.legend(loc='upper left', fontsize=9, framealpha=0.95)
+plt.grid(axis='y', alpha=0.3, linestyle='--')
+
 plt.tight_layout()
-save_figure("happiness_average_hist.png")
+save_figure("happiness_distribution_enhanced.png")
 plt.close()
+
+print_section("2.2 Disagreement: happiness_standard_deviation")
 
 print_section("2.2 Disagreement: happiness_standard_deviation")
 

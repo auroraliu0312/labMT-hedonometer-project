@@ -531,7 +531,197 @@ pip install requests pandas
 python src/met_fetch.py
 
 
+# Mini-Project 2: Inferring Happiness Dynamics in Media
+## Eastern vs. Western Aesthetic Concepts in Met Museum Artwork Titles
+
+### 👥 Team Roles
+- **Repo & workflow lead**: [Your Name]
+- **Data acquisition lead**: [Your Name]
+- **Measurement lead**: [Your Name]  
+- **Stats & sampling lead**: [Your Name]
+- **Visualisation lead**: [Your Name]
+- **Provenance & critique lead**: [Your Name]
+
+---
+
+## 🔍 Research Question
+
+**How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles?**
+
+We hypothesized that Western aesthetic terms (e.g., "beauty," "sublime," "glory") would cluster toward positive happiness scores, while Eastern concepts (e.g., "zen," "wabi-sabi," "impermanence") would show greater range, embracing bittersweet or contemplative emotions.
+
+---
+
+## 📊 Data Acquisition & Provenance
+
+### Source
+We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github.io/) to search for artwork titles containing aesthetic concepts from both traditions.
+
+**Search Terms:**
+- **Western** (10 terms): beauty, sublime, pastoral, romantic, ideal, grace, glory, divine, harmony, splendor
+- **Eastern** (14 terms): zen, ukiyo, wabi sabi, mono no aware, feng shui, simplicity, impermanence, emptiness, enlightenment, meditation, bamboo, cherry blossom, lotus, nirvana
+
+**Acquisition Pipeline:**
+1. Searched API for each term (max 15 results per term, `hasImages=true`)
+2. Collected metadata for each unique object
+3. Gathered 133 unique artworks (67 Western, 66 Eastern)
+4. Applied 0.3s delays between requests to respect rate limits
+
+**Date of access:** March 2025
+
+### Ethics & Limitations
+- **Privacy**: Only public artwork metadata collected; no personal data
+- **Bias**: The Met collection overrepresents Western art; non-Western cultures are underrepresented
+- **Language**: Only English titles; translations may lose nuance
+- **Temporal**: Collection reflects Western collecting priorities over centuries
+- **Interpretation**: Titles may be curatorial additions, not artist-given
+
+---
+
+## 📈 Methods
+
+### Happiness Scoring
+We used the **labMT 1.0 dataset** (Dodds et al. 2011), containing happiness scores (1-9) for 10,222 English words rated by Amazon Mechanical Turk workers.
+
+For each artwork title:
+1. Cleaned punctuation and converted to lowercase
+2. Tokenized into individual words
+3. Matched words to labMT lexicon
+4. Calculated mean happiness score for the title
+
+### Statistical Analysis
+We performed:
+- **Descriptive statistics** (mean, median, SD, range)
+- **Bootstrap confidence intervals** (10,000 resamples, 95% CI)
+- **Hypothesis testing**: t-test, Mann-Whitney U
+- **Effect size**: Cohen's d
+
+---
+
+## 📉 Results
+
+### Descriptive Statistics
+
+| Category | Count | Mean | Median | SD | Min | Max |
+|----------|-------|------|--------|-----|-----|-----|
+| Western | 60 | 5.54 | 5.49 | 0.54 | 3.83 | 6.86 |
+| Eastern | 59 | 5.56 | 5.51 | 0.64 | 3.82 | 7.92 |
+
+### Confidence Intervals (95%)
+
+| Category | Mean [95% CI] | CI Width |
+|----------|---------------|----------|
+| Western | 5.54 [5.41, 5.68] | 0.27 |
+| Eastern | 5.56 [5.40, 5.72] | 0.32 |
+
+### Statistical Tests
+
+| Test | Statistic | p-value | Significant? |
+|------|-----------|---------|--------------|
+| t-test | t = -0.14 | 0.89 | No |
+| Mann-Whitney U | U = 1763.5 | 0.97 | No |
+| Cohen's d | -0.026 | - | Negligible |
+
+---
+
+## 🖼️ Visualizations
+
+### Figure 1: Boxplot with Confidence Intervals
+![Boxplot with CI](figures/figure1_boxplot_with_ci.png)
+*Boxplot showing distribution of happiness scores. Red lines indicate means with 95% confidence intervals.*
+
+### Figure 2: Distribution Overlay
+![Distribution](figures/figure2_distribution.png)
+*Density plot showing the spread of scores. Eastern concepts (green) show wider range despite similar means.*
+
+### Figure 3: Confidence Interval Comparison
+![CI Comparison](figures/figure3_ci_comparison.png)
+*Direct comparison of means with 95% confidence intervals. Overlapping intervals confirm no significant difference.*
+
+---
+
+## 📋 Notable Examples
+
+| Title | Category | Score | Note |
+|-------|----------|-------|------|
+| "Butterflies" | Eastern | 7.92 | Highest overall |
+| Cherry Blossoms | Eastern | 7.04 | Sakura - beauty and transience |
+| Paris | Western | 6.86 | Highest Western |
+| The Death of Socrates | Eastern | 3.82 | Lowest overall |
+| War club | Western | 3.83 | Lowest Western |
+| The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |
+
+---
+
+## 💭 Interpretation
+
+### What We Found
+Despite our hypothesis, **no statistically significant difference** emerged between Eastern and Western aesthetic concepts in artwork titles. Both categories center around neutral-to-slightly-positive scores (≈5.5).
+
+However, **qualitative patterns** emerged:
+- **Eastern concepts** show greater emotional range, containing both the happiest ("Butterflies") and saddest ("Death of Socrates") titles
+- **Western concepts** cluster more tightly, suggesting more consistent emotional valence
+- The highest Eastern scores come from nature themes (butterflies, cherry blossoms) - universal beauty
+- The lowest Eastern scores involve death/impermanence - Buddhist philosophical themes
+
+### Why No Difference?
+Possible explanations:
+1. **Museum context**: The Met's collection and cataloging may Westernize Eastern art titles
+2. **Translation effect**: Original nuances lost in English titles
+3. **Universal aesthetics**: Beauty transcends cultural boundaries
+4. **Small sample**: 119 artworks may not capture full diversity
+
+---
+
+## 🔬 Critical Reflection
+
+### What We Would Trust
+- The comparison shows that **on average**, Eastern and Western aesthetic terms produce similar happiness scores in this specific context
+- The method works for detecting **extreme examples** (like "Butterflies" vs "Death of Socrates")
+
+### What We Would Not Claim
+- That Eastern and Western aesthetics are emotionally equivalent
+- That these scores represent how people from those cultures actually feel
+- That titles reflect artist intention (many are curatorial additions)
+
+### If We Rebuilt This Instrument
+- Include **multilingual titles** (original language)
+- Collect **cultural context** metadata (region, religion, period)
+- Use **multidimensional affect** model (not just happy-sad)
+- Sample more **non-Western institutions**
+
+---
+
+## 🧪 Reproducibility
+
+### Repository Structure
+
+labMT-hedonometer-project/
+├── README.md # This file
+├── requirements.txt # Dependencies
+├── src/
+│ ├── met_fetch.py # API data collection
+│ ├── score_artworks.py # labMT scoring
+│ └── comprehensive_analysis.py # Stats + figures
+├── data/
+│ ├── raw/ # Raw API output
+│ └── processed/ # Scored data
+├── figures/ # All visualizations
+└── tables/ # Summary statistics
 
 
+### How to Run
+```bash
+# 1. Clone repository
+git clone https://github.com/auroraliu0312/labMT-hedonometer-project.git
+cd labMT-hedonometer-project
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run full pipeline
+python3 src/met_fetch.py          # Collect data
+python3 src/score_artworks.py     # Add happiness scores
+python3 src/comprehensive_analysis.py  # Generate stats + figures
 
 

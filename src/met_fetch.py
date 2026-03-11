@@ -1,339 +1,266 @@
 """
-Task: Fetch and process artwork data from The Metropolitan Museum of Art API
-This script downloads artwork data, saves raw JSON, and creates a processed CSV
-for hedonometer analysis of artwork titles and descriptions.
+MET Museum API Data Acquisition
+Fetches artwork data based on emotional keywords for hedonometer analysis
 """
 
 import requests
-import json
 import time
 import pandas as pd
-from pathlib import Path
-from datetime import datetime
 import os
+from pathlib import Path
+import json
+from datetime import datetime
 
-print("=" * 60)
-print("MET MUSEUM API DATA ACQUISITION")
-print("=" * 60)
-
-# -----------------------------------------------------------------------------
-# Step 1: Set up directories
-# -----------------------------------------------------------------------------
-ROOT = Path(__file__).resolve().parent.parent
-RAW_DIR = ROOT / "data" / "raw" / "met"
-PROCESSED_DIR = ROOT / "data" / "processed"
-
+# Create directories
+RAW_DIR = Path("data/raw/met")
+PROCESSED_DIR = Path("data/processed")
 RAW_DIR.mkdir(parents=True, exist_ok=True)
 PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
-print(f"Raw data directory: {RAW_DIR}")
-print(f"Processed data directory: {PROCESSED_DIR}")
+print("=" * 70)
+print("MET MUSEUM API DATA ACQUISITION")
+print("=" * 70)
+print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+print(f"Raw data directory: {RAW_DIR.absolute()}")
+print(f"Processed data directory: {PROCESSED_DIR.absolute()}")
+print()
 
-# -----------------------------------------------------------------------------
-# Step 2: API configuration
-# -----------------------------------------------------------------------------
-BASE_URL = "https://collectionapi.metmuseum.org/public/collection/v1"
-
-# =============================================================================
-# IMPROVED: Multiple search terms for better coverage
-# =============================================================================
-# Rationale: 
-# 1. Increase sample size for statistical power
-# 2. Include emotional words likely to match labMT
-# 3. Enable comparisons across themes/themes
-# 4. Capture diverse artistic traditions
-
+# Search terms related to emotional concepts
 search_terms = [
-    "love",      # High labMT score (8.42)
-    "death",     # Low labMT score (1.54)
-    "war",       # Low labMT score (2.50)
-    "peace",     # High labMT score (7.20)
-    "nature",    # Medium labMT score (6.50)
-    "beauty",    # High labMT score (7.80)
-    "sorrow",    # Low labMT score (2.30)
-    "joy",       # High labMT score (8.16)
-    "flowers",   # Original term
-    "landscape", # Art term with nature vocabulary
-    "portrait",  # Art term with human subjects
-    "religious"  # Art term with moral/spiritual vocabulary
+    'love', 'death', 'war', 'peace', 'nature', 
+    'beauty', 'sorrow', 'joy', 'flowers', 'landscape',
+    'portrait', 'religious', 'happiness', 'sadness',
+    'victory', 'defeat', 'celebration', 'mourning'
 ]
 
-objects_per_term = 30  # Total: 12 * 30 = 360 objects
-max_total = 300  # Safety limit
+# Limit objects per term to be kind to the API
+objects_per_term = 15
+print(f"Search terms: {len(search_terms)} terms")
+print(f"Search terms list: {search_terms}")
+print(f"Objects per term: {objects_per_term}")
+print(f"Target total: {len(search_terms) * objects_per_term} objects")
+print()
 
-print(f"\n Search terms: {search_terms}")
-print(f" Objects per term: {objects_per_term}")
-print(f" Target total: {min(len(search_terms) * objects_per_term, max_total)} objects")
+# Store all object IDs we find
+all_object_ids = set()
+search_log = []
 
-# -----------------------------------------------------------------------------
-# Step 3: Search and collect object IDs
-# -----------------------------------------------------------------------------
-print("\n" + "=" * 60)
-print("Step 1: Searching for objects")
-print("=" * 60)
-
-all_object_ids = []
-search_results = {}
+print("=" * 70)
+print("STEP 1: SEARCHING FOR OBJECTS BY KEYWORD")
+print("=" * 70)
 
 for term in search_terms:
-    print(f"\n Searching for: '{term}'")
+    print(f"\n🔍 Searching for: '{term}'")
     
-    search_url = f"{BASE_URL}/search"
-    params = {
-        "q": term,
-        "hasImages": True
-    }
+    # API search endpoint - add hasImages=true to get only objects with images
+    search_url = f"https://collectionapi.metmuseum.org/public/collection/v1/search?q={term}&hasImages=true"
     
     try:
-        response = requests.get(search_url, params=params)
-        response.raise_for_status()
-        data = response.json()
-        
-        object_ids = data.get("objectIDs", [])
-        print(f"   Found {len(object_ids)} objects")
-        
-        # Take first N objects for this term
-        term_ids = object_ids[:objects_per_term]
-        all_object_ids.extend(term_ids)
-        search_results[term] = len(term_ids)
-        
-        # Be nice to API
-        time.sleep(0.5)
-        
-    except requests.exceptions.RequestException as e:
-        print(f"   Error: {e}")
-        search_results[term] = 0
+        response = requests.get(search_url)
+        if response.status_code == 200:
+            data = response.json()
+            object_ids = data.get('objectIDs', [])
+            
+            # Log the search
+            search_log.append({
+                'term': term,
+                'timestamp': datetime.now().isoformat(),
+                'total_found': len(object_ids) if object_ids else 0,
+                'selected': min(objects_per_term, len(object_ids)) if object_ids else 0
+            })
+            
+            if object_ids and len(object_ids) > 0:
+                # Take only the first N objects
+                selected = object_ids[:min(objects_per_term, len(object_ids))]
+                all_object_ids.update(selected)
+                print(f"  ✅ Found {len(object_ids)} objects, selected {len(selected)}")
+                print(f"  📊 Sample IDs: {selected[:3]}")
+            else:
+                print(f"  ⚠️  No objects found")
+        else:
+            print(f"  ❌ API error: {response.status_code}")
+            search_log.append({
+                'term': term,
+                'timestamp': datetime.now().isoformat(),
+                'error': f"HTTP {response.status_code}"
+            })
+    
+    except Exception as e:
+        print(f"  ❌ Error: {e}")
+        search_log.append({
+            'term': term,
+            'timestamp': datetime.now().isoformat(),
+            'error': str(e)
+        })
+    
+    # Be nice to the API - wait between requests
+    time.sleep(0.3)
 
-# Remove duplicates while preserving order
-seen = set()
-unique_object_ids = []
-for obj_id in all_object_ids:
-    if obj_id not in seen and obj_id is not None:
-        seen.add(obj_id)
-        unique_object_ids.append(obj_id)
+print(f"\n✅ Total unique objects collected: {len(all_object_ids)}")
 
-# Limit total
-unique_object_ids = unique_object_ids[:max_total]
+# Save search log
+search_log_df = pd.DataFrame(search_log)
+search_log_file = RAW_DIR / "met_search_log.csv"
+search_log_df.to_csv(search_log_file, index=False)
+print(f"✅ Saved search log to: {search_log_file}")
 
-print(f"\n Total unique objects found: {len(unique_object_ids)}")
-print(f" Search results by term:")
-for term, count in search_results.items():
-    print(f"  - {term}: {count} objects")
+# Save the object IDs
+object_ids_file = RAW_DIR / "met_object_ids.csv"
+pd.DataFrame({"object_id": list(all_object_ids)}).to_csv(object_ids_file, index=False)
+print(f"✅ Saved object IDs to: {object_ids_file}")
+print()
 
-# -----------------------------------------------------------------------------
-# Step 4: Download object details
-# -----------------------------------------------------------------------------
-print("\n" + "=" * 60)
-print("Step 2: Downloading object details")
-print("=" * 60)
+print("=" * 70)
+print("STEP 2: FETCHING OBJECT DETAILS")
+print("=" * 70)
+print(f"Estimated time: {len(all_object_ids) * 0.25:.1f} seconds...")
+print()
 
+# Fetch details for each object
 artworks = []
-failed_ids = []
+object_ids_list = list(all_object_ids)
+fetch_log = []
 
-for i, obj_id in enumerate(unique_object_ids):
-    print(f"  Downloading {i+1}/{len(unique_object_ids)}: Object {obj_id}", end="")
+for i, obj_id in enumerate(object_ids_list):
+    if i % 10 == 0:
+        print(f"  Progress: {i}/{len(object_ids_list)} objects fetched")
     
-    detail_url = f"{BASE_URL}/objects/{obj_id}"
+    detail_url = f"https://collectionapi.metmuseum.org/public/collection/v1/objects/{obj_id}"
     
     try:
-        detail_response = requests.get(detail_url)
-        detail_response.raise_for_status()
-        
-        artwork = detail_response.json()
-        artworks.append(artwork)
-        print(" ✅")
-        
-    except requests.exceptions.RequestException as e:
-        print(f"  Failed: {e}")
-        failed_ids.append(obj_id)
+        response = requests.get(detail_url)
+        if response.status_code == 200:
+            data = response.json()
+            
+            # Extract relevant fields
+            artwork = {
+                'object_id': data.get('objectID'),
+                'title': data.get('title'),
+                'department': data.get('department'),
+                'classification': data.get('classification'),
+                'culture': data.get('culture'),
+                'period': data.get('period'),
+                'object_date': data.get('objectDate'),
+                'object_begin': data.get('objectBeginDate'),
+                'object_end': data.get('objectEndDate'),
+                'medium': data.get('medium'),
+                'artist_name': data.get('artistDisplayName'),
+                'artist_nationality': data.get('artistNationality'),
+                'artist_begin': data.get('artistBeginDate'),
+                'artist_end': data.get('artistEndDate'),
+                'accession_year': data.get('accessionYear'),
+                'tags': json.dumps([tag['term'] for tag in data.get('tags', [])]) if data.get('tags') else None
+            }
+            artworks.append(artwork)
+            
+            fetch_log.append({
+                'object_id': obj_id,
+                'timestamp': datetime.now().isoformat(),
+                'status': 'success',
+                'has_title': bool(data.get('title'))
+            })
+        else:
+            fetch_log.append({
+                'object_id': obj_id,
+                'timestamp': datetime.now().isoformat(),
+                'status': f'error_{response.status_code}',
+                'has_title': False
+            })
+            print(f"  ⚠️  Error fetching {obj_id}: HTTP {response.status_code}")
+    except Exception as e:
+        fetch_log.append({
+            'object_id': obj_id,
+            'timestamp': datetime.now().isoformat(),
+            'status': f'error_{str(e)[:50]}',
+            'has_title': False
+        })
+        print(f"  ❌ Error fetching {obj_id}: {e}")
     
+    # Rate limiting
     time.sleep(0.2)
 
-print(f"\n Successfully downloaded: {len(artworks)} objects")
-print(f" Failed downloads: {len(failed_ids)} objects")
+print(f"\n✅ Successfully fetched {len(artworks)} artworks")
 
-# -----------------------------------------------------------------------------
-# Step 5: Save raw data with provenance
-# -----------------------------------------------------------------------------
-print("\n" + "=" * 60)
-print("Step 3: Saving raw data")
-print("=" * 60)
+# Save fetch log
+fetch_log_df = pd.DataFrame(fetch_log)
+fetch_log_file = RAW_DIR / "met_fetch_log.csv"
+fetch_log_df.to_csv(fetch_log_file, index=False)
+print(f"✅ Saved fetch log to: {fetch_log_file}")
 
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-raw_filename = f"met_objects_multi_{timestamp}.json"
-raw_path = RAW_DIR / raw_filename
-
-with open(raw_path, "w", encoding="utf-8") as f:
-    json.dump(artworks, f, indent=2, ensure_ascii=False)
-
-print(f"Raw data saved to: {raw_path}")
-print(f"File size: {raw_path.stat().st_size / 1024:.1f} KB")
-
-# -----------------------------------------------------------------------------
-# Step 6: Create processed DataFrame
-# -----------------------------------------------------------------------------
-print("\n" + "=" * 60)
-print("Step 4: Creating processed dataset")
-print("=" * 60)
-
-if not artworks:
-    print("No artworks downloaded. Exiting.")
-    exit()
-
+# Create DataFrame
 df = pd.DataFrame(artworks)
-print(f"Total columns in raw data: {len(df.columns)}")
 
-# Select columns relevant for text analysis
-text_columns = ['title', 'artistDisplayName', 'objectDate', 'medium', 'classification', 
-                'department', 'culture', 'period', 'dynasty', 'reign', 'objectName']
+# Save raw data
+raw_file = RAW_DIR / "met_artworks_raw.csv"
+df.to_csv(raw_file, index=False)
+print(f"✅ Saved raw data to: {raw_file}")
 
-keep_cols = [col for col in text_columns if col in df.columns]
-df_processed = df[keep_cols].copy()
+print("\n" + "=" * 70)
+print("STEP 3: PROCESSING DATA")
+print("=" * 70)
 
-# Add metadata
-df_processed['object_id'] = df.get('objectID', range(len(df)))
-df_processed['is_public_domain'] = df.get('isPublicDomain', False)
-df_processed['accession_year'] = df.get('accessionYear', None)
+# Basic cleaning for processed data
+df_processed = df.copy()
+initial_rows = len(df_processed)
 
-# Create analysis text
-df_processed['analysis_text'] = df_processed['title'].fillna('') + ' ' + df_processed['medium'].fillna('')
-df_processed['text_length'] = df_processed['analysis_text'].str.len()
+# Remove rows with no title
+df_processed = df_processed[df_processed['title'].notna()]
+print(f"✅ Removed {initial_rows - len(df_processed)} rows with missing titles")
 
-# Add search term tag (for grouping analysis)
-def tag_search_term(title):
-    title_lower = str(title).lower()
-    for term in search_terms:
-        if term in title_lower:
-            return term
-    return 'other'
+# Create century column from object_begin
+def get_century(year):
+    if pd.isna(year) or year <= 0:
+        return None
+    return (int(year) // 100) * 100
 
-df_processed['search_term'] = df_processed['title'].apply(tag_search_term)
+df_processed['century'] = df_processed['object_begin'].apply(get_century)
+century_count = df_processed['century'].notna().sum()
+print(f"✅ Created century field for {century_count} artworks")
 
-print(f"\nProcessed dataset shape: {df_processed.shape}")
-print(f"\nArtworks by search term:")
-print(df_processed['search_term'].value_counts())
+# Simple title cleaning (remove punctuation)
+df_processed['title_clean'] = df_processed['title'].str.replace(r'[^\w\s]', '', regex=True)
+print(f"✅ Created cleaned titles for hedonometer scoring")
 
-# -----------------------------------------------------------------------------
-# Step 7: Save processed data
-# -----------------------------------------------------------------------------
-processed_filename = f"met_artworks_multi_{timestamp}.csv"
-processed_path = PROCESSED_DIR / processed_filename
+# Count missing values for documentation
+missing_counts = df_processed.isna().sum().to_dict()
 
-df_processed.to_csv(processed_path, index=False)
-print(f"\n💾 Processed data saved to: {processed_path}")
+# Save processed data
+processed_file = PROCESSED_DIR / "met_artworks_processed.csv"
+df_processed.to_csv(processed_file, index=False)
+print(f"✅ Saved processed data to: {processed_file}")
 
-# -----------------------------------------------------------------------------
-# Step 8: Create data dictionary
-# -----------------------------------------------------------------------------
-print("\n" + "=" * 60)
-print("Step 5: Creating data dictionary")
-print("=" * 60)
+print("\n" + "=" * 70)
+print("DATA SUMMARY")
+print("=" * 70)
+print(f"Total artworks: {len(df_processed)}")
+print(f"Total columns: {len(df_processed.columns)}")
+print(f"Columns: {', '.join(df_processed.columns)}")
+print(f"\n📊 Department distribution:")
+dept_stats = df_processed['department'].value_counts().head(5)
+for dept, count in dept_stats.items():
+    print(f"  • {dept}: {count} artworks")
 
-data_dict = pd.DataFrame({
-    'column': df_processed.columns,
-    'dtype': df_processed.dtypes.astype(str),
-    'non_null_count': df_processed.count().values,
-    'example': [df_processed[col].iloc[0] if len(df_processed) > 0 else None for col in df_processed.columns]
-})
+print(f"\n📊 Century distribution:")
+century_stats = df_processed['century'].value_counts().head(5)
+for century, count in century_stats.items():
+    print(f"  • {century}s: {count} artworks")
 
-descriptions = {
-    'title': 'Title of the artwork',
-    'artistDisplayName': 'Name of the artist',
-    'objectDate': 'Date or period when object was created',
-    'medium': 'Materials used in the artwork',
-    'classification': 'Art classification',
-    'department': 'Museum department',
-    'culture': 'Cultural origin',
-    'period': 'Historical period',
-    'dynasty': 'Dynasty (for Chinese/Egyptian art)',
-    'reign': 'Reign of ruler',
-    'objectName': 'Type of object',
-    'object_id': 'Unique identifier from MET',
-    'is_public_domain': 'Whether artwork is in public domain',
-    'accession_year': 'Year museum acquired the object',
-    'analysis_text': 'Combined text for hedonometer analysis',
-    'text_length': 'Length of analysis text in characters',
-    'search_term': 'Term used to discover this artwork'
-}
+print(f"\n📊 Culture distribution:")
+culture_stats = df_processed['culture'].value_counts().head(5)
+for culture, count in culture_stats.items():
+    print(f"  • {culture}: {count} artworks")
 
-data_dict['description'] = data_dict['column'].map(descriptions).fillna('No description')
-dict_path = PROCESSED_DIR / "met_data_dictionary.csv"
-data_dict.to_csv(dict_path, index=False)
-print(f"Data dictionary saved to: {dict_path}")
+print(f"\n📊 Missing data summary:")
+for col in ['culture', 'artist_name', 'artist_nationality', 'period']:
+    missing = df_processed[col].isna().sum()
+    pct = (missing / len(df_processed)) * 100
+    print(f"  • {col}: {missing} missing ({pct:.1f}%)")
 
-# -----------------------------------------------------------------------------
-# Step 9: Provenance and ethics statement
-# -----------------------------------------------------------------------------
-print("\n" + "=" * 60)
-print("Step 6: Data provenance")
-print("=" * 60)
-
-provenance = f"""
-MET MUSEUM DATA ACQUISITION SUMMARY
-====================================
-Download Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-Script: fetch_met_data.py
-API: Metropolitan Museum of Art Collection API
-
-SEARCH METHODOLOGY
-------------------
-Rationale: Multiple search terms were used to:
-1. Increase sample size for statistical power
-2. Include emotional words likely to match labMT (love, death, joy, sorrow)
-3. Enable comparisons across themes (nature vs religious vs war)
-4. Capture diverse artistic traditions
-
-Search terms: {search_terms}
-Objects per term: {objects_per_term}
-Total unique objects requested: {len(unique_object_ids)}
-Successfully downloaded: {len(artworks)}
-Failed downloads: {len(failed_ids)}
-
-SAMPLE CHARACTERISTICS
-----------------------
-Artworks by search term:
-{df_processed['search_term'].value_counts().to_string()}
-
-Date range: {df_processed['objectDate'].min()} to {df_processed['objectDate'].max()}
-Unique artists: {df_processed['artistDisplayName'].nunique()}
-Unique departments: {df_processed['department'].nunique() if 'department' in df_processed.columns else 'N/A'}
-
-LIMITATIONS
------------
-- Only includes objects with images
-- Limited to first {objects_per_term} results per term
-- Search terms may bias toward certain artistic traditions
-- Text may contain historical language and terminology
-- Not representative of all museum collections
-"""
-
-print(provenance)
-
-provenance_path = PROCESSED_DIR / "met_data_provenance.txt"
-with open(provenance_path, "w") as f:
-    f.write(provenance)
-print(f"Provenance saved to: {provenance_path}")
-
-# -----------------------------------------------------------------------------
-# Step 10: Preview
-# -----------------------------------------------------------------------------
-print("\n" + "=" * 60)
-print("DATA PREVIEW")
-print("=" * 60)
-
-print("\nFirst 5 artworks:")
-print(df_processed[['title', 'artistDisplayName', 'search_term', 'text_length']].head())
-
-print(f"\nText length statistics:")
-print(df_processed['text_length'].describe())
-
-print("\n" + "=" * 60)
-print("MET DATA ACQUISITION COMPLETE!")
-print("=" * 60)
-print("\nNext steps:")
-print("1. Run hedonometer scoring on 'analysis_text' column")
-print("2. Compare scores across search terms, departments, or periods")
-print("3. Create visualizations of your findings")
+print("\n" + "=" * 70)
+print("✅ DATA ACQUISITION COMPLETE")
+print("=" * 70)
+print("\nNext steps: Run scoring with labMT word list")
+print("> python src/02_score_titles.py")
 
 
 

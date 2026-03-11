@@ -414,13 +414,13 @@ Additionally, all interpretive claims, methodological decisions, and critical re
 # Mini-Project 2: Inferring Happiness Dynamics in Media
 ## Eastern vs. Western Aesthetic Concepts in Met Museum Artwork Titles
 
-### 👥 Team Roles
-- **Repo & workflow lead**: [Your Name]
-- **Data acquisition lead**: [Your Name]
-- **Measurement lead**: [Your Name]  
-- **Stats & sampling lead**: [Your Name]
-- **Visualisation lead**: [Your Name]
-- **Provenance & critique lead**: [Your Name]
+## Team roles:
+1. Repo & workflow lead: Anny Li
+2. Data wrangler: Mohan Liu
+3. Quantitative analyst: Mohan Liu, Anny Li
+4. Qualitative / close-reading lead: Angelina Roman Rosales
+5. Provenance & critique lead: Simone van Moerkerk
+6. Editor & figure curator: Jaena Danaram
 
 ---
 

@@ -118,6 +118,23 @@ print("Duplicated words:\n", duplicated_words)
 sample_rows = df.sample(15, random_state=42)  # English comment: Randomly sample 15 rows to review data
 print("Random sample of 15 rows:\n", sample_rows)
 
+cols_to_show = ['word', 'happiness_rank', 'happiness_average', 
+                'happiness_standard_deviation', 'twitter_rank',
+                'google_rank', 'nyt_rank', 'lyrics_rank']
+
+sample_table = sample_rows[cols_to_show].copy()
+
+
+sample_table.to_csv('tables/random_sample_15_rows.csv', index=False)
+
+
+for idx, row in sample_table.iterrows():
+    google = f"{row['google_rank']:.1f}" if pd.notna(row['google_rank']) else "NaN"
+    nyt = f"{row['nyt_rank']:.1f}" if pd.notna(row['nyt_rank']) else "NaN"
+    lyrics = f"{row['lyrics_rank']:.1f}" if pd.notna(row['lyrics_rank']) else "NaN"
+    
+    print(f"| {row['word']} | {int(row['happiness_rank'])} | {row['happiness_average']:.2f} | {google} | {nyt} | {lyrics} |")
+
 # Identify the 10 most positive words
 top_10_positive = df.nlargest(10, "happiness_average")[["word", "happiness_average"]]  # English comment: Top 10 highest happiness scores
 print("Top 10 positive words:\n", top_10_positive)
@@ -126,8 +143,9 @@ print("Top 10 positive words:\n", top_10_positive)
 bottom_10_negative = df.nsmallest(10, "happiness_average")[["word", "happiness_average"]]  # English comment: Top 10 lowest happiness scores
 print("Top 10 negative words:\n", bottom_10_negative)
 
+
 # -----------------------------------------------------------------------------
-# 2. QUANTITATIVE EXPLORATION
+# 2.1 Distribution of happiness_average (Single Enhanced Histogram)
 # -----------------------------------------------------------------------------
 
 print_section("2.1 Distribution of happiness_average")
@@ -144,7 +162,7 @@ summary_stats = pd.DataFrame(
             "p95 (95th percentile)",
         ],
         "value": [
-            float(h.shape[0]), #row
+            float(h.shape[0]),
             float(h.mean()),
             float(h.median()),
             float(h.std()),
@@ -154,22 +172,126 @@ summary_stats = pd.DataFrame(
     }
 )
 
-print(summary_stats.to_string(index=False)) #save table
+print(summary_stats.to_string(index=False))
 save_csv(summary_stats, "happiness_average_summary_stats.csv", index=False)
 
-# Histogram：how many words in each percentile, not cumulative
-plt.figure()
-plt.hist(h, bins=40)
-plt.title("Distribution of happiness_average (labMT 1.0)")
-plt.xlabel("happiness_average (1–9)")
-plt.ylabel("number of words")
+# -----------------------------------------------------------------------------
+# Find the actual words for extremes
+# -----------------------------------------------------------------------------
+most_negative_word = df.loc[df['happiness_average'].idxmin(), 'word']
+most_positive_word = df.loc[df['happiness_average'].idxmax(), 'word']
+
+print(f"Most negative word: '{most_negative_word}' with score {h.min():.2f}")
+print(f"Most positive word: '{most_positive_word}' with score {h.max():.2f}")
+
+# -----------------------------------------------------------------------------
+# SINGLE ENHANCED HISTOGRAM with all annotations
+# -----------------------------------------------------------------------------
+plt.figure(figsize=(14, 10))
+
+# Calculate key values
+p05 = h.quantile(0.05)      # 3.18
+p95 = h.quantile(0.95)      # 7.08
+min_val = h.min()            # 1.30
+max_val = h.max()            # 8.50
+mean_val = h.mean()          # 5.38
+median_val = h.median()      # 5.44
+
+# Plot histogram
+n, bins, patches = plt.hist(h, bins=40, color='skyblue', edgecolor='black', alpha=0.7)
+
+# Color the tails differently to highlight them
+for i, (left, right) in enumerate(zip(bins[:-1], bins[1:])):
+    if left < p05:  # Negative tail
+        patches[i].set_facecolor('lightcoral')
+        patches[i].set_alpha(0.8)
+    elif right > p95:  # Positive tail
+        patches[i].set_facecolor('lightgreen')
+        patches[i].set_alpha(0.8)
+
+# Add vertical lines for key percentiles
+plt.axvline(p05, color='red', linestyle='--', linewidth=2.5, alpha=0.8,
+            label=f'5th percentile: {p05:.2f} (start of negative tail)')
+plt.axvline(p95, color='green', linestyle='--', linewidth=2.5, alpha=0.8,
+            label=f'95th percentile: {p95:.2f} (start of positive tail)')
+
+# Add vertical lines for extreme values
+plt.axvline(min_val, color='darkred', linestyle=':', linewidth=2.5, alpha=0.8,
+            label=f'Minimum: {min_val:.2f} (most negative word)')
+plt.axvline(max_val, color='darkgreen', linestyle=':', linewidth=2.5, alpha=0.8,
+            label=f'Maximum: {max_val:.2f} (most positive word)')
+
+# Add mean and median for reference
+plt.axvline(mean_val, color='blue', linestyle='-', linewidth=2, alpha=0.6,
+            label=f'Mean: {mean_val:.2f}')
+plt.axvline(median_val, color='purple', linestyle='-', linewidth=2, alpha=0.6,
+            label=f'Median: {median_val:.2f}')
+
+# Add shaded regions for tails
+plt.axvspan(1, p05, alpha=0.1, color='red')
+plt.axvspan(p95, 9, alpha=0.1, color='green')
+
+# Add annotations for the words
+max_count = max(n)
+
+# Annotate most negative word
+plt.annotate(f'Most negative: "{most_negative_word}"\nScore: {min_val:.2f}',
+             xy=(min_val, 5), xytext=(min_val - 0.8, max_count * 0.8),
+             arrowprops=dict(arrowstyle='->', color='darkred', lw=2),
+             fontsize=11, color='darkred',
+             bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.9))
+
+# Annotate most positive word
+plt.annotate(f'Most positive: "{most_positive_word}"\nScore: {max_val:.2f}',
+             xy=(max_val, 5), xytext=(max_val + 0.5, max_count * 0.7),
+             arrowprops=dict(arrowstyle='->', color='darkgreen', lw=2),
+             fontsize=11, color='darkgreen',
+             bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.9))
+
+# Add text box with your exact finding
+finding_text = (
+    f"KEY FINDING:\n"
+    f"• Negative tail width: 1 to {p05:.2f} = {p05-1:.2f} points\n"
+    f"• Positive tail width: {p95:.2f} to 9 = {9-p95:.2f} points\n"
+    f"• Negative tail is {(p05-1) - (9-p95):.2f} points LONGER\n"
+    f"  → More mildly negative words in vocabulary\n\n"
+    f"• Most negative word '{most_negative_word}': {min_val:.2f}\n"
+    f"  Distance from mean: {mean_val-min_val:.2f}\n"
+    f"• Most positive word '{most_positive_word}': {max_val:.2f}\n"
+    f"  Distance from mean: {max_val-mean_val:.2f}\n"
+    f"• Positive extreme is {(max_val-mean_val) - (mean_val-min_val):.2f} points FURTHER\n"
+    f"  → Most positive words are more extremely positive"
+)
+
+plt.text(0.98, 0.98, finding_text, transform=plt.gca().transAxes,
+         fontsize=10, verticalalignment='top', horizontalalignment='right',
+         bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.95),
+         linespacing=1.5)
+
+# Title and labels
+plt.title('Figure 1: Distribution of Happiness Scores\nwith Highlighted Tails and Extremes', 
+          fontsize=16, fontweight='bold', pad=20)
+plt.xlabel('Happiness Score (1-9)', fontsize=13, labelpad=10)
+plt.ylabel('Number of Words', fontsize=13, labelpad=10)
+plt.legend(loc='upper left', fontsize=9, framealpha=0.95)
+plt.grid(axis='y', alpha=0.3, linestyle='--')
+
 plt.tight_layout()
-save_figure("happiness_average_hist.png")
+save_figure("happiness_distribution_enhanced.png")
 plt.close()
 
 print_section("2.2 Disagreement: happiness_standard_deviation")
 
+<<<<<<< HEAD
 show_cols = ["word", "happiness_average", "happiness_standard_deviation"]
+=======
+print_section("2.2 Disagreement: happiness_standard_deviation")
+
+# ---------------------------
+# 2.2 Disagreement: which words are “contested”?
+# ---------------------------
+print("\n--- Disagreement analysis (average vs standard deviation) ---")
+>>>>>>> eea16d636ce3100fbe22a4674e3489e792846623
 
 # Scatter: happiness score vs standard deviation
 plt.figure()
@@ -446,6 +568,7 @@ plt.close()
 # 3. Qualitative exploration: close reading the lexicon as a cultural artifact
 # -----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 """
 Script 3: Qualitative Exploration - Building a Word Exhibit
 Run this after data_analysis.py
@@ -619,3 +742,90 @@ print("✅ Copy the tables above and paste them into your README.md")
 print("="*50)
 
 
+=======
+# ---------------------------
+# 3.1 Build a small “exhibit” of words (20 words)
+# ---------------------------
+print("\n--- 3.1 Exhibit of words (20-word table) ---")
+
+    # 5 very positive / 5 very negative
+very_positive = (
+        df.sort_values("happiness_average", ascending=False)
+        .head(5)
+        .assign(category="very_positive")
+    )
+
+very_negative = (
+        df.sort_values("happiness_average", ascending=True)
+        .head(5)
+        .assign(category="very_negative")
+    )
+
+    # 5 highly contested (highest std dev)
+    # (Optional: avoid overlap with positive/negative by filtering them out)
+exclude = set(very_positive["word"]) | set(very_negative["word"])
+
+highly_contested = (
+        df[~df["word"].isin(exclude)]
+        .sort_values("happiness_standard_deviation", ascending=False)
+        .head(5)
+        .assign(category="highly_contested")
+    )
+
+    # 5 “weird" or "culturally loaded" words
+
+weird_words = [
+        "capitalism",
+        "churches",
+        "whiskey",
+        "porn",
+        "weekend"
+    ]
+
+weird = (
+        df[df["word"].isin(weird_words)]
+        .copy()
+        .assign(category="weird_or_culturally_loaded")
+    )
+
+
+if len(weird) < 5:
+        missing = [w for w in weird_words if w not in set(df["word"])]
+        print("WARNING: These weird_words were not found in the dataset:", missing)
+
+# Combine into one exhibit table
+exhibit = pd.concat([very_positive, very_negative, highly_contested, weird], ignore_index=True)
+
+# Keep the most relevant columns for the exhibit
+exhibit = exhibit[["category", "word", "happiness_average", "happiness_standard_deviation",
+                    "twitter_rank", "google_rank", "nyt_rank", "lyrics_rank"]]
+
+print("\nExhibit table (preview):")
+print(exhibit)
+
+# Save to tables/
+from pathlib import Path
+TABLES_DIR = Path("tables")
+TABLES_DIR.mkdir(parents=True, exist_ok=True)
+out_path = TABLES_DIR / "exhibit_words.csv"
+exhibit.to_csv(out_path, index=False)
+print(f"\nSaved exhibit table to: {out_path}")
+
+# -----------------------------------------------------------------------------
+# Save labMT word list for future use
+# -----------------------------------------------------------------------------
+print("\nSaving labMT word list for future use...")
+
+# Create a clean version with just word and happiness score
+labMT_clean = df[['word', 'happiness_average']].copy()
+
+# Save to processed folder
+labMT_clean_path = Path("data/processed") / "labMT_cleaned.csv"
+labMT_clean.to_csv(labMT_clean_path, index=False)
+print(f"Saved labMT word list to: {labMT_clean_path}")
+
+# -----------------------------------------------------------------------------
+# Done
+# -----------------------------------------------------------------------------
+print_section("Done")
+>>>>>>> eea16d636ce3100fbe22a4674e3489e792846623

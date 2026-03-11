@@ -87,13 +87,9 @@ The words with the highest happiness scores are logical and correspond to highly
 | laughs    | 8.18            |
 | joy       | 8.16            |
 
-<<<<<<< HEAD
 Interpretative Paragraph: The very positive words reveal what English speakers collectively associate with happiness. "Laughter," "happiness," and "love" represent universal human experiences that transcend cultural boundaries—this explains their presence across multiple corpora. Interestingly, "laughed" (past tense) scores slightly lower than "laughter" (noun), suggesting that the abstract concept of joy feels more positive than specific instances. These words are used by all communities—from journalists to songwriters to Twitter users—which explains why they appear in all four corpora. The low standard deviations (0.93-1.16) indicate strong consensus: people generally agree these words feel happy, regardless of context.
 
-# Top 10 negative words:
-=======
 ## Top 10 negative words:
->>>>>>> eea16d636ce3100fbe22a4674e3489e792846623
 The words with the lowest happiness scores correspond to negative or sensitive terms.
 
 | word       | happiness_average |
@@ -394,12 +390,7 @@ git clone https://github.com/auroraliu0312/labMT-hedonometer-project
  python3 src/data_analysis.py
 
  5. What gets generated?
-<<<<<<< HEAD
-
-After running, look in/Users/luciana/Downloads/labMT-hedonometer-project-main/.venv/bin/python /Users/luciana/Downloads/labMT-hedonometer-project-main/labMT-hedonometer-project/src/data_analysis.py
-=======
  After running, look in:
->>>>>>> eea16d636ce3100fbe22a4674e3489e792846623
 - `figures/` — PNG plots
 - `tables/` — CSV summary tables
 
@@ -428,25 +419,13 @@ Additionally, all interpretive claims, methodological decisions, and critical re
 # Mini-Project 2: Inferring Happiness Dynamics in Media
 ## Eastern vs. Western Aesthetic Concepts in Met Museum Artwork Titles
 
-## Team roles:
-1. Repo & workflow lead: Anny Li
-2. Data wrangler: Mohan Liu
-3. Quantitative analyst: Mohan Liu, Anny Li
-4. Qualitative / close-reading lead: Angelina Roman Rosales
-5. Provenance & critique lead: Simone van Moerkerk
-6. Editor & figure curator: Jaena Danaram
-
----
-
-## 🔍 Research Question
+## Research Question
 
 **How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles?**
 
 We hypothesized that Western aesthetic terms (e.g., "beauty," "sublime," "glory") would cluster toward positive happiness scores, while Eastern concepts (e.g., "zen," "wabi-sabi," "impermanence") would show greater range, embracing bittersweet or contemplative emotions.
 
----
-
-## 📊 Data Acquisition & Provenance
+## Data Acquisition & Provenance
 
 ### Source
 We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github.io/) to search for artwork titles containing aesthetic concepts from both traditions.
@@ -470,29 +449,114 @@ We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github
 - **Temporal**: Collection reflects Western collecting priorities over centuries
 - **Interpretation**: Titles may be curatorial additions, not artist-given
 
----
+## Happiness Scoring
 
-## 📈 Methods
+### How to Calculated Happiness Scores
 
-### Happiness Scoring
-We used the **labMT 1.0 dataset** (Dodds et al. 2011), containing happiness scores (1-9) for 10,222 English words rated by Amazon Mechanical Turk workers.
+We followed the standard method from Dodds et al. (2011) to measure how "happy" each artwork title is. Here's how it works:
 
-For each artwork title:
-1. Cleaned punctuation and converted to lowercase
-2. Tokenized into individual words
-3. Matched words to labMT lexicon
-4. Calculated mean happiness score for the title
+For each artwork title, we carry on the following scoring process:
+1. Break the title into individual words
+2. Look up each word in the labMT dictionary (labMT_cleaned.csv)
+3. Take the average of all the words that we found in the dictionary
 
-### Statistical Analysis
-We performed:
-- **Descriptive statistics** (mean, median, SD, range)
-- **Bootstrap confidence intervals** (10,000 resamples, 95% CI)
-- **Hypothesis testing**: t-test, Mann-Whitney U
-- **Effect size**: Cohen's d
+**Simple example:** 
+If a title contains the words "love" (score 8.42) and "painting" (score 5.20), its happiness score would be:
+(8.42 + 5.20) ÷ 2 = 6.81
 
----
+**Important notes on scoring methdology:**
+- Words that aren't in the labMT dictionary are simply ignored. They don't raise or lower the score. This is the standard approach (Dodds et al., 2011) because assigning arbitrary scores to unknown words would introduce bias. If an artwork title contains many specialized art terms or non-English words, its happiness score is based on fewer words. This doesn't make the score wrong, but it does mean we're measuring only part of the text. The coverage metric helps us track this.
 
-## 📉 Results
+- If a word appears multiple times, it counts each time, so repeated words have more influence. Repetition is meaningful in language. For instance, saying "love, love, love" expresses stronger emotion than saying "love" once. Our method preserves this natural emphasis.
+
+- Coverage is the percentage of words in a title that were successfully matched to the labMT dictionary. Coverage tells us how much of each text we're actually measuring. A high coverage score (like 80%) is based on most of the words and can be trusted. A low coverage score (like 30%) might miss important emotional content carried by specialized vocabulary. When comparing Eastern and Western artworks, we need to check whether one group systematically has lower coverage – if so, any observed differences might reflect dictionary coverage rather than real emotional differences.
+
+### Tokenization
+
+Before scoring, We cleaned each title to make sure words would match the dictionary properly:
+
+1. **Lowercase everything** – so "Love" and "love" match the same dictionary entry
+2. **Remove punctuation** – commas, periods, and quotes are replaced with spaces
+3. **Remove extra spaces** – so "  hello   world " becomes "hello world"
+4. **Split into words** – using simple spaces as dividers
+
+**Implications:**
+- We kept every word that matched the labMT dictionary. No words were filtered out, even common ones like "the", "and", or "of" that have neutral scores around 5. If I had removed neutral word, Scores would be pulled toward extremes (higher highs, lower lows). Moreover, short titles lose most words may not have a score. For instance, a title containing "The Garden of Earthly Delights" has 5 words, 3 of which are neutral ("the", "of", "delights" is neutral). Removing neutral words would leave only "garden" and "earthly" – losing 60% of the text and potentially misrepresenting the title's emotional tone. On the other hand, different titles affected differently. Some titles have more neutral words than others may lead to unfair comparasion. Therefore, by keeping all words, we are measuring the actual language used in titles, not an artificially filtered version. This means scores reflect real word choices, including the subtle emotional baseline set by neutral words.
+
+### Scoring Results
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Total artworks | 133 | Complete dataset of Eastern and Western aesthetic concepts |
+| Artworks with scores | 120 (90.2%) | Most titles contained at least some everyday English words |
+| Artworks with no matches | 13 | These titles use specialized art terminology or non-English words exclusively |
+
+**Happiness score distribution:**
+- **Average score:** 5.56
+- **Typical range (one standard deviation):** 4.98 to 6.15
+- **Lowest score:** 3.82
+- **Highest score:** 7.92
+- **Middle (median):** 5.51
+
+- The average happiness score of 5.56 is slightly above the neutral midpoint of 5, suggesting that artwork titles tend to lean mildly positive in their word choice. The range from 3.82 to 7.92 shows that while some titles use distinctly negative language, others can be quite positive, nevertheless, the extreme scores are rare. The fact that mean (5.56) and median (5.51) are very close tells us the scores are roughly symmetric, not skewed by outliers.
+
+### Coverage Analysis: How Much of Each Title Got Measured?
+
+Coverage tells us what percentage of words in each title were actually found in the labMT dictionary. This matters because low coverage means a score is based on very few words and may be less reliable.
+
+| Coverage Metric | Value | Interpretation |
+|-----------------|-------|----------------|
+| Mean coverage | 62.9% | On average, about two-thirds of each title's words were measurable |
+| Median coverage | 66.7% | Most titles had even better coverage – half of them exceeded 67% |
+| Artworks with no matches | 13 | These 13 titles (9.8%) couldn't be scored at all |
+
+- The high median coverage (66.7%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 13 unscorable titles are worth examining separately. They likely contain specialized terminology (like "statuette" or "verso") that a general dictionary misses.
+
+### Eastern vs Western: A First Look
+
+| Category | Count | Mean Score | Std Dev | Interpretation |
+|----------|-------|------------|---------|----------------|
+| Eastern concepts | 59 | 5.566 | 0.631 | Slightly happier, more varied language |
+| Western concepts | 61 | 5.551 | 0.543 | Slightly less happy, more consistent language |
+
+- The Eastern artworks scored marginally higher on average (5.566 vs 5.551), but the difference is tiny – only 0.015 points. More interesting is the standard deviation. Eastern titles show more variation (0.631 vs 0.543), meaning their language ranges more widely from very positive to less positive. Western titles are more clustered around the average. This could reflect genuine differences in how Eastern and Western aesthetic concepts are described, or it could be an artifact of the specific search terms used to collect the data. A more rigorous statistical test would be needed to determine if this difference is meaningful.
+
+### Words That Didn't Match: What the labMT Misses
+
+The most common words that appeared in titles but weren't in my dictionary tell us about the limits of applying a general sentiment tool to art historical texts:
+
+| Word | Frequency | Word Type | Why It's Missing |
+|------|-----------|-----------|------------------|
+| shrine | 4 | Religious place | Too specific, not common in everyday English |
+| sphinx | 3 | Mythological figure | Proper noun / mythological term |
+| statuette | 3 | Art object | Art-specific vocabulary |
+| mono | 3 | Japanese word | Non-English |
+| blossoms | 3 | Nature | Should be in labMT? Possibly a preprocessing issue |
+| bodhisattva | 3 | Buddhist deity | Religious/cultural term |
+| garcini | 2 | Proper name | Person's name |
+| verso | 2 | Art term | Art-specific (back of a page) |
+| skeleton | 2 | Anatomy | Common word? Should be in labMT – worth checking |
+| baptist | 2 | Religious figure | Religious term |
+
+**OOV Implications:**
+
+The labMT lexicon was designed for general English, predictably misses several categories of words that matter in art historical texts:
+
+1. **Art-specific terminology** (statuette, verso) – these are precisely the words that might carry aesthetic meaning, yet they're invisible to our measurement
+2. **Religious and cultural concepts** (shrine, bodhisattva, baptist) – central to understanding many artworks, but absent from a secular, general-purpose dictionary
+3. **Non-English words** (mono) – art historical discourse often incorporates foreign terms
+4. **Proper names** (garcini) – artists, patrons, and historical figures are everywhere in titles
+
+- When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they might be systematically underrepresented in our measurements. The coverage statistics help us identify when this is happening.
+
+### Data Availability
+
+All scored data and summaries have been saved to:
+- `data/processed/met_aesthetic_scored.csv` – Complete dataset with happiness scores for every artwork
+- `tables/met_aesthetic_summary.csv` – Summary statistics in table format
+- `tables/met_aesthetic_oov.csv` – The list of words not found in labMT for further analysis
+
+## Results
 
 ### Descriptive Statistics
 
@@ -518,7 +582,7 @@ We performed:
 
 ---
 
-## 🖼️ Visualizations
+## Visualizations
 
 ### Figure 1: Boxplot with Confidence Intervals
 ![Boxplot with CI](figures/figure1_boxplot_with_ci.png)
@@ -534,7 +598,7 @@ We performed:
 
 ---
 
-## 📋 Notable Examples
+## Notable Examples
 
 | Title | Category | Score | Note |
 |-------|----------|-------|------|
@@ -547,7 +611,7 @@ We performed:
 
 ---
 
-## 💭 Interpretation
+## Interpretation
 
 ### What We Found
 Despite our hypothesis, **no statistically significant difference** emerged between Eastern and Western aesthetic concepts in artwork titles. Both categories center around neutral-to-slightly-positive scores (≈5.5).
@@ -567,7 +631,7 @@ Possible explanations:
 
 ---
 
-## 🔬 Critical Reflection
+## Critical Reflection
 
 ### What We Would Trust
 - The comparison shows that **on average**, Eastern and Western aesthetic terms produce similar happiness scores in this specific context
@@ -586,7 +650,7 @@ Possible explanations:
 
 ---
 
-## 🧪 Reproducibility
+## Reproducibility
 
 ### Repository Structure
 
@@ -604,7 +668,6 @@ labMT-hedonometer-project/
 └── tables/ # Summary statistics
 
 
-<<<<<<< HEAD
 We selected 25 words across five categories for qualitative analysis, revealing how context, community, and culture influence emotional valence.
 
 ### Very Positive Words: laughter, happiness, love, happy, laughed
@@ -743,12 +806,10 @@ The dataset was published as supplementary material with Dodds et al. (2011) in 
 
 # 1. Clone the repository
 git clone https://github.com/your-username/labMT-hedonometer-project.git
-=======
 ### How to Run
 ```bash
 # 1. Clone repository
 git clone https://github.com/auroraliu0312/labMT-hedonometer-project.git
->>>>>>> eea16d636ce3100fbe22a4674e3489e792846623
 cd labMT-hedonometer-project
 
 # 2. Install dependencies
@@ -760,22 +821,3 @@ python3 src/score_artworks.py     # Add happiness scores
 python3 src/comprehensive_analysis.py  # Generate stats + figures
 
 
-<<<<<<< HEAD
-## Credits
-
-- Team roles:
-1. Repo & workflow lead
-2. Data wrangler
-3. Quantitative analyst
-4. Qualitative / close-reading lead
-5. Provenance & critique lead
-6. Editor & figure curator
-
-- Citation of papers:
-Dodds, Peter Sheridan, Kameron Decker Harris, Isabel M. Kloumann, Catherine A. Bliss, and Christopher M. Danforth. 2011. “Temporal Patterns of Happiness and Information in a Global Social Network: Hedonometrics and Twitter.” Edited by Johan Bollen. PLoS ONE 6 (12): e26752. https://doi.org/10.1371/journal.pone.0026752.
-
-## Academic integrity & AI note
-
-
-=======
->>>>>>> eea16d636ce3100fbe22a4674e3489e792846623

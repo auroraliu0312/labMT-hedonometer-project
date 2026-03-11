@@ -169,47 +169,43 @@ plt.close()
 
 print_section("2.2 Disagreement: happiness_standard_deviation")
 
-# ---------------------------
-# 2.2 Disagreement: which words are “contested”?
-# ---------------------------
-print("\n--- Disagreement analysis (average vs standard deviation) ---")
+show_cols = ["word", "happiness_average", "happiness_standard_deviation"]
 
-# Scatterplot:
-# - x = average happiness (valence)
-# - y = standard deviation (how much raters disagreed)
-# Each dot = one word in the dataset
+# Scatter: happiness score vs standard deviation
 plt.figure()
 plt.scatter(
-        df["happiness_average"],
-        df["happiness_standard_deviation"],
-    )
-plt.xlabel("Happiness Average")
-plt.ylabel("Happiness Standard Deviation")
-plt.title("Average Happiness vs Disagreement (LabMT)")
+    df["happiness_average"], #data for x
+    df["happiness_standard_deviation"], #data for y
+    s=10,
+    alpha=0.35,
+)
+plt.title("Disagreement vs score: happiness_average vs happiness_standard_deviation")
+plt.xlabel("happiness_average")
+plt.ylabel("happiness_standard_deviation")
+plt.tight_layout()
+save_figure("happiness_vs_std_scatter.png")
 plt.close()
 
-# Identify the 15 most disagreed-about words (highest std dev)
-most_disagreed = df.sort_values("happiness_standard_deviation", ascending=False).head(15)
+# Which words do people disagree about most?
+most_contested_15 = df.sort_values("happiness_standard_deviation", ascending=False).head(15)[show_cols]
+print("Top 15 most 'contested' words (highest standard deviation):")
+print(most_contested_15.to_string(index=False))
+save_csv(most_contested_15, "top_15_contested_words.csv", index=False)
 
-print("\nTop 15 most disagreed-about words (highest std dev):")
-print(most_disagreed[["word", "happiness_average", "happiness_standard_deviation"]])
-
-# ---------------------------
-# 2.3 Corpus comparison
-# ---------------------------
-print("\n--- Corpus comparison ---")
+print_section("2.3 Corpus comparison: rank coverage + overlaps")
 
 corpora = {
-     "Twitter": "twitter_rank",
-     "GoogleBooks": "google_rank",
-     "NYT": "nyt_rank",
-     "Lyrics": "lyrics_rank",
+        "Twitter": "twitter_rank",
+        "GoogleBooks": "google_rank",
+        "NYT": "nyt_rank",
+        "Lyrics": "lyrics_rank",
     }
 
 # ---------------------------------------
 # 1) Count how many LabMT words appear in top 5000
 # (rank not missing = appears in top 5000)
 # ---------------------------------------
+
 corpus_counts = {}
 
 for name, col in corpora.items():
@@ -223,7 +219,7 @@ plt.bar(corpus_counts.keys(), corpus_counts.values())
 plt.ylabel("Number of LabMT words present")
 plt.title("LabMT Word Presence Across Corpora")
 plt.xticks(rotation=45)
-plt.close()
+plt.show()
 
 # ---------------------------------------
 # 2) Overlap calculations
@@ -260,19 +256,20 @@ plt.scatter(df_both["twitter_rank"], df_both["nyt_rank"])
 plt.xlabel("Twitter Rank")
 plt.ylabel("NYT Rank")
 plt.title("Twitter vs NYT Rank (Shared Words)")
-plt.close()
+plt.show()
 
-# Heatmap-like table - Overlap matrix between corpora
+#Overlap matrix between corpora
 
 print_section("Heatmap-like Table: Corpus Overlap Matrix")
 
 # -----------------------------------------------------------------------------
 # Step 1: Create boolean flags for each corpus
 # -----------------------------------------------------------------------------
+
 # For each word, we record True if it appears in that corpus (has a rank),
 # False if it does not appear (rank is missing)
 
-print("\nStep 1: Creating presence flags for each corpus...")
+print("\nCreating presence flags for each corpus...")
 print("(True = word appears in corpus, False = word does not appear)")
 
 # Create a DataFrame with 4 columns, one for each corpus
@@ -300,7 +297,7 @@ print(f"Each row represents one word, each column represents one corpus")
 # - Diagonal: number of words present in each corpus
 # - Off-diagonal: number of words present in BOTH corpora
 
-print("\nStep 2: Building overlap matrix...")
+print("\nBuilding overlap matrix...")
 
 # Get the list of corpus names from the flags DataFrame columns
 corpus_names = list(flags.columns)
@@ -335,7 +332,7 @@ overlap_matrix = overlap_matrix.astype(int)
 # Step 3: Display the overlap matrix
 # -----------------------------------------------------------------------------
 
-print("\nStep 3: Displaying overlap matrix")
+print("\nDisplaying overlap matrix")
 print("=" * 70)
 print("CORPUS OVERLAP MATRIX")
 print("=" * 70)
@@ -393,7 +390,7 @@ print("  -> These are rare words or specialized vocabulary")
 # This satisfies the requirement: "Make at least one plot about corpus differences"
 # Heatmap is a great way to visualize the overlap matrix
 
-print("\nStep 3.5: Creating heatmap visualization...")
+print("\nCreating heatmap visualization...")
 
 # Create a new figure with appropriate size
 plt.figure(figsize=(8, 6))
@@ -449,4 +446,176 @@ plt.close()
 # 3. Qualitative exploration: close reading the lexicon as a cultural artifact
 # -----------------------------------------------------------------------------
 
-print_section("TASK 3.1: Build a small “exhibit” of words")
+"""
+Script 3: Qualitative Exploration - Building a Word Exhibit
+Run this after data_analysis.py
+"""
+
+import pandas as pd
+import numpy as np
+from pathlib import Path
+
+print("="*50)
+print("QUALITATIVE EXPLORATION: WORD EXHIBIT")
+print("="*50)
+
+# Find the data file - try different possible locations
+possible_paths = [
+    'data/labMT_cleaned.csv',
+    '../data/labMT_cleaned.csv',
+    'data/raw/Data_Set_S1.txt',
+    '../data/raw/Data_Set_S1.txt'
+]
+
+df = None
+for path in possible_paths:
+    try:
+        if path.endswith('.csv'):
+            df = pd.read_csv(path)
+        else:
+            df = pd.read_csv(path, sep='\t', skiprows=3, na_values='--')
+        print(f" Loaded data from: {path}")
+        print(f"Shape: {df.shape}")
+        break
+    except FileNotFoundError:
+        continue
+
+if df is None:
+    print(" Could not find data file. Please check the path.")
+    exit()
+
+# Create a function to check corpus presence
+def get_corpus_presence(row):
+    corpora = []
+    if pd.notna(row.get('twitter_rank')):
+        corpora.append('Twitter')
+    if pd.notna(row.get('google_rank')):
+        corpora.append('Google')
+    if pd.notna(row.get('nyt_rank')):
+        corpora.append('NYT')
+    if pd.notna(row.get('lyrics_rank')):
+        corpora.append('Lyrics')
+    return ', '.join(corpora) if corpora else 'None'
+
+# Add corpus presence column
+df['corpus_presence'] = df.apply(get_corpus_presence, axis=1)
+
+# 1. Select 5 VERY POSITIVE words (highest happiness scores)
+positive_words = df.nlargest(5, 'happiness_average')[
+    ['word', 'happiness_average', 'happiness_standard_deviation', 'corpus_presence']
+].copy()
+positive_words['category'] = 'Very Positive'
+
+# 2. Select 5 VERY NEGATIVE words (lowest happiness scores)
+negative_words = df.nsmallest(5, 'happiness_average')[
+    ['word', 'happiness_average', 'happiness_standard_deviation', 'corpus_presence']
+].copy()
+negative_words['category'] = 'Very Negative'
+
+# 3. Select 5 HIGHLY CONTESTED words (highest standard deviation)
+contested_words = df.nlargest(5, 'happiness_standard_deviation')[
+    ['word', 'happiness_average', 'happiness_standard_deviation', 'corpus_presence']
+].copy()
+contested_words['category'] = 'Highly Contested'
+
+# 4. Select 5 INTERESTING/CULTURALLY LOADED words
+interesting_candidates = [
+    'gay', 'queer', 'feminist', 'trump', 'obama', 'covid', 'pandemic',
+    'thou', 'thee', 'hath', 'internet', 'google', 'tweet', 'selfie',
+    'hipster', 'millennial', 'boomer', 'woke', 'lit', 'sick', 'cool'
+]
+
+available_interesting = df[df['word'].isin(interesting_candidates)].copy()
+if len(available_interesting) < 5:
+    additional = df[
+        (df['happiness_standard_deviation'] > 1.5) & 
+        (df['twitter_rank'].notna()) & 
+        (df['google_rank'].isna())
+    ].head(5)
+    interesting_words = pd.concat([available_interesting, additional]).head(5)
+else:
+    interesting_words = available_interesting.head(5)
+
+interesting_words['category'] = 'Interesting/Culturally Loaded'
+interesting_words = interesting_words[
+    ['word', 'happiness_average', 'happiness_standard_deviation', 'corpus_presence', 'category']
+]
+
+# Combine all exhibits
+exhibit = pd.concat([
+    positive_words, 
+    negative_words, 
+    contested_words, 
+    interesting_words
+])
+
+exhibit = exhibit.reset_index(drop=True)
+
+print("\n" + "="*50)
+print("WORD EXHIBIT: 20 Words for Close Reading")
+print("="*50)
+print("\n")
+
+# Display as regular table
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', 20)
+
+print("="*50)
+print("REGULAR TABLE OUTPUT")
+print("="*50)
+print(exhibit.to_string(index=False))
+
+# Save to CSV
+exhibit.to_csv('data/word_exhibit.csv', index=False)
+print("\n✅ Exhibit saved to data/word_exhibit.csv")
+
+# ============================================
+# CREATE MARKDOWN TABLES FOR README
+# ============================================
+print("\n" + "="*50)
+print("MARKDOWN TABLES FOR README (COPY THESE!)")
+print("="*50)
+print("\n")
+
+# Very Positive Words Table
+print("### 📈 Very Positive Words (Happiness > 8.0)")
+print("| Word | Score | SD | Corpus Presence |")
+print("|------|-------|-----|-----------------|")
+for _, row in positive_words.iterrows():
+    print(f"| {row['word']} | {row['happiness_average']:.2f} | {row['happiness_standard_deviation']:.2f} | {row['corpus_presence']} |")
+print("\n**Interpretative Paragraph:**")
+print("[Write 2-3 sentences about what these words reveal about happiness and language]\n")
+
+# Very Negative Words Table
+print("### 📉 Very Negative Words (Happiness < 1.5)")
+print("| Word | Score | SD | Corpus Presence |")
+print("|------|-------|-----|-----------------|")
+for _, row in negative_words.iterrows():
+    print(f"| {row['word']} | {row['happiness_average']:.2f} | {row['happiness_standard_deviation']:.2f} | {row['corpus_presence']} |")
+print("\n**Interpretative Paragraph:**")
+print("[Write 2-3 sentences about what these words reveal about negativity and trauma in language]\n")
+
+# Highly Contested Words Table
+print("### ⚖️ Highly Contested Words (Highest Standard Deviation)")
+print("| Word | Score | SD | Corpus Presence |")
+print("|------|-------|-----|-----------------|")
+for _, row in contested_words.iterrows():
+    print(f"| {row['word']} | {row['happiness_average']:.2f} | {row['happiness_standard_deviation']:.2f} | {row['corpus_presence']} |")
+print("\n**Interpretative Paragraph:**")
+print("[Write 2-3 sentences about why these words create disagreement and how context matters]\n")
+
+# Culturally Interesting Words Table
+print("### 🌍 Culturally/Historically Interesting Words")
+print("| Word | Score | SD | Corpus Presence |")
+print("|------|-------|-----|-----------------|")
+for _, row in interesting_words.iterrows():
+    print(f"| {row['word']} | {row['happiness_average']:.2f} | {row['happiness_standard_deviation']:.2f} | {row['corpus_presence']} |")
+print("\n**Interpretative Paragraph:**")
+print("[Write 2-3 sentences about how these words reflect cultural and linguistic change]\n")
+
+print("="*50)
+print("✅ Copy the tables above and paste them into your README.md")
+print("="*50)
+
+

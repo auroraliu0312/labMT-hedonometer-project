@@ -1,3 +1,4 @@
+
 # labMT Hedonometer Dataset Analysis
 
 ## Project Overview
@@ -87,6 +88,8 @@ The words with the highest happiness scores are logical and correspond to highly
 | laughs    | 8.18            |
 | joy       | 8.16            |
 
+Interpretative Paragraph: The very positive words reveal what English speakers collectively associate with happiness. "Laughter," "happiness," and "love" represent universal human experiences that transcend cultural boundaries—this explains their presence across multiple corpora. Interestingly, "laughed" (past tense) scores slightly lower than "laughter" (noun), suggesting that the abstract concept of joy feels more positive than specific instances. These words are used by all communities—from journalists to songwriters to Twitter users—which explains why they appear in all four corpora. The low standard deviations (0.93-1.16) indicate strong consensus: people generally agree these words feel happy, regardless of context.
+
 # Top 10 negative words:
 The words with the lowest happiness scores correspond to negative or sensitive terms.
 
@@ -102,6 +105,8 @@ The words with the lowest happiness scores correspond to negative or sensitive t
 | died      | 1.56            |
 | kill      | 1.56            |
 | killed    | 1.56            |
+
+Interpretative Paragraph: The most negative words cluster around violence, death, and trauma. "Suicide" and "murder" appear in all four corpora—these concepts are discussed across all types of texts, from news to songs to casual conversation. The pattern of "terrorism" appearing ONLY in the New York Times is striking: this suggests that in 2011, terrorism was primarily discussed in formal news contexts, not in songs or casual Twitter conversations. "Rape" appears in Twitter, NYT, and Lyrics but NOT in Google Books—possibly reflecting censorship in historical texts or changing social willingness to discuss sexual violence. The very low scores (1.3-1.5) and low standard deviations show strong cultural agreement about the negativity of these words. 
 
 > These checks confirm that the happiness scores and words are reasonable, and no data entry errors are apparent.
 
@@ -313,7 +318,8 @@ pip install -r requirements.txt
 python3 src/data_analysis.py
 
  5. What gets generated?
-After running, look in:
+
+After running, look in/Users/luciana/Downloads/labMT-hedonometer-project-main/.venv/bin/python /Users/luciana/Downloads/labMT-hedonometer-project-main/labMT-hedonometer-project/src/data_analysis.py
 - `figures/` — PNG plots
 - `tables/` — CSV summary tables
 
@@ -466,16 +472,24 @@ We selected 25 words across five categories for qualitative analysis, revealing 
 ### Very Positive Words: laughter, happiness, love, happy, laughed
 
 These words consistently score above 8.2, indicating strong cross-cultural consensus about their positive emotional content. "Love" and "happiness" represent fundamental human emotions universally valued across communities. Variations of "laugh" (laughter, laughed) all score highly, suggesting actions associated with joy are consistently rated as positive regardless of grammatical form. These words are used similarly across all contexts - from formal literature to social media - because they describe core human experiences that transcend register differences.
+**Interpretative Paragraph:** The very positive words reveal what English speakers collectively associate with happiness. "Laughter," "happiness," and "love" represent universal human experiences that transcend cultural boundaries—this explains their presence across multiple corpora. Interestingly, "laughed" (past tense) scores slightly lower than "laughter" (noun), suggesting that the abstract concept of joy feels more positive than specific instances. These words are used by all communities—from journalists to songwriters to Twitter users—which explains why they appear in all four corpora. The low standard deviations (0.93-1.16) indicate strong consensus: people generally agree these words feel happy, regardless of context.
+
 
 ### Very Negative Words: suicide, terrorist, rape, murder, terrorism
 
 With scores below 1.5, these words represent the darkest aspects of human experience. Their low standard deviations (0.78-1.01) show overwhelming agreement on their negative valence, reflecting societal taboos and shared understanding of trauma. "Terrorist" and "terrorism" are particularly interesting as politically charged concepts that might theoretically be viewed differently across communities, yet ratings show remarkable agreement about their negative emotional impact. This suggests that regardless of political orientation, people recognize these words as describing fundamentally harmful actions.
 
+**Interpretative Paragraph:** The most negative words cluster around violence, death, and trauma. "Suicide" and "murder" appear in all four corpora—these concepts are discussed across all types of texts, from news to songs to casual conversation. The pattern of "terrorism" appearing ONLY in the New York Times is striking: this suggests that in 2011, terrorism was primarily discussed in formal news contexts, not in songs or casual Twitter conversations. "Rape" appears in Twitter, NYT, and Lyrics but NOT in Google Books—possibly reflecting censorship in historical texts or changing social willingness to discuss sexual violence. The very low scores (1.3-1.5) and low standard deviations show strong cultural agreement about the negativity of these words. 
+
 ### Highly Contested Words: fucking, fuckin, fucked, pussy, whiskey
 
 These words have the highest standard deviations (2.4-2.9), revealing significant disagreement about their emotional valence. The profanity cluster demonstrates how context dramatically alters meaning - functioning as intensifiers with little emotional content in some communities ("that's fucking awesome") while retaining taboo status in others. "Whiskey" (5.72 average, 2.64 st dev) is particularly fascinating, representing celebration and sociability in some contexts, addiction and despair in others. These words show that happiness scores cannot capture contextual nuance; the same word can evoke warmth in a toast or sorrow in a story about alcoholism.
 
+**Interpretative Paragraph:** The highly contested words (highest standard deviation) are fascinating because they reveal where cultural meaning breaks down. Profanity words like "fucking," "fuckin," and "fucked" can function as intensifiers ("fucking amazing" = positive) or aggression ("fuck you" = negative)—the same word can flip valence completely depending on context and tone. "Pussy" has multiple meanings: a cat (neutral), an insult (negative), or slang (context-dependent). "Whiskey" appears ONLY in the Lyrics corpus—alcohol in songs can represent celebration ("whiskey for my men") or heartbreak ("whiskey lullaby"), explaining the disagreement. These words are used differently across communities: what's casual slang for one group might be offensive to another. 
+
 ### Culturally Loaded Words: rt, lol, im, twitter, haha
+
+**Interpretative Paragraph:** These culturally loaded words capture linguistic and social change. "Internet" and "google" represent technological shifts—"google" appears ONLY in Twitter, showing how brand names become verbs first in informal contexts before entering formal language. "Cool" demonstrates complete semantic shift: from temperature (neutral) to aesthetic approval (positive), now used universally. "Obama" appears ONLY in Twitter with a high standard deviation (2.16)—political figures polarize opinion, and real-time reactions happen on social media, not in books or songs. "Lit" shows how slang evolves: literally "illuminated" → slang for "exciting," appearing only in youth-focused corpora (Twitter, Lyrics). These words reveal that language is alive—constantly changing and community-specific. 
 
 These words, common on Twitter but absent from NYT's top 5000, reflect the emergence of internet-mediated language. "rt" (retweet) and "lol" (laughing out loud) are platform-specific conventions meaningless to traditional newspaper readers. Their happiness scores vary widely - "haha" scores 7.64 capturing genuine amusement, while "rt" scores only 4.88 as a purely functional term. These words reveal how new communities develop vocabulary serving specific communicative needs. A journalist would never write "lol" in a news article, but for Twitter users it's essential punctuation for digital conversation.
 
@@ -625,3 +639,5 @@ After running, look in:
 Dodds, Peter Sheridan, Kameron Decker Harris, Isabel M. Kloumann, Catherine A. Bliss, and Christopher M. Danforth. 2011. “Temporal Patterns of Happiness and Information in a Global Social Network: Hedonometrics and Twitter.” Edited by Johan Bollen. PLoS ONE 6 (12): e26752. https://doi.org/10.1371/journal.pone.0026752.
 
 ## Academic integrity & AI note
+
+

@@ -447,7 +447,7 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 4. **Duplicate removal**: Removed duplicate objects that appeared under multiple search terms, keeping the first occurrence
 5. **Rate limiting**: Implemented 0.3-second delays between requests to respect the API's rate limits (80 requests per second max)
 
-**Raw data:** The unprocessed API responses are saved in `data/raw/met_artworks_raw.csv`.
+**Raw data:** The unprocessed API responses are saved in `data/raw/met_aesthetic_raw.csv`.
 
 **Date of access:** March 2026
 
@@ -460,9 +460,9 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 
 ### Dataset Characteristics
 
-The final dataset contains **133 unique artworks**:
-- **Western aesthetic concepts**: 67 artworks
-- **Eastern aesthetic concepts**: 66 artworks
+The final dataset contains **326 unique artworks**:
+- **Western aesthetic concepts**: 216 artworks (66.3%)
+- **Eastern aesthetic concepts**: 110 artworks (33.7%)
 
 ### Data Dictionary
 
@@ -475,12 +475,22 @@ The processed dataset (`data/processed/met_aesthetic_scored.csv`) contains the f
 | `category` | string | Cultural category: "eastern" or "western" | 0 |
 | `term_used` | string | Search term that retrieved this artwork | 0 |
 | `department` | string | Met curatorial department | 0 |
-| `culture` | string | Cultural attribution (e.g., "Japanese", "French") | 24 (18%) |
-| `period` | string | Historical period (e.g., "Edo period") | 29 (22%) |
-| `artist` | string | Artist display name | 33 (25%) |
-| `date` | string | Object date description (e.g., "ca. 1880") | 0 |
-| `object_begin` | float | Machine-readable start date (for chronological sorting) | 24 (18%) |
-| `score` | float | Happiness score (1-9 scale) from labMT | 13 (9.8%) |
+| `classification` | string | Artwork classification (e.g., "Painting", "Sculpture") | 0 |
+| `culture` | string | Cultural attribution (e.g., "Japanese", "French") | 215 (66.0%) |
+| `period` | string | Historical period (e.g., "Edo period") | 0 |
+| `object_date` | string | Object date description (e.g., "ca. 1880") | 0 |
+| `object_begin` | float | Machine-readable start date (for chronological sorting) | 66 (20.2%) |
+| `object_end` | float | Machine-readable end date | 66 (20.2%) |
+| `medium` | string | Materials used in the artwork | 0 |
+| `artist_name` | string | Artist display name | 0 |
+| `artist_nationality` | string | Artist nationality | 0 |
+| `artist_begin` | float | Artist birth year | 需要计算 |
+| `artist_end` | float | Artist death year | 需要计算 |
+| `accession_year` | float | Year museum acquired the object | 需要计算 |
+| `tags` | string | JSON array of subject tags | 需要计算 |
+| `century` | float | Century derived from object_begin | 66 (20.2%) |
+| `title_clean` | string | Cleaned title for hedonometer scoring | 0 |
+| `score` | float | Happiness score (1-9 scale) from labMT | 35 (10.7%) |
 | `matched` | integer | Number of words matched to labMT dictionary | 0 |
 | `total` | integer | Total words in cleaned title | 0 |
 | `coverage` | float | Proportion of words matched (matched / total) | 0 |
@@ -525,18 +535,20 @@ Before scoring, we cleaned each title to make sure words would match the diction
 
 | Metric | Value | Interpretation |
 |--------|-------|----------------|
-| Total artworks | 133 | Complete dataset of Eastern and Western aesthetic concepts |
-| Artworks with scores | 120 (90.2%) | Most titles contained at least some everyday English words |
-| Artworks with no matches | 13 | These titles use specialized art terminology or non-English words exclusively |
+| Total artworks | 326 | Complete dataset of Eastern and Western aesthetic concepts |
+| Artworks with scores | 291 (89.3%) | Most titles contained at least some everyday English words |
+| Artworks with no matches | 35 | These titles use specialized art terminology or non-English words exclusively |
+
+The initial dataset contained 326 artworks retrieved from the Met API. After applying the hedonometer scoring procedure, 291 titles contained at least one word matched in the labMT lexicon and could therefore receive a happiness score. The remaining 35 titles contained only specialized or non-English terms and were excluded from sentiment analysis.
 
 **Happiness score distribution:**
-- Average score: 5.56
-- Typical range: 4.98 to 6.15
+- Average score: 5.53
+- Typical range: 4.98 to 6.08
 - Lowest score: 3.82
 - Highest score: 7.92
-- Median: 5.51
+- Median: 5.52
 
-- The average happiness score of 5.56 is slightly above the neutral midpoint of 5, suggesting that artwork titles tend to lean mildly positive in their word choice. The range from 3.82 to 7.92 shows that while some titles use distinctly negative language, others can be quite positive, nevertheless, the extreme scores are rare. The fact that mean (5.56) and median (5.51) are very close tells us the scores are roughly symmetric, not skewed by outliers.
+- The average happiness score of 5.53 is slightly above the neutral midpoint of 5, suggesting that artwork titles tend to lean mildly positive in their word choice. The range from 3.82 to 7.92 shows that while some titles use distinctly negative language, others can be quite positive, nevertheless, the extreme scores are rare. The fact that mean (5.53) and median (5.52) are very close tells us the scores are roughly symmetric, not skewed by outliers.
 
 
 ## Coverage Analysis
@@ -545,46 +557,46 @@ Coverage tells us what percentage of words in each title were actually found in 
 
 | Coverage Metric | Value | Interpretation |
 |-----------------|-------|----------------|
-| Mean coverage | 62.9% | On average, about two-thirds of each title's words were measurable |
-| Median coverage | 66.7% | Most titles had even better coverage – half of them exceeded 67% |
-| Artworks with no matches | 13 | These 13 titles (9.8%) couldn't be scored at all |
+| Mean coverage | 61.6% | On average, about 62% of each title's words were measurable |
+| Median coverage | 71.4% | Most titles had even better coverage – half of them exceeded 71% |
+| Artworks with no matches | 35 | These 35 titles (10.7%) couldn't be scored at all |
 
-- The high median coverage (66.7%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 13 unscorable titles are worth examining separately. They likely contain specialized terminology (like "statuette" or "verso") that a general dictionary misses.
+- The high median coverage (71.4%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 35 unscorable titles are worth examining separately. They likely contain specialized terminology (like "verso" or "staurotheke") that a general dictionary misses.
 
 
 ## Eastern vs Western
 
 | Category | Count | Mean Score | Std Dev | Interpretation |
 |----------|-------|------------|---------|----------------|
-| Eastern concepts | 59 | 5.566 | 0.631 | Slightly happier, more varied language |
-| Western concepts | 61 | 5.551 | 0.543 | Slightly less happy, more consistent language |
+| Eastern concepts | 97 | 5.477 | 0.546 | Slightly less happy, similar variation |
+| Western concepts | 194 | 5.562 | 0.545 | Slightly happier, similar consistency |
 
-- The Eastern artworks scored marginally higher on average (5.566 vs 5.551), but the difference is tiny – only 0.015 points. More interesting is the standard deviation. Eastern titles show more variation (0.631 vs 0.543), meaning their language ranges more widely from very positive to less positive. Western titles are more clustered around the average. This could reflect genuine differences in how Eastern and Western aesthetic concepts are described, or it could be an artifact of the specific search terms used to collect the data. A more rigorous statistical test would be needed to determine if this difference is meaningful.
+- The Western artworks scored marginally higher on average (5.562 vs 5.477), with a difference of 0.085 points. The standard deviations are nearly identical (0.546 vs 0.545), suggesting both categories have similar consistency in their emotional language. This difference is small and may not be meaningful without further statistical testing.
 
 
 ## Words That Didn't Match（OOV）
 
-The most common words that appeared in titles but weren't in my dictionary tell us about the limits of applying a general sentiment tool to art historical texts:
+The most common words that appeared in titles but weren't in our dictionary tell us about the limits of applying a general sentiment tool to art historical texts:
 
 | Word | Frequency | Word Type | Why It's Missing |
 |------|-----------|-----------|------------------|
-| shrine | 4 | Religious place | Too specific, not common in everyday English |
-| sphinx | 3 | Mythological figure | Proper noun / mythological term |
-| statuette | 3 | Art object | Art-specific vocabulary |
-| mono | 3 | Japanese word | Non-English |
-| blossoms | 3 | Nature | Should be in labMT? Possibly a preprocessing issue |
-| bodhisattva | 3 | Buddhist deity | Religious/cultural term |
-| garcini | 2 | Proper name | Person's name |
-| verso | 2 | Art term | Art-specific (back of a page) |
-| skeleton | 2 | Anatomy | Common word? Should be in labMT – worth checking |
-| baptist | 2 | Religious figure | Religious term |
+| skeleton | 40 | Anatomical/Artistic | Domain-specific subject matter |
+| verso | 23 | Art terminology | Art-specific (back of a page) |
+| fieschi | 20 | Proper name | Personal name |
+| staurotheke | 20 | Art object | Specialized art/religious object |
+| horus | 20 | Deity name | Egyptian deity |
+| imhotep | 20 | Historical figure | Ancient Egyptian figure |
+| imuthes | 20 | Variant spelling | Historical name variant |
+| watercarrier | 20 | Occupational term | Specific to certain artworks |
+| posada | 20 | Artist name | Spanish artist's surname |
+| manilla | 20 | Place name | Philippine city |
 
 The labMT lexicon was designed for general English, predictably misses several categories of words that matter in art historical texts:
 
-1. **Art-specific terminology** (statuette, verso) – these are precisely the words that might carry aesthetic meaning, yet they're invisible to our measurement
-2. **Religious and cultural concepts** (shrine, bodhisattva, baptist) – central to understanding many artworks, but absent from a secular, general-purpose dictionary
-3. **Non-English words** (mono) – art historical discourse often incorporates foreign terms
-4. **Proper names** (garcini) – artists, patrons, and historical figures are everywhere in titles
+1. **Art-specific terminology** (verso, staurotheke) – these are precisely the words that might carry aesthetic meaning, yet they're invisible to our measurement
+2. **Religious and cultural concepts** (horus, imhotep) – central to understanding many artworks, but absent from a general-purpose dictionary
+3. **Artist and place names** (posada, manilla) – proper names appear frequently in titles
+4. **Anatomical/artistic subjects** (skeleton) – common in certain art genres but not in everyday English
 
 - When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they might be systematically underrepresented in our measurements. The coverage statistics help us identify when this is happening.
 
@@ -594,6 +606,8 @@ We performed:
 - **Bootstrap confidence intervals** (10,000 resamples, 95% CI)
 - **Hypothesis testing**: t-test, Mann-Whitney U
 - **Effect size**: Cohen's d
+
+All statistical analyses were conducted on the subset of artworks that received valid happiness scores and met the criteria for the analytical dataset. This resulted in a final sample of 89 artworks (60 Western and 29 Eastern).
 
 **Descriptive Statistics**
 
@@ -816,6 +830,8 @@ All scored data and summaries have been saved to:
 - `data/processed/met_aesthetic_scored.csv` – Complete dataset with happiness scores for every artwork
 - `tables/met_aesthetic_summary.csv` – Summary statistics in table format
 - `tables/met_aesthetic_oov.csv` – The list of words not found in labMT for further analysis
+
+
 
 
 We selected 25 words across five categories for qualitative analysis, revealing how context, community, and culture influence emotional valence.

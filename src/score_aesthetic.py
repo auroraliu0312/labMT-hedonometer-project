@@ -27,7 +27,7 @@ TABLES_DIR.mkdir(parents=True, exist_ok=True)
 # Load MET aesthetic data
 # -----------------------------------------------------------------------------
 print("\n Loading MET aesthetic data...")
-met_path = RAW_DIR / "met_aesthetic_raw.csv"
+met_path = RAW_DIR / "met_raw_data.csv"
 
 if not met_path.exists():
     print(f"Error: File not found at {met_path}")

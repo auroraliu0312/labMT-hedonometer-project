@@ -466,6 +466,8 @@ The final dataset contains **326 unique artworks**:
 
 ### Data Dictionary
 
+### Data Dictionary
+
 The processed dataset (`data/processed/met_aesthetic_scored.csv`) contains the following columns:
 
 | Column | Type | Description | Missing Values |
@@ -473,23 +475,10 @@ The processed dataset (`data/processed/met_aesthetic_scored.csv`) contains the f
 | `object_id` | integer | Unique Met Museum object identifier | 0 |
 | `title` | string | Artwork title (raw, as provided by API) | 0 |
 | `category` | string | Cultural category: "eastern" or "western" | 0 |
-| `term_used` | string | Search term that retrieved this artwork | 0 |
 | `department` | string | Met curatorial department | 0 |
-| `classification` | string | Artwork classification (e.g., "Painting", "Sculpture") | 0 |
 | `culture` | string | Cultural attribution (e.g., "Japanese", "French") | 215 (66.0%) |
-| `period` | string | Historical period (e.g., "Edo period") | 0 |
-| `object_date` | string | Object date description (e.g., "ca. 1880") | 0 |
-| `object_begin` | float | Machine-readable start date (for chronological sorting) | 66 (20.2%) |
-| `object_end` | float | Machine-readable end date | 66 (20.2%) |
-| `medium` | string | Materials used in the artwork | 0 |
-| `artist_name` | string | Artist display name | 0 |
-| `artist_nationality` | string | Artist nationality | 0 |
-| `artist_begin` | float | Artist birth year | 需要计算 |
-| `artist_end` | float | Artist death year | 需要计算 |
-| `accession_year` | float | Year museum acquired the object | 需要计算 |
-| `tags` | string | JSON array of subject tags | 需要计算 |
-| `century` | float | Century derived from object_begin | 66 (20.2%) |
-| `title_clean` | string | Cleaned title for hedonometer scoring | 0 |
+| `period` | string | Historical period (e.g., "Edo period") | 224 (68.7%) |
+| `object_date` | string | Object date description (e.g., "ca. 1880") | 1 (0.3%) |
 | `score` | float | Happiness score (1-9 scale) from labMT | 35 (10.7%) |
 | `matched` | integer | Number of words matched to labMT dictionary | 0 |
 | `total` | integer | Total words in cleaned title | 0 |

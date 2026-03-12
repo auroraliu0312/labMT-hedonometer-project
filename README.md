@@ -818,7 +818,6 @@ All scored data and summaries have been saved to:
 - `tables/met_aesthetic_oov.csv` – The list of words not found in labMT for further analysis
 
 
-<<<<<<< HEAD
 We selected 25 words across five categories for qualitative analysis, revealing how context, community, and culture influence emotional valence.
 
 ### Very Positive Words: laughter, happiness, love, happy, laughed
@@ -957,12 +956,10 @@ The dataset was published as supplementary material with Dodds et al. (2011) in 
 
 # 1. Clone the repository
 git clone https://github.com/your-username/labMT-hedonometer-project.git
-=======
 ### How to Run
 ```bash
 # 1. Clone repository
 git clone https://github.com/auroraliu0312/labMT-hedonometer-project.git
->>>>>>> eea16d636ce3100fbe22a4674e3489e792846623
 cd labMT-hedonometer-project
 
 # 2. Install dependencies
@@ -974,7 +971,6 @@ python3 src/score_artworks.py     # Add happiness scores
 python3 src/comprehensive_analysis.py  # Generate stats + figures
 
 
-<<<<<<< HEAD
 ## Credits
 
 - Team roles:
@@ -991,5 +987,3 @@ Dodds, Peter Sheridan, Kameron Decker Harris, Isabel M. Kloumann, Catherine A. B
 ## Academic integrity & AI note
 
 
-=======
->>>>>>> eea16d636ce3100fbe22a4674e3489e792846623

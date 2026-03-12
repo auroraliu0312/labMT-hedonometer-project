@@ -32,7 +32,7 @@ We created a data dictionary to summarize each column's content, type, and missi
 
 We performed the following analyses using Python with pandas, matplotlib, and numpy:
 
-## 1.1 Load the File
+## Load the File
 
 We loaded the labMT 1.0 dataset using pandas `read_csv`. The dataset is tab-delimited and contains three lines of metadata at the top, which we skipped using `skiprows=3`. We also treated '--' as missing values (`NaN`) using `na_values="--"`.
 
@@ -40,13 +40,10 @@ The dataset contains 10222 rows and 8 columns.
 
 A missing rank (`--`) indicates that the word does not appear in that particular corpus.
 
-## 1.2 Data Dictionary (See "DataSet": Data Dictionary)
-
-## 1.3 Sanity Checks
+## Sanity Checks
 
  We performed several sanity checks to ensure the dataset is clean and reasonable.
 
-## Check for duplicated words:
  There are no duplicated words in the dataset, confirming unique entries for each word.
 
 ## Random sample of 15 rows:
@@ -89,7 +86,6 @@ The words with the highest happiness scores are logical and correspond to highly
 
 Interpretative Paragraph: The very positive words reveal what English speakers collectively associate with happiness. "Laughter," "happiness," and "love" represent universal human experiences that transcend cultural boundaries—this explains their presence across multiple corpora. Interestingly, "laughed" (past tense) scores slightly lower than "laughter" (noun), suggesting that the abstract concept of joy feels more positive than specific instances. These words are used by all communities—from journalists to songwriters to Twitter users—which explains why they appear in all four corpora. The low standard deviations (0.93-1.16) indicate strong consensus: people generally agree these words feel happy, regardless of context.
 
-
 ## Top 10 negative words:
 
 The words with the lowest happiness scores correspond to negative or sensitive terms.
@@ -113,7 +109,7 @@ Interpretative Paragraph: The most negative words cluster around violence, death
 
 # Results
 
-## 2.1 Distribution of Happiness Scores
+## Distribution of Happiness Scores
 
 ![Figure 1: Distribution of Happiness Scores](figures/happiness_average_hist.png)
 
@@ -132,7 +128,7 @@ The distribution of happiness scores is centered slightly above 5, with mean and
  
  According to the advanced figure 1 above, a closer examination of the tails reveals an interesting asymmetry. The negative tail extends from 1 to 3.18, spanning 2.18 points, while the positive tail extends from 7.08 to 9, spanning only 1.92 points. This means that when words deviate from the neutral range, they are slightly more likely to be negative than positive English vocabulary. However, the extremes tell a different story. The most positive word "laughter" (8.50) lies 3.12 points above the mean, while the most negative word "suicide" (1.30) lies 4.08 points below the mean. This indicates that although there are more mildly negative words, the most intensely negative words reach further from neutrality than the most intensely positive words. Overall, these patterns suggest that English vocabulary is structured with a broad spectrum of mild negativity but reserves its most extreme emotional intensity for positive expression. The strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
 
-## 2.2 Disagreement: Words with High Standard Deviation
+## Disagreement: Words with High Standard Deviation
 
 We used happiness_standard_deviation to measure how much people disagreed when rating each word.
 ![Figure 2: Happiness Average vs Standard Deviation](figures/happiness_vs_std_scatter.png)
@@ -172,7 +168,7 @@ Beyond identifying individual contested words, the overall shape of the scatterp
 
 In contrast, words with more extreme average scores (very positive or very negative) tend to show greater horizontal spread and higher standard deviations. This occurs because emotionally charged words often evoke multiple interpretations depending on context, personal experience, or cultural background. For example, strongly negative words may be interpreted either literally (e.g., violence or suffering) or metaphorically (e.g., dramatic emphasis), while highly positive words may carry ironic or sarcastic uses. As a result, the further a word’s average happiness moves away from the neutral midpoint, the more room there is for disagreement among raters. This produces the wider “petals” of the plot at the extremes. The visual pattern therefore suggests that emotional intensity is associated with interpretive variability: strongly valenced words are not only emotionally charged but also socially and contextually contested.
 
-## 2.3 Corpus comparison: rank coverage and overlaps
+## Corpus comparison: rank coverage and overlaps
 
 We created a heatmap to present the overlaps between corpora
 ![Figure 3: Corpus Overlap Heatmap](figures/corpus_overlap_heatmap.png)
@@ -198,8 +194,6 @@ It appears in Twitter and NYT but is much less prominent in Lyrics. This reflect
 Similarly, slang or profanity terms (e.g., “fucking”) tend to appear in Twitter and Lyrics but are less common in formal corpora like Google Books, reflecting editorial filtering and stylistic norms.
 
 # Qualitative “exhibit” of words
-
-## 3.1 Build a small “exhibit” of words
 
 | category | word | happiness_average | happiness_standard_deviation | twitter_rank | google_rank | nyt_rank | lyrics_rank |
 |----------|------|-------------------|------------------------------|--------------|-------------|----------|--------------|
@@ -236,10 +230,9 @@ Upon examination of these 20 words across four categories, it reveals how happin
 
 **Conclusion:** This exercise portrays that the word's happiness scores are cultural artifacts. There is a reflection of the values, fears, and disagreements of a specific time frame-  2011, and a specific population- Mechanical Turk workers. The corpus presence patterns show how words depict a different meaning across news, songs or casual conversation. A word’s happiness is a reflection about who uses it, where and why.
 
+# Data provenance
 
-# Critical Reflection
-
-## 4.1 Reconstruct the pipeline (data provenance)
+## Reconstruct the pipeline
 
 The labMT 1.0 dataset was constructed through a multi-stage process that transformed raw text collections into the numerical happiness scores we've been analyzing. Based on Dodds et al. (2011) and our examination of the data structure, here is the reconstruction of how this dataset came to be:
 
@@ -256,6 +249,10 @@ The researchers first assembled four distinct text corpora representing differen
 
 From each corpus, they extracted word frequency lists, counting how many times each word appeared. This produced four separate ranked lists showing the most common words in each text domain.
 
+However, the lexicon is derived only from four English-language corpora. The dataset is heavily tuned to written English in particular genres, including conversational social media; published books; mainstream news and popular music. It under-represents spoken, non-digital, non-English, and non-mainstream communities. What labMT treats as “common” vocabulary is really “common in these four specific genres.”
+
+For example, our overlap matrix shows that Google Books & NY Times are the most similar pair (3,414 words in common; 33.4% of the lexicon), while NY Times & Lyrics are the least similar (2,241 words; 21.9%). Words like rt, lol, haha, gonna, wanna are highly frequent on Twitter but do not appear in the NYT top-5000 at all. Conversely, NYT and Google Books likely share more formal, topic-specific words that are rare on Twitter or in lyrics. This means labMT is excellent for measuring sentiment in these four genres, but might miss important vocabulary in, say, scientific forums, gaming chat, or multilingual communities.
+
 ## Step 2: Creating the Master Word List
 
 The researchers then compiled a master list of words to be rated. This wasn't simply all words from all corpora. Instead, they needed a manageable set that represented common English vocabulary. The final list contains 10,222 words, selected based on:
@@ -264,6 +261,10 @@ The researchers then compiled a master list of words to be rated. This wasn't si
   - Including words with linguistic and cultural interest
 
 This is why each corpus column has exactly 5,000 non-missing values. As each corpus contributed its top 5,000 most frequent words to the master list.
+
+Nevertheless, each source corpus only contributed its top 5,000 words by frequency. Words outside these frequency bands never enter labMT at all. The dataset focuses on mainstream, high-frequency vocabulary and largely ignores rare, technical, or niche words. This makes it easier to measure the emotional tone of “ordinary” language across large corpora but makes it hard to analyze specialized domains (e.g., medical jargon, fandom slang, minority dialects). 
+
+For example, every rank column (twitter_rank, google_rank, nyt_rank, lyrics_rank) has exactly 5,000 non-missing values, and together they cover about 48.9% of the lexicon per corpus. Our overlap analysis shows 327 words (3.2%) that appear in none of the four top-5000 lists. Tthese words are present in labMT (because they came from at least one corpus’s 5000 list before merging), but in practice we cannot tie them strongly to any particular corpus. If we wanted to study less frequent, emerging slang or technical terms, labMT would simply not “see” them.
 
 ## Step 3: Happiness Rating Collection via Amazon Mechanical Turk
 
@@ -275,6 +276,12 @@ This is the most crucial step where raw text became emotional data. The research
 
 The choice of 50 raters per word represents a balance between statistical reliability and cost. With fewer raters, individual biases would have too much influence. With more raters, the cost would become prohibitive.
 
+However, all ratings come from workers on Amazon Mechanical Turk, primarily English-speaking internet users who opted into such tasks around 2010–2011.The emotional scores reflect the cultural and demographic biases of that annotator pool (likely overrepresenting certain countries, age groups, and internet-savvy populations).
+Words tied to specific political or religious debates (e.g., “capitalism,” “churches”) will be colored by the prevailing attitudes of those workers, not by some abstract universal meaning.
+
+For example, “churches” (avg ≈ 5.70, sd ≈ 2.46) and “capitalism” (avg ≈ 5.16, sd ≈ 2.45) show high disagreement.
+These disagreements likely reflect differing personal experiences and political views among Turkers (e.g., religious vs secular, pro- vs anti-capitalist). If we applied labMT in a different cultural context (e.g., outside the U.S.), these scores might not generalize.
+
 ## Step 4: Statistical Aggregation
 
 For each word, the researchers calculated two key metrics from the 50 ratings:
@@ -285,6 +292,11 @@ For each word, the researchers calculated two key metrics from the 50 ratings:
 | happiness_standard_deviation| Standard deviation of ratings | How much people disagreed about the word |
 
 The happiness_rank column (1 = happiest word) was then computed by sorting all words by their average happiness score. This rank is what gives the dataset its name. It's a "hedonometer" or happiness meter that can rank words by emotional valence.
+
+The labMT ratings reduce emotional response to a single valence dimension (1 = unhappy, 9 = happy), without measuring arousal (calm/excited), dominance (in control/overwhelmed), or more nuanced categories (e.g., nostalgia, irony). Therefore, the complex or mixed emotions are forced onto a single “happiness” line. Words that evoke ambivalent feelings (e.g., “whiskey”, “mortality”) may have mid-level averages that mask the fact that some people feel strongly positive and others strongly negative.
+
+For example, “whiskey” has happiness_average ≈ 5.72 but happiness_standard_deviation ≈ 2.64, placing it among the most contested words. The mid-range average might tempt us to call it “neutral,” yet the high sd reveals polarized reactions.
+A more multidimensional instrument could separate “pleasant excitement,” “guilty pleasure,” or “danger,” which are all collapsed here.
 
 ## Step 5: Frequency Rank Integration
 
@@ -301,6 +313,10 @@ The resulting dataset was published as supplementary material alongside the 2011
  - 8 data columns (word, happiness_rank, happiness_average, happiness_standard_deviation, and four corpus ranks)
  - Tab-separated format with metadata headers
 
+ The corpora and ratings reflect language usage around 2008–2011. The lexicon and ratings do not automatically update as language evolves. New slang, memes, and shifting connotations (e.g., of political terms) are not captured.
+
+For example, words like rt, lol, blog appear as very frequent on Twitter in our 2011-era rankings. More recent slang (e.g., “yeet”, “stan”) is absent from labMT entirely. If we used labMT today without updating it, we would mis-measure or ignore large parts of current online language.
+
 ## What This Pipeline Reveals
 
 This generation process explains several features we observed in our analysis:
@@ -312,42 +328,7 @@ This generation process explains several features we observed in our analysis:
 
 Overall, this pipeline transforms messy and context-dependent human language into clean numerical data. It is a powerful simplification, but one that comes with important limitations we'll explore in the next section.
 
-## 4.2 Consequences and limitations
-
-## Only high-frequency words (top 5000 per corpus)
-Each source corpus only contributed its top 5,000 words by frequency. Words outside these frequency bands never enter labMT at all. The dataset focuses on mainstream, high-frequency vocabulary and largely ignores rare, technical, or niche words. This makes it easier to measure the emotional tone of “ordinary” language across large corpora but makes it hard to analyze specialized domains (e.g., medical jargon, fandom slang, minority dialects). 
-
-For example, every rank column (twitter_rank, google_rank, nyt_rank, lyrics_rank) has exactly 5,000 non-missing values, and together they cover about 48.9% of the lexicon per corpus. Our overlap analysis shows 327 words (3.2%) that appear in none of the four top-5000 lists. Tthese words are present in labMT (because they came from at least one corpus’s 5000 list before merging), but in practice we cannot tie them strongly to any particular corpus. If we wanted to study less frequent, emerging slang or technical terms, labMT would simply not “see” them.
-
-## Rating words in isolation, without cultural context
-Mechanical Turk workers rated words alone, with no sentence or situational context. This makes the dataset easier to collect and apply (we only need word → score), but it ignores polysemy (multiple meanings) and contextual usage. Some words can be positive in one context and negative in another; rating them out of context collapses these into a single average, often hiding the underlying disagreement.
-
-For example, we plotted happiness_average vs happiness_standard_deviation and found a set of highly “contested” words with very high standard deviation. Words like “fucking”, “pussy”, “whiskey”, “churches”, “capitalism” all have standard deviations above 2.4. “fucking” can be a hostile insult or an emphatic positive (“fucking amazing”); “pussy” mixes sexual and gendered insult meanings; “whiskey” can be associated with social drinking or addiction; “churches” and “capitalism” have strong ideological and personal connotations. The high disagreement indicates that different raters “saw” different senses of the same word—context that the dataset cannot capture.
-
-## Using a single 1–9 “happiness” dimension
-The labMT ratings reduce emotional response to a single valence dimension (1 = unhappy, 9 = happy), without measuring arousal (calm/excited), dominance (in control/overwhelmed), or more nuanced categories (e.g., nostalgia, irony). Therefore, the complex or mixed emotions are forced onto a single “happiness” line. Words that evoke ambivalent feelings (e.g., “whiskey”, “mortality”) may have mid-level averages that mask the fact that some people feel strongly positive and others strongly negative.
-
-For example, “whiskey” has happiness_average ≈ 5.72 but happiness_standard_deviation ≈ 2.64, placing it among the most contested words. The mid-range average might tempt us to call it “neutral,” yet the high sd reveals polarized reactions.
-A more multidimensional instrument could separate “pleasant excitement,” “guilty pleasure,” or “danger,” which are all collapsed here.
-
-## Mechanical Turk as annotator population
-All ratings come from workers on Amazon Mechanical Turk, primarily English-speaking internet users who opted into such tasks around 2010–2011.The emotional scores reflect the cultural and demographic biases of that annotator pool (likely overrepresenting certain countries, age groups, and internet-savvy populations).
-Words tied to specific political or religious debates (e.g., “capitalism,” “churches”) will be colored by the prevailing attitudes of those workers, not by some abstract universal meaning.
-
-For example, “churches” (avg ≈ 5.70, sd ≈ 2.46) and “capitalism” (avg ≈ 5.16, sd ≈ 2.45) show high disagreement.
-These disagreements likely reflect differing personal experiences and political views among Turkers (e.g., religious vs secular, pro- vs anti-capitalist). If we applied labMT in a different cultural context (e.g., outside the U.S.), these scores might not generalize.
-
-## Corpus selection (Twitter, Books, NYT, Lyrics) and genre bias
-The lexicon is derived only from four English-language corpora. The dataset is heavily tuned to written English in particular genres, including conversational social media; published books; mainstream news and popular music. It under-represents spoken, non-digital, non-English, and non-mainstream communities. What labMT treats as “common” vocabulary is really “common in these four specific genres.”
-
-For example, our overlap matrix shows that Google Books & NY Times are the most similar pair (3,414 words in common; 33.4% of the lexicon), while NY Times & Lyrics are the least similar (2,241 words; 21.9%). Words like rt, lol, haha, gonna, wanna are highly frequent on Twitter but do not appear in the NYT top-5000 at all. Conversely, NYT and Google Books likely share more formal, topic-specific words that are rare on Twitter or in lyrics. This means labMT is excellent for measuring sentiment in these four genres, but might miss important vocabulary in, say, scientific forums, gaming chat, or multilingual communities.
-
-## Snapshot of language for certain time period only
-The corpora and ratings reflect language usage around 2008–2011. The lexicon and ratings do not automatically update as language evolves. New slang, memes, and shifting connotations (e.g., of political terms) are not captured.
-
-For example, words like rt, lol, blog appear as very frequent on Twitter in our 2011-era rankings. More recent slang (e.g., “yeet”, “stan”) is absent from labMT entirely. If we used labMT today without updating it, we would mis-measure or ignore large parts of current online language.
-
-## 4.3 If you were to use this dataset as an instrument today…
+## Furture Improvements for Pipeline Construction
 
 The LabMT dataset is best understood as a lexical affect instrument rather than a measure of lived emotional experience. We would trust it to approximate large-scale trends in average lexical valence across corpora, especially when analyzing aggregate shifts in tone (e.g., comparing overall positivity in news versus song lyrics). Because it is standardized and reproducible, it works well for macro-level comparisons and computational modeling of sentiment trends.
 
@@ -361,7 +342,6 @@ If we were to rebuild this instrument today, we would introduce several improvem
 
 These changes would make the dataset more sensitive to ambiguity, social variation, and contextual nuance while retaining its usefulness for large-scale computational analysis.
 
-
 # How to Run the Code
 
 ## Structure layout 
@@ -373,7 +353,6 @@ These changes would make the dataset more sensitive to ambiguity, social variati
  - `tables/` — CSV tables/summaries
  - README.md
  - requirements.txt
-
 
 ## Setup Steps 
 
@@ -514,7 +493,6 @@ Before scoring, we cleaned each title to make sure words would match the diction
 4. **Split into words** – using simple spaces as dividers
 
 - We kept every word that matched the labMT dictionary. No words were filtered out, even common ones like "the", "and", or "of" that have neutral scores around 5. If we had removed neutral word, Scores would be pulled toward extremes (higher highs, lower lows). Moreover, short titles lose most words may not have a score. For instance, a title containing "The Garden of Earthly Delights" has 5 words, 3 of which are neutral ("the", "of", "delights" is neutral). Removing neutral words would leave only "garden" and "earthly" – losing 60% of the text and potentially misrepresenting the title's emotional tone. On the other hand, different titles affected differently. Some titles have more neutral words than others may lead to unfair comparasion. Therefore, by keeping all words, we are measuring the actual language used in titles, not an artificially filtered version. This means scores reflect real word choices, including the subtle emotional baseline set by neutral words.
-
 
 # Results
 

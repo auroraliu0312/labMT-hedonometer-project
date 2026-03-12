@@ -1,134 +1,7 @@
 """
-<<<<<<< HEAD
 Met Museum: Eastern vs. Western Aesthetic Concepts
 Research Question: How do happiness scores differ between Eastern and Western 
 aesthetic concepts found in Met artwork titles?
-"""
-
-import requests
-import pandas as pd
-import time
-import re
-from pathlib import Path
-
-# Create folders
-base_dir = Path(__file__).parent.parent  # Goes up one level from src/
-(base_dir / "data/raw").mkdir(parents=True, exist_ok=True)
-(base_dir / "data/processed").mkdir(parents=True, exist_ok=True)
-
-# ============================================
-# EASTERN VS WESTERN AESTHETIC CONCEPTS
-# ============================================
-
-SEARCH_TERMS = {
-    "western": [
-        "beauty", "sublime", "pastoral", "romantic", "ideal", 
-        "grace", "glory", "divine", "harmony", "splendor"
-    ],
-    "eastern": [
-        "zen", "ukiyo", "wabi sabi", "mono no aware", "feng shui",
-        "simplicity", "impermanence", "emptiness", "enlightenment", 
-        "meditation", "bamboo", "cherry blossom", "lotus", "nirvana"
-    ]
-}
-
-def search_met(term, max_results=15):
-    """Search Met API for a term"""
-    url = "https://collectionapi.metmuseum.org/public/collection/v1/search"
-    params = {"q": term, "hasImages": "true"}
-    
-    try:
-        print(f"    Searching for '{term}'...")
-        response = requests.get(url, params=params)
-        data = response.json()
-        object_ids = data.get('objectIDs', [])
-        if object_ids:
-            print(f"      Found {len(object_ids[:max_results])} objects")
-            return object_ids[:max_results]
-        return []
-    except Exception as e:
-        print(f"      Error: {e}")
-        return []
-
-def get_object(obj_id):
-    """Get object details"""
-    url = f"https://collectionapi.metmuseum.org/public/collection/v1/objects/{obj_id}"
-    try:
-        response = requests.get(url)
-        return response.json()
-    except:
-        return None
-
-def main():
-    """Main function to collect artworks"""
-    print("=" * 60)
-    print("MET MUSEUM: EASTERN VS WESTERN AESTHETIC CONCEPTS")
-    print("=" * 60)
-    
-    all_artworks = []
-    total_found = 0
-    
-    for category, terms in SEARCH_TERMS.items():
-        print(f"\n📁 {category.upper()} concepts ({len(terms)} terms)")
-        
-        for term in terms:
-            object_ids = search_met(term)
-            
-            for obj_id in object_ids:
-                data = get_object(obj_id)
-                if data and data.get('title'):
-                    all_artworks.append({
-                        'object_id': obj_id,
-                        'title': data['title'],
-                        'category': category,
-                        'term_used': term,
-                        'department': data.get('department', ''),
-                        'culture': data.get('culture', ''),
-                        'period': data.get('period', ''),
-                        'artist': data.get('artistDisplayName', ''),
-                        'date': data.get('objectDate', ''),
-                        'object_begin': data.get('objectBeginDate', '')
-                    })
-                    total_found += 1
-                    if total_found % 10 == 0:
-                        print(f"      Collected {total_found} artworks so far...")
-                
-                # Small delay to be nice to API
-                time.sleep(0.1)
-            
-            # Delay between terms
-            time.sleep(0.2)
-    
-    # Remove duplicates
-    df = pd.DataFrame(all_artworks)
-    df = df.drop_duplicates(subset=['object_id'])
-    
-    # Save raw data
-    output_path = base_dir / "data/raw/met_aesthetic_raw.csv"
-    df.to_csv(output_path, index=False)
-    
-    print("\n" + "=" * 60)
-    print(f"✅ COLLECTION COMPLETE!")
-    print("=" * 60)
-    print(f"Total unique artworks: {len(df)}")
-    print(f"  - Western concepts: {len(df[df['category']=='western'])}")
-    print(f"  - Eastern concepts: {len(df[df['category']=='eastern'])}")
-    print(f"\nData saved to: {output_path}")
-    
-    # Show sample
-    print("\n📋 First 5 artworks collected:")
-    print(df[['title', 'category', 'term_used', 'culture']].head())
-    
-    # Quick summary
-    print("\n📊 Summary by category:")
-    summary = df.groupby('category').size().reset_index(name='count')
-    print(summary)
-
-if __name__ == "__main__":
-    main()
-=======
-MET Museum API Data Acquisition
-Fetches artwork data based on emotional keywords for hedonometer analysis
 """
 
 import requests
@@ -146,27 +19,40 @@ RAW_DIR.mkdir(parents=True, exist_ok=True)
 PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
 print("=" * 70)
-print("MET MUSEUM API DATA ACQUISITION")
+print("MET MUSEUM: EASTERN VS WESTERN AESTHETIC CONCEPTS")
 print("=" * 70)
 print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 print(f"Raw data directory: {RAW_DIR.absolute()}")
 print(f"Processed data directory: {PROCESSED_DIR.absolute()}")
 print()
 
-# Search terms related to emotional concepts
-search_terms = [
-    'love', 'death', 'war', 'peace', 'nature', 
-    'beauty', 'sorrow', 'joy', 'flowers', 'landscape',
-    'portrait', 'religious', 'happiness', 'sadness',
-    'victory', 'defeat', 'celebration', 'mourning'
-]
+# ============================================
+# EASTERN VS WESTERN AESTHETIC CONCEPTS
+# ============================================
+
+SEARCH_TERMS = {
+    "western": [
+        "beauty", "sublime", "pastoral", "romantic", "ideal", 
+        "grace", "glory", "divine", "harmony", "splendor"
+    ],
+    "eastern": [
+        "zen", "ukiyo", "wabi sabi", "mono no aware", "feng shui",
+        "simplicity", "impermanence", "emptiness", "enlightenment", 
+        "meditation", "bamboo", "cherry blossom", "lotus", "nirvana"
+    ]
+}
+
+# Flatten search terms for logging
+all_terms = []
+for category, terms in SEARCH_TERMS.items():
+    all_terms.extend(terms)
 
 # Limit objects per term to be kind to the API
 objects_per_term = 15
-print(f"Search terms: {len(search_terms)} terms")
-print(f"Search terms list: {search_terms}")
+print(f"Search categories: Western ({len(SEARCH_TERMS['western'])} terms), Eastern ({len(SEARCH_TERMS['eastern'])} terms)")
+print(f"Total search terms: {len(all_terms)}")
 print(f"Objects per term: {objects_per_term}")
-print(f"Target total: {len(search_terms) * objects_per_term} objects")
+print(f"Target total: {len(all_terms) * objects_per_term} objects")
 print()
 
 # Store all object IDs we find
@@ -177,52 +63,63 @@ print("=" * 70)
 print("STEP 1: SEARCHING FOR OBJECTS BY KEYWORD")
 print("=" * 70)
 
-for term in search_terms:
-    print(f"\n🔍 Searching for: '{term}'")
+for category, terms in SEARCH_TERMS.items():
+    print(f"\n📁 {category.upper()} concepts ({len(terms)} terms)")
     
-    # API search endpoint - add hasImages=true to get only objects with images
-    search_url = f"https://collectionapi.metmuseum.org/public/collection/v1/search?q={term}&hasImages=true"
-    
-    try:
-        response = requests.get(search_url)
-        if response.status_code == 200:
-            data = response.json()
-            object_ids = data.get('objectIDs', [])
-            
-            # Log the search
-            search_log.append({
-                'term': term,
-                'timestamp': datetime.now().isoformat(),
-                'total_found': len(object_ids) if object_ids else 0,
-                'selected': min(objects_per_term, len(object_ids)) if object_ids else 0
-            })
-            
-            if object_ids and len(object_ids) > 0:
-                # Take only the first N objects
-                selected = object_ids[:min(objects_per_term, len(object_ids))]
-                all_object_ids.update(selected)
-                print(f"  ✅ Found {len(object_ids)} objects, selected {len(selected)}")
-                print(f"  📊 Sample IDs: {selected[:3]}")
+    for term in terms:
+        print(f"\n  🔍 Searching for: '{term}'")
+        
+        # API search endpoint - add hasImages=true to get only objects with images
+        search_url = f"https://collectionapi.metmuseum.org/public/collection/v1/search?q={term}&hasImages=true"
+        
+        try:
+            response = requests.get(search_url)
+            if response.status_code == 200:
+                data = response.json()
+                object_ids = data.get('objectIDs', [])
+                
+                # Log the search
+                search_log.append({
+                    'category': category,
+                    'term': term,
+                    'timestamp': datetime.now().isoformat(),
+                    'total_found': len(object_ids) if object_ids else 0,
+                    'selected': min(objects_per_term, len(object_ids)) if object_ids else 0
+                })
+                
+                if object_ids and len(object_ids) > 0:
+                    # Take only the first N objects
+                    selected = object_ids[:min(objects_per_term, len(object_ids))]
+                    
+                    # Add category info to each object ID for later reference
+                    for obj_id in selected:
+                        all_object_ids.add((obj_id, category, term))
+                    
+                    print(f"    ✅ Found {len(object_ids)} objects, selected {len(selected)}")
+                    if selected:
+                        print(f"    📊 Sample IDs: {selected[:3]}")
+                else:
+                    print(f"    ⚠️  No objects found")
             else:
-                print(f"  ⚠️  No objects found")
-        else:
-            print(f"  ❌ API error: {response.status_code}")
+                print(f"    ❌ API error: {response.status_code}")
+                search_log.append({
+                    'category': category,
+                    'term': term,
+                    'timestamp': datetime.now().isoformat(),
+                    'error': f"HTTP {response.status_code}"
+                })
+        
+        except Exception as e:
+            print(f"    ❌ Error: {e}")
             search_log.append({
+                'category': category,
                 'term': term,
                 'timestamp': datetime.now().isoformat(),
-                'error': f"HTTP {response.status_code}"
+                'error': str(e)
             })
-    
-    except Exception as e:
-        print(f"  ❌ Error: {e}")
-        search_log.append({
-            'term': term,
-            'timestamp': datetime.now().isoformat(),
-            'error': str(e)
-        })
-    
-    # Be nice to the API - wait between requests
-    time.sleep(0.3)
+        
+        # Be nice to the API - wait between requests
+        time.sleep(0.3)
 
 print(f"\n✅ Total unique objects collected: {len(all_object_ids)}")
 
@@ -232,10 +129,13 @@ search_log_file = RAW_DIR / "met_search_log.csv"
 search_log_df.to_csv(search_log_file, index=False)
 print(f"✅ Saved search log to: {search_log_file}")
 
-# Save the object IDs
+# Save the object IDs with their category information
+object_ids_with_cat = [{'object_id': obj_id, 'category': cat, 'term': term} 
+                       for (obj_id, cat, term) in all_object_ids]
+object_ids_df = pd.DataFrame(object_ids_with_cat)
 object_ids_file = RAW_DIR / "met_object_ids.csv"
-pd.DataFrame({"object_id": list(all_object_ids)}).to_csv(object_ids_file, index=False)
-print(f"✅ Saved object IDs to: {object_ids_file}")
+object_ids_df.to_csv(object_ids_file, index=False)
+print(f"✅ Saved object IDs with categories to: {object_ids_file}")
 print()
 
 print("=" * 70)
@@ -244,9 +144,12 @@ print("=" * 70)
 print(f"Estimated time: {len(all_object_ids) * 0.25:.1f} seconds...")
 print()
 
+# Create a dictionary to map object_id to its category
+obj_to_category = {obj_id: cat for (obj_id, cat, term) in all_object_ids}
+
 # Fetch details for each object
 artworks = []
-object_ids_list = list(all_object_ids)
+object_ids_list = [obj_id for (obj_id, cat, term) in all_object_ids]
 fetch_log = []
 
 for i, obj_id in enumerate(object_ids_list):
@@ -264,6 +167,7 @@ for i, obj_id in enumerate(object_ids_list):
             artwork = {
                 'object_id': data.get('objectID'),
                 'title': data.get('title'),
+                'category': obj_to_category.get(obj_id, 'unknown'),
                 'department': data.get('department'),
                 'classification': data.get('classification'),
                 'culture': data.get('culture'),
@@ -319,7 +223,7 @@ print(f"✅ Saved fetch log to: {fetch_log_file}")
 df = pd.DataFrame(artworks)
 
 # Save raw data
-raw_file = RAW_DIR / "met_artworks_raw.csv"
+raw_file = RAW_DIR / "met_aesthetic_raw.csv"
 df.to_csv(raw_file, index=False)
 print(f"✅ Saved raw data to: {raw_file}")
 
@@ -353,7 +257,7 @@ print(f"✅ Created cleaned titles for hedonometer scoring")
 missing_counts = df_processed.isna().sum().to_dict()
 
 # Save processed data
-processed_file = PROCESSED_DIR / "met_artworks_processed.csv"
+processed_file = PROCESSED_DIR / "met_aesthetic_processed.csv"
 df_processed.to_csv(processed_file, index=False)
 print(f"✅ Saved processed data to: {processed_file}")
 
@@ -363,6 +267,13 @@ print("=" * 70)
 print(f"Total artworks: {len(df_processed)}")
 print(f"Total columns: {len(df_processed.columns)}")
 print(f"Columns: {', '.join(df_processed.columns)}")
+
+print(f"\n📊 Category distribution:")
+cat_stats = df_processed['category'].value_counts()
+for cat, count in cat_stats.items():
+    pct = (count / len(df_processed)) * 100
+    print(f"  • {cat.capitalize()}: {count} artworks ({pct:.1f}%)")
+
 print(f"\n📊 Department distribution:")
 dept_stats = df_processed['department'].value_counts().head(5)
 for dept, count in dept_stats.items():
@@ -388,8 +299,4 @@ print("\n" + "=" * 70)
 print("✅ DATA ACQUISITION COMPLETE")
 print("=" * 70)
 print("\nNext steps: Run scoring with labMT word list")
-print("> python src/02_score_titles.py")
-
->>>>>>> eea16d636ce3100fbe22a4674e3489e792846623
-
-
+print("> python src/score_artworks.py")

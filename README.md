@@ -416,14 +416,17 @@ All code included in the repository was revised and verified by us. We understan
 
 Additionally, all interpretive claims, methodological decisions, and critical reflections represent our own academic judgment and responsibility.
 
-# Mini-Project 2: Inferring Happiness Dynamics in Media
-## Eastern vs. Western Aesthetic Concepts in Met Museum Artwork Titles
+# Eastern vs. Western Aesthetic Concepts in Met Museum Artwork Titles
+
+## Overview
+
+This project applies the labMT hedonometer to analyze how emotional language differs between Eastern and Western aesthetic concepts in artwork titles from the Metropolitan Museum of Art's collection. By measuring the "happiness scores" of titles associated with different cultural traditions, we explore whether Western aesthetic ideals tend toward more positive emotional expression while Eastern concepts embrace a wider emotional range, including contemplative and bittersweet themes.
 
 ## Research Question
 
 **How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles?**
 
-We hypothesized that Western aesthetic terms (e.g., "beauty," "sublime," "glory") would cluster toward positive happiness scores, while Eastern concepts (e.g., "zen," "wabi-sabi," "impermanence") would show greater range, embracing bittersweet or contemplative emotions.
+We hypothesized that Western aesthetic terms (such as "beauty," "sublime," and "glory") would cluster toward the positive end of the happiness scale, reflecting cultural emphasis on idealized forms and emotional clarity. In contrast, we expected Eastern concepts (like "zen," "wabi-sabi," and "impermanence") to show a greater range of scores, capturing the nuanced emotional palette of traditions that value transience, simplicity, and contemplative experience.
 
 ## Data Acquisition & Provenance
 
@@ -434,13 +437,18 @@ We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github
 - **Western** (10 terms): beauty, sublime, pastoral, romantic, ideal, grace, glory, divine, harmony, splendor
 - **Eastern** (14 terms): zen, ukiyo, wabi sabi, mono no aware, feng shui, simplicity, impermanence, emptiness, enlightenment, meditation, bamboo, cherry blossom, lotus, nirvana
 
-**Acquisition Pipeline:**
-1. Searched API for each term (max 15 results per term, `hasImages=true`)
-2. Collected metadata for each unique object
-3. Gathered 133 unique artworks (67 Western, 66 Eastern)
-4. Applied 0.3s delays between requests to respect rate limits
+### Acquisition Pipeline
+The data collection process was implemented in `src/met_fetch.py` and followed these steps:
 
-**Date of access:** March 2025
+1. **API search**: For each search term, queried the Met API with parameters `q={term}` and `hasImages=true` to ensure objects with images
+2. **Result limiting**: Collected a maximum of 15 objects per term to maintain balanced representation across concepts
+3. **Metadata retrieval**: For each unique object ID, fetched full object details including title, department, culture, period, and artist information
+4. **Duplicate removal**: Removed duplicate objects that appeared under multiple search terms, keeping the first occurrence
+5. **Rate limiting**: Implemented 0.3-second delays between requests to respect the API's rate limits (80 requests per second max)
+
+**Raw data:** The unprocessed API responses are saved in `data/raw/met_artworks_raw.csv`.
+
+**Date of access:** March 2026
 
 ### Ethics & Limitations
 - **Privacy**: Only public artwork metadata collected; no personal data
@@ -448,6 +456,33 @@ We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github
 - **Language**: Only English titles; translations may lose nuance
 - **Temporal**: Collection reflects Western collecting priorities over centuries
 - **Interpretation**: Titles may be curatorial additions, not artist-given
+
+### Dataset Characteristics
+
+The final dataset contains **133 unique artworks**:
+- **Western aesthetic concepts**: 67 artworks
+- **Eastern aesthetic concepts**: 66 artworks
+
+### Data Dictionary
+
+The processed dataset (`data/processed/met_aesthetic_scored.csv`) contains the following columns:
+
+| Column | Type | Description | Missing Values |
+|--------|------|-------------|----------------|
+| `object_id` | integer | Unique Met Museum object identifier | 0 |
+| `title` | string | Artwork title (raw, as provided by API) | 0 |
+| `category` | string | Cultural category: "eastern" or "western" | 0 |
+| `term_used` | string | Search term that retrieved this artwork | 0 |
+| `department` | string | Met curatorial department | 0 |
+| `culture` | string | Cultural attribution (e.g., "Japanese", "French") | 24 (18%) |
+| `period` | string | Historical period (e.g., "Edo period") | 29 (22%) |
+| `artist` | string | Artist display name | 33 (25%) |
+| `date` | string | Object date description (e.g., "ca. 1880") | 0 |
+| `object_begin` | float | Machine-readable start date (for chronological sorting) | 24 (18%) |
+| `score` | float | Happiness score (1-9 scale) from labMT | 13 (9.8%) |
+| `matched` | integer | Number of words matched to labMT dictionary | 0 |
+| `total` | integer | Total words in cleaned title | 0 |
+| `coverage` | float | Proportion of words matched (matched / total) | 0 |
 
 ## Happiness Scoring
 

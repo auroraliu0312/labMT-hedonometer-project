@@ -466,8 +466,6 @@ The final dataset contains **326 unique artworks**:
 
 ### Data Dictionary
 
-### Data Dictionary
-
 The processed dataset (`data/processed/met_aesthetic_scored.csv`) contains the following columns:
 
 | Column | Type | Description | Missing Values |

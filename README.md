@@ -447,7 +447,7 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 4. **Duplicate removal**: Removed duplicate objects that appeared under multiple search terms, keeping the first occurrence
 5. **Rate limiting**: Implemented 0.3-second delays between requests to respect the API's rate limits (80 requests per second max)
 
-**Raw data:** The unprocessed API responses are saved in `data/raw/met_artworks_raw.csv`.
+**Raw data:** The unprocessed API responses are saved in `data/raw/met_aesthetic_raw.csv`.
 
 **Date of access:** March 2026
 
@@ -529,6 +529,8 @@ Before scoring, we cleaned each title to make sure words would match the diction
 | Artworks with scores | 120 (90.2%) | Most titles contained at least some everyday English words |
 | Artworks with no matches | 13 | These titles use specialized art terminology or non-English words exclusively |
 
+The initial dataset contained 133 artworks retrieved from the Met API. After applying the hedonometer scoring procedure, 120 titles contained at least one word matched in the labMT lexicon and could therefore receive a happiness score. The remaining 13 titles contained only specialized or non-English terms and were excluded from sentiment analysis.
+
 **Happiness score distribution:**
 - Average score: 5.56
 - Typical range: 4.98 to 6.15
@@ -594,6 +596,8 @@ We performed:
 - **Bootstrap confidence intervals** (10,000 resamples, 95% CI)
 - **Hypothesis testing**: t-test, Mann-Whitney U
 - **Effect size**: Cohen's d
+
+All statistical analyses were conducted on the subset of artworks that received valid happiness scores and met the criteria for the analytical dataset. This resulted in a final sample of 89 artworks (60 Western and 29 Eastern).
 
 **Descriptive Statistics**
 
@@ -816,6 +820,8 @@ All scored data and summaries have been saved to:
 - `data/processed/met_aesthetic_scored.csv` – Complete dataset with happiness scores for every artwork
 - `tables/met_aesthetic_summary.csv` – Summary statistics in table format
 - `tables/met_aesthetic_oov.csv` – The list of words not found in labMT for further analysis
+
+
 
 
 <<<<<<< HEAD

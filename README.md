@@ -439,9 +439,11 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 
 ### Dataset Characteristics
 
-The final dataset contains **326 unique artworks**:
-- **Western aesthetic concepts**: 216 artworks (66.3%)
-- **Eastern aesthetic concepts**: 110 artworks (33.7%)
+The final dataset contains **132 unique artworks**:
+- **Western aesthetic concepts**: 62 artworks
+- **Eastern aesthetic concepts**: 70 artworks
+
+Because the same artwork may appear under multiple search terms, duplicate objects were removed using the `object_id` field before analysis.
 
 ### Data Dictionary
 
@@ -453,10 +455,12 @@ The processed dataset (`data/processed/met_aesthetic_scored.csv`) contains the f
 | `title` | string | Artwork title (raw, as provided by API) | 0 |
 | `category` | string | Cultural category: "eastern" or "western" | 0 |
 | `department` | string | Met curatorial department | 0 |
-| `culture` | string | Cultural attribution (e.g., "Japanese", "French") | 215 (66.0%) |
-| `period` | string | Historical period (e.g., "Edo period") | 224 (68.7%) |
-| `object_date` | string | Object date description (e.g., "ca. 1880") | 1 (0.3%) |
-| `score` | float | Happiness score (1-9 scale) from labMT | 35 (10.7%) |
+| `culture` | string | Cultural attribution (e.g., "Japanese", "French") | 24 (18%) |
+| `period` | string | Historical period (e.g., "Edo period") | 29 (22%) |
+| `artist_name` | string | Artist display name | 33 (25%) |
+| `object_date` | string | Object date description (e.g., "ca. 1880") | 0 |
+| `object_begin` | float | Machine-readable start date (for chronological sorting) | 24 (18%) |
+| `score` | float | Happiness score (1-9 scale) from labMT | 13 (9.8%) |
 | `matched` | integer | Number of words matched to labMT dictionary | 0 |
 | `total` | integer | Total words in cleaned title | 0 |
 | `coverage` | float | Proportion of words matched (matched / total) | 0 |
@@ -500,20 +504,20 @@ Before scoring, we cleaned each title to make sure words would match the diction
 
 | Metric | Value | Interpretation |
 |--------|-------|----------------|
-| Total artworks | 326 | Complete dataset of Eastern and Western aesthetic concepts |
-| Artworks with scores | 291 (89.3%) | Most titles contained at least some everyday English words |
-| Artworks with no matches | 35 | These titles use specialized art terminology or non-English words exclusively |
+| Total artworks | 132 | Complete dataset of Eastern and Western aesthetic concepts |
+| Artworks with scores | 119 (90.2%) | Most titles contained at least some everyday English words |
+| Artworks with no matches | 13 | These titles use specialized art terminology or non-English words exclusively |
 
-The initial dataset contained 326 artworks retrieved from the Met API. After applying the hedonometer scoring procedure, 291 titles contained at least one word matched in the labMT lexicon and could therefore receive a happiness score. The remaining 35 titles contained only specialized or non-English terms and were excluded from sentiment analysis.
+The initial dataset contained 132 unique artworks retrieved from the Met API after duplicate objects were removed. After applying the hedonometer scoring procedure, 119 titles contained at least one word matched in the labMT lexicon and could therefore receive a happiness score. The remaining 13 titles contained only specialized or non-English terms and were excluded from sentiment analysis.
 
 **Happiness score distribution:**
-- Average score: 5.53
-- Typical range: 4.98 to 6.08
+- Average score: 5.56
+- Typical range: 4.98 to 6.15
 - Lowest score: 3.82
 - Highest score: 7.92
-- Median: 5.52
+- Median: 5.51
 
-- The average happiness score of 5.53 is slightly above the neutral midpoint of 5, suggesting that artwork titles tend to lean mildly positive in their word choice. The range from 3.82 to 7.92 shows that while some titles use distinctly negative language, others can be quite positive, nevertheless, the extreme scores are rare. The fact that mean (5.53) and median (5.52) are very close tells us the scores are roughly symmetric, not skewed by outliers.
+- The average happiness score of 5.56 is slightly above the neutral midpoint of 5, suggesting that artwork titles tend to lean mildly positive in their word choice. The range from 3.82 to 7.92 shows that while some titles use distinctly negative language, others can be quite positive, nevertheless, the extreme scores are rare. The fact that mean (5.56) and median (5.51) are very close tells us the scores are roughly symmetric, not skewed by outliers.
 
 
 ## Coverage Analysis
@@ -522,79 +526,71 @@ Coverage tells us what percentage of words in each title were actually found in 
 
 | Coverage Metric | Value | Interpretation |
 |-----------------|-------|----------------|
-| Mean coverage | 61.6% | On average, about 62% of each title's words were measurable |
-| Median coverage | 71.4% | Most titles had even better coverage – half of them exceeded 71% |
-| Artworks with no matches | 35 | These 35 titles (10.7%) couldn't be scored at all |
+| Mean coverage | 62.9% | On average, about two-thirds of each title's words were measurable |
+| Median coverage | 66.7% | Most titles had even better coverage – half of them exceeded 67% |
+| Artworks with no matches | 13 | These 13 titles (9.8%) couldn't be scored at all |
 
-- The high median coverage (71.4%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 35 unscorable titles are worth examining separately. They likely contain specialized terminology (like "verso" or "staurotheke") that a general dictionary misses.
+- The high median coverage (66.7%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 13 unscorable titles are worth examining separately. They likely contain specialized terminology (like "statuette" or "verso") that a general dictionary misses.
 
 
 ## Eastern vs Western
 
 | Category | Count | Mean Score | Std Dev | Interpretation |
 |----------|-------|------------|---------|----------------|
-| Eastern concepts | 97 | 5.477 | 0.546 | Slightly less happy, similar variation |
-| Western concepts | 194 | 5.562 | 0.545 | Slightly happier, similar consistency |
+| Eastern concepts | 62 | 5.56 | 0.62 | Slightly more variable language |
+| Western concepts | 57 | 5.55 | 0.56 | Slightly more consistent language |
 
-- The Western artworks scored marginally higher on average (5.562 vs 5.477), with a difference of 0.085 points. The standard deviations are nearly identical (0.546 vs 0.545), suggesting both categories have similar consistency in their emotional language. This difference is small and may not be meaningful without further statistical testing.
+- The Eastern artworks scored marginally higher on average (5.56 vs 5.55), but the difference is tiny – only 0.015 points. More interesting is the standard deviation. Eastern titles show more variation (0.631 vs 0.543), meaning their language ranges more widely from very positive to less positive. Western titles are more clustered around the average. This could reflect differences in how aesthetic concepts are described across traditions, although the small magnitude of the difference suggests caution in interpretation. A more rigorous statistical test would be needed to determine if this difference is meaningful.
 
 
 ## Words That Didn't Match（OOV）
 
-The most common words that appeared in titles but weren't in our dictionary tell us about the limits of applying a general sentiment tool to art historical texts:
+The most common words that appeared in titles but weren't in my dictionary tell us about the limits of applying a general sentiment tool to art historical texts:
 
 | Word | Frequency | Word Type | Why It's Missing |
 |------|-----------|-----------|------------------|
-| skeleton | 40 | Anatomical/Artistic | Domain-specific subject matter |
-| verso | 23 | Art terminology | Art-specific (back of a page) |
-| fieschi | 20 | Proper name | Personal name |
-| staurotheke | 20 | Art object | Specialized art/religious object |
-| horus | 20 | Deity name | Egyptian deity |
-| imhotep | 20 | Historical figure | Ancient Egyptian figure |
-| imuthes | 20 | Variant spelling | Historical name variant |
-| watercarrier | 20 | Occupational term | Specific to certain artworks |
-| posada | 20 | Artist name | Spanish artist's surname |
-| manilla | 20 | Place name | Philippine city |
+| shrine | 4 | Religious place | Too specific, not common in everyday English |
+| sphinx | 3 | Mythological figure | Proper noun / mythological term |
+| statuette | 3 | Art object | Art-specific vocabulary |
+| mono | 3 | Japanese word | Non-English |
+| blossoms | 3 | Nature | Should be in labMT? Possibly a preprocessing issue |
+| bodhisattva | 3 | Buddhist deity | Religious/cultural term |
+| garcini | 2 | Proper name | Person's name |
+| verso | 2 | Art term | Art-specific (back of a page) |
+| skeleton | 2 | Anatomy | Common word? Should be in labMT – worth checking |
+| baptist | 2 | Religious figure | Religious term |
 
 The labMT lexicon was designed for general English, predictably misses several categories of words that matter in art historical texts:
 
-1. **Art-specific terminology** (verso, staurotheke) – these are precisely the words that might carry aesthetic meaning, yet they're invisible to our measurement
-2. **Religious and cultural concepts** (horus, imhotep) – central to understanding many artworks, but absent from a general-purpose dictionary
-3. **Artist and place names** (posada, manilla) – proper names appear frequently in titles
-4. **Anatomical/artistic subjects** (skeleton) – common in certain art genres but not in everyday English
+1. **Art-specific terminology** (statuette, verso) – these are precisely the words that might carry aesthetic meaning, yet they're invisible to our measurement
+2. **Religious and cultural concepts** (shrine, bodhisattva, baptist) – central to understanding many artworks, but absent from a secular, general-purpose dictionary
+3. **Non-English words** (mono) – art historical discourse often incorporates foreign terms
+4. **Proper names** (garcini) – artists, patrons, and historical figures are everywhere in titles
 
 - When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they might be systematically underrepresented in our measurements. The coverage statistics help us identify when this is happening.
 
 ## Statistical Analysis
 We performed:
-- **Descriptive statistics** (mean, median, SD, range)
-- **Bootstrap confidence intervals** (10,000 resamples, 95% CI)
-- **Hypothesis testing**: t-test, Mann-Whitney U
-- **Effect size**: Cohen's d
+- Descriptive statistics (mean, median, SD, range)
+- Bootstrap confidence intervals (10,000 resamples, 95% CI)
+- Bootstrap difference estimation between categories
+- Coverage sensitivity analysis
 
-All statistical analyses were conducted on the subset of artworks that received valid happiness scores and met the criteria for the analytical dataset. This resulted in a final sample of 89 artworks (60 Western and 29 Eastern).
+All statistical analyses were conducted on the subset of artworks that received valid happiness scores and met the criteria for the analytical dataset. This resulted in a final sample of 119 artworks (62 Eastern and 57 Western).
 
 **Descriptive Statistics**
 
 | Category | Count | Mean | Median | SD | Min | Max |
-|----------|-------|------|--------|-----|-----|-----|
-| Western | 60 | 5.54 | 5.49 | 0.54 | 3.83 | 6.86 |
-| Eastern | 59 | 5.56 | 5.51 | 0.64 | 3.82 | 7.92 |
+|----------|------|------|------|------|------|------|
+| Eastern | 62 | 5.56 | 5.52 | 0.62 | 3.82 | 7.92 |
+| Western | 57 | 5.55 | 5.49 | 0.56 | 3.83 | 6.86 |
 
 **Confidence Intervals (95%)**
 
 | Category | Mean [95% CI] | CI Width |
 |----------|---------------|----------|
-| Western | 5.54 [5.41, 5.68] | 0.27 |
-| Eastern | 5.56 [5.40, 5.72] | 0.32 |
-
-**Statistical Tests**
-
-| Test | Statistic | p-value | Significant? |
-|------|-----------|---------|--------------|
-| t-test | t = -0.14 | 0.89 | No |
-| Mann-Whitney U | U = 1763.5 | 0.97 | No |
-| Cohen's d | -0.026 | - | Negligible |
+| Eastern | 5.48 [5.37, 5.59] | 0.22 |
+| Western | 5.56 [5.49, 5.64] | 0.15 |
 
 **Bootstrap Difference Analysis**
 To complement the classical hypothesis tests above, we estimated the uncertainty of the mean difference between Eastern and Western using bootstrap resampling.
@@ -603,20 +599,16 @@ Bootstrap results (10,000 resamples):
 
 | Metric | Value |
 |-------|------|
-| Mean difference (East − West) | -0.010 |
-| 95% CI | [-0.247, 0.219] |
-| Pr(East > West) | 0.477 |
+| Mean difference (East − West) | -0.085 |
+| 95% CI | [-0.213, 0.049] |
+| Pr(East > West) | 0.105 |
 
-The bootstrap estimate shows that the difference between the categories is extremely small and highly uncertain.
-The confidence interval spans both negative and positive values, meaning the data are compatible with:
-	•	Eastern titles being slightly higher,
-	•	Western titles being slightly higher,
-	•	or essentially no difference at all.
 
-The probability that Eastern titles exceed Western titles in the bootstrap distribution is 0.477, which is almost exactly indeterminate (≈50%).
+The bootstrap estimate suggests that Western titles have slightly higher average happiness scores in this sample. However, the 95% confidence interval spans both negative and positive values, meaning the data remain compatible with small differences in either direction.
 
-This result reinforces the conclusion from the t-test and Mann-Whitney test: the dataset does not provide evidence for a systematic difference in average happiness between the two aesthetic traditions.
+The probability that Eastern titles exceed Western titles in the bootstrap distribution is 0.105.
 
+This result reinforces the overall interpretation that the dataset does not provide strong evidence for a systematic difference in average happiness between the two aesthetic traditions.
 
 ## Sampling Audit & Robustness Analysis
 In addition to the descriptive and inferential analysis above, we conducted a separate sampling and robustness audit to evaluate how stable the results are under different assumptions about measurement quality and sample composition.
@@ -689,18 +681,7 @@ The distribution is centered very close to zero, and the 95% interval spans both
 
 Bootstrap therefore confirms that the similarity between categories is not an artifact of a single sample draw.
 
-### Figure 5: Sample Size by Search Term
-![Sample Size](figures/sample_size_by_term.png)
-*Number of artworks retrieved for each aesthetic search term. Some concepts contribute many more artworks than others, illustrating that the dataset reflects API retrieval patterns rather than a perfectly balanced conceptual sample.*
-
-This plot audits how many artworks were retrieved for each aesthetic search term.
-
-The distribution reveals that some terms contribute far more artworks than others. This is expected when using keyword searches against a museum collection database.
-
-The figure illustrates an important methodological point:
-the dataset reflects API retrieval patterns and curatorial cataloging practices, not a balanced representation of aesthetic concepts.
-
-### Figure 6: Lexical Coverage by Category
+### Figure 5: Lexical Coverage by Category
 ![Coverage](figures/coverage_by_category.png)
 *Boxplot showing lexical coverage (matched words / total words) for Eastern and Western titles. Eastern titles display slightly greater variability, reflecting the presence of transliterated or culturally specific terms not present in the hedonometer lexicon.*
 
@@ -777,17 +758,17 @@ For these reasons, the statistical analysis should be interpreted as a robust co
 ### Repository Structure
 
 labMT-hedonometer-project/
-├── README.md # This file
-├── requirements.txt # Dependencies
+├── README.md                  # Project description and analysis report
+├── requirements.txt           # Python dependencies
 ├── src/
-│ ├── met_fetch.py # API data collection
-│ ├── score_artworks.py # labMT scoring
-│ └── comprehensive_analysis.py # Stats + figures
+│   ├── met_fetch.py           # Retrieve artwork metadata from the Met Museum API
+│   ├── score_aesthetic.py     # Apply labMT hedonometer scoring to artwork titles
+│   └── stats_sampling_analysis.py  # Statistical analysis, bootstrap inference, and robustness checks
 ├── data/
-│ ├── raw/ # Raw API output
-│ └── processed/ # Scored data
-├── figures/ # All visualizations
-└── tables/ # Summary statistics
+│   ├── raw/                   # Raw API output data
+│   └── processed/             # Cleaned and scored datasets
+├── figures/                   # Generated visualizations
+└── tables/                    # Summary statistics and analysis tables
 
 ### Data Availability
 
@@ -799,6 +780,7 @@ All scored data and summaries have been saved to:
 
 
 
+<<<<<<< HEAD
 We selected 25 words across five categories for qualitative analysis, revealing how context, community, and culture influence emotional valence.
 
 ### Very Positive Words: laughter, happiness, love, happy, laughed
@@ -937,10 +919,12 @@ The dataset was published as supplementary material with Dodds et al. (2011) in 
 
 # 1. Clone the repository
 git clone https://github.com/your-username/labMT-hedonometer-project.git
+=======
 ### How to Run
 ```bash
 # 1. Clone repository
 git clone https://github.com/auroraliu0312/labMT-hedonometer-project.git
+>>>>>>> eea16d636ce3100fbe22a4674e3489e792846623
 cd labMT-hedonometer-project
 
 # 2. Install dependencies
@@ -952,6 +936,7 @@ python3 src/score_artworks.py     # Add happiness scores
 python3 src/comprehensive_analysis.py  # Generate stats + figures
 
 
+<<<<<<< HEAD
 ## Credits
 
 - Team roles:
@@ -968,3 +953,5 @@ Dodds, Peter Sheridan, Kameron Decker Harris, Isabel M. Kloumann, Catherine A. B
 ## Academic integrity & AI note
 
 
+=======
+>>>>>>> eea16d636ce3100fbe22a4674e3489e792846623

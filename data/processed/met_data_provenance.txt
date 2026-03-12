@@ -1,0 +1,42 @@
+
+MET MUSEUM DATA ACQUISITION SUMMARY
+====================================
+Download Date: 2026-03-10 14:08:57
+Script: fetch_met_data.py
+API: Metropolitan Museum of Art Collection API
+
+SEARCH METHODOLOGY
+------------------
+Rationale: Multiple search terms were used to:
+1. Increase sample size for statistical power
+2. Include emotional words likely to match labMT (love, death, joy, sorrow)
+3. Enable comparisons across themes (nature vs religious vs war)
+4. Capture diverse artistic traditions
+
+Search terms: ['love', 'death', 'war', 'peace', 'nature', 'beauty', 'sorrow', 'joy', 'flowers', 'landscape', 'portrait', 'religious']
+Objects per term: 30
+Total unique objects requested: 91
+Successfully downloaded: 90
+Failed downloads: 1
+
+SAMPLE CHARACTERISTICS
+----------------------
+Artworks by search term:
+search_term
+other       79
+portrait     6
+war          3
+love         1
+sorrow       1
+
+Date range:  to summer 1940
+Unique artists: 60
+Unique departments: 16
+
+LIMITATIONS
+-----------
+- Only includes objects with images
+- Limited to first 30 results per term
+- Search terms may bias toward certain artistic traditions
+- Text may contain historical language and terminology
+- Not representative of all museum collections

@@ -26,7 +26,7 @@ def load_data():
     """Load the scored artwork data"""
     print("📂 Loading data...")
     df = pd.read_csv(data_path)
-    df = df.dropna(subset=['happiness_score']).copy()
+    df = df.dropna(subset=['score']).copy()
     print(f"✅ Loaded {len(df)} scored artworks")
     return df
 
@@ -37,7 +37,7 @@ def descriptive_statistics(df):
     
     stats_list = []
     for category in ['western', 'eastern']:
-        cat_df = df[df['category'] == category]['happiness_score']
+        cat_df = df[df['category'] == category]['score']
         
         # Calculate statistics
         stats_dict = {
@@ -77,7 +77,7 @@ def confidence_intervals(df, n_bootstrap=10000, confidence=0.95):
     results = []
     
     for category in ['western', 'eastern']:
-        cat_data = df[df['category'] == category]['happiness_score'].values
+        cat_data = df[df['category'] == category]['score'].values
         
         # Bootstrap
         bootstrap_means = []
@@ -113,8 +113,8 @@ def hypothesis_tests(df):
     print("\n🔬 HYPOTHESIS TESTS")
     print("=" * 50)
     
-    western = df[df['category'] == 'western']['happiness_score']
-    eastern = df[df['category'] == 'eastern']['happiness_score']
+    western = df[df['category'] == 'western']['score']
+    eastern = df[df['category'] == 'eastern']['score']
     
     # 1. Independent t-test (parametric)
     t_stat, t_pval = stats.ttest_ind(western, eastern, equal_var=False)
@@ -162,11 +162,11 @@ def create_publication_figures(df, ci_df):
     plt.figure(figsize=(12, 7))
     
     # Boxplot
-    ax = sns.boxplot(x='category', y='happiness_score', data=df, 
+    ax = sns.boxplot(x='category', y='score', data=df, 
                      palette=['#3498db', '#2ecc71'], width=0.6)
     
     # Add individual points
-    sns.stripplot(x='category', y='happiness_score', data=df, 
+    sns.stripplot(x='category', y='score', data=df, 
                   color='black', alpha=0.4, size=3, jitter=0.2)
     
     # Add confidence intervals
@@ -205,10 +205,10 @@ def create_publication_figures(df, ci_df):
     # Figure 2: Distribution histogram
     plt.figure(figsize=(12, 6))
     
-    plt.hist(df[df['category']=='western']['happiness_score'], 
+    plt.hist(df[df['category']=='western']['score'], 
              alpha=0.7, label='Western', bins=12, color='#3498db', 
              edgecolor='black', density=True)
-    plt.hist(df[df['category']=='eastern']['happiness_score'], 
+    plt.hist(df[df['category']=='eastern']['score'], 
              alpha=0.7, label='Eastern', bins=12, color='#2ecc71', 
              edgecolor='black', density=True)
     
@@ -219,9 +219,9 @@ def create_publication_figures(df, ci_df):
     plt.legend(fontsize=12)
     
     # Add vertical lines for means
-    plt.axvline(df[df['category']=='western']['happiness_score'].mean(), 
+    plt.axvline(df[df['category']=='western']['score'].mean(), 
                 color='#3498db', linestyle='--', linewidth=2, alpha=0.8)
-    plt.axvline(df[df['category']=='eastern']['happiness_score'].mean(), 
+    plt.axvline(df[df['category']=='eastern']['score'].mean(), 
                 color='#2ecc71', linestyle='--', linewidth=2, alpha=0.8)
     
     plt.tight_layout()
@@ -255,42 +255,42 @@ def create_example_table(df):
     examples = []
     
     # Highest scoring Western
-    top_western = df[df['category']=='western'].nlargest(3, 'happiness_score')
+    top_western = df[df['category']=='western'].nlargest(3, 'score')
     for _, row in top_western.iterrows():
         examples.append({
             'title': row['title'],
             'category': 'Western',
-            'score': f"{row['happiness_score']:.2f}",
+            'score': f"{row['score']:.2f}",
             'note': 'Highest in category'
         })
     
     # Highest scoring Eastern
-    top_eastern = df[df['category']=='eastern'].nlargest(3, 'happiness_score')
+    top_eastern = df[df['category']=='eastern'].nlargest(3, 'score')
     for _, row in top_eastern.iterrows():
         examples.append({
             'title': row['title'],
             'category': 'Eastern',
-            'score': f"{row['happiness_score']:.2f}",
+            'score': f"{row['score']:.2f}",
             'note': 'Highest in category'
         })
     
     # Lowest scoring Western
-    bottom_western = df[df['category']=='western'].nsmallest(3, 'happiness_score')
+    bottom_western = df[df['category']=='western'].nsmallest(3, 'score')
     for _, row in bottom_western.iterrows():
         examples.append({
             'title': row['title'],
             'category': 'Western',
-            'score': f"{row['happiness_score']:.2f}",
+            'score': f"{row['score']:.2f}",
             'note': 'Lowest in category'
         })
     
     # Lowest scoring Eastern
-    bottom_eastern = df[df['category']=='eastern'].nsmallest(3, 'happiness_score')
+    bottom_eastern = df[df['category']=='eastern'].nsmallest(3, 'score')
     for _, row in bottom_eastern.iterrows():
         examples.append({
             'title': row['title'],
             'category': 'Eastern',
-            'score': f"{row['happiness_score']:.2f}",
+            'score': f"{row['score']:.2f}",
             'note': 'Lowest in category'
         })
     

@@ -416,11 +416,11 @@ All code included in the repository was revised and verified by us. We understan
 
 Additionally, all interpretive claims, methodological decisions, and critical reflections represent our own academic judgment and responsibility.
 
-# Eastern vs. Western Aesthetic Concepts in Met Museum Artwork Titles
+# Eastern vs. Western Aesthetic Concepts in Met Museum
 
 ## Overview
 
-This project applies the labMT hedonometer to analyze how emotional language differs between Eastern and Western aesthetic concepts in artwork titles from the Metropolitan Museum of Art's collection. By measuring the "happiness scores" of titles associated with different cultural traditions, we explore whether Western aesthetic ideals tend toward more positive emotional expression while Eastern concepts embrace a wider emotional range, including contemplative and bittersweet themes.
+We apply the labMT hedonometer to analyze how emotional language differs between Eastern and Western aesthetic concepts in artwork titles from the Metropolitan Museum of Art's collection. By measuring the "happiness scores" of titles associated with different cultural traditions, we explore whether Western aesthetic ideals tend toward more positive emotional expression while Eastern concepts embrace a wider emotional range, including contemplative and bittersweet themes.
 
 ## Research Question
 
@@ -527,10 +527,10 @@ Before scoring, We cleaned each title to make sure words would match the diction
 
 **Happiness score distribution:**
 - Average score: 5.56
-- Typical range (one standard deviation): 4.98 to 6.15
+- Typical range: 4.98 to 6.15
 - Lowest score: 3.82
 - Highest score: 7.92
-- Middle (median): 5.51
+- Median: 5.51
 
 - The average happiness score of 5.56 is slightly above the neutral midpoint of 5, suggesting that artwork titles tend to lean mildly positive in their word choice. The range from 3.82 to 7.92 shows that while some titles use distinctly negative language, others can be quite positive, nevertheless, the extreme scores are rare. The fact that mean (5.56) and median (5.51) are very close tells us the scores are roughly symmetric, not skewed by outliers.
 
@@ -574,10 +574,10 @@ The most common words that appeared in titles but weren't in my dictionary tell 
 
 The labMT lexicon was designed for general English, predictably misses several categories of words that matter in art historical texts:
 
-1. Art-specific terminology (statuette, verso) – these are precisely the words that might carry aesthetic meaning, yet they're invisible to our measurement
-2. Religious and cultural concepts (shrine, bodhisattva, baptist) – central to understanding many artworks, but absent from a secular, general-purpose dictionary
-3. Non-English words (mono) – art historical discourse often incorporates foreign terms
-4. Proper names (garcini) – artists, patrons, and historical figures are everywhere in titles
+1. **Art-specific terminology** (statuette, verso) – these are precisely the words that might carry aesthetic meaning, yet they're invisible to our measurement
+2. **Religious and cultural concepts** (shrine, bodhisattva, baptist) – central to understanding many artworks, but absent from a secular, general-purpose dictionary
+3. **Non-English words** (mono) – art historical discourse often incorporates foreign terms
+4. **Proper names** (garcini) – artists, patrons, and historical figures are everywhere in titles
 
 - When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they might be systematically underrepresented in our measurements. The coverage statistics help us identify when this is happening.
 

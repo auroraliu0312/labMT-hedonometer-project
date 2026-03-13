@@ -321,6 +321,7 @@ For example, words like rt, lol, blog appear as very frequent on Twitter in our 
 
 This generation process explains several features we observed in our analysis:
 
+
 1. Missing ranks occur because a word wasn't frequent enough in a particular corpus to make its top 5000. It is not because the word doesn't exist in that domain.
 2. Standard deviation measures genuine disagreement among raters, not ambiguity in the word itself.
 3. The 2011 time stamp means all ratings and frequency data reflect language use from approximately 2008-2010. Words like "tweet" (rank 107 on Twitter, missing from NYT) had different meanings.

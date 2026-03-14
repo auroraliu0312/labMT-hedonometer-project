@@ -401,13 +401,11 @@ Additionally, all interpretive claims, methodological decisions, and critical re
 
 ## Overview
 
-We apply the labMT hedonometer to analyze how emotional language differs between Eastern and Western aesthetic concepts in artwork titles from the Metropolitan Museum of Art's collection. By measuring the "happiness scores" of titles associated with different cultural traditions, we explore whether Western aesthetic ideals tend toward more positive emotional expression while Eastern concepts embrace a wider emotional range, including contemplative and bittersweet themes.
-
-## Research Question
+We utilized the labMT hedonometer to analyze how emotional language differs between Eastern and Western aesthetic concepts in artwork titles from the Metropolitan Museum of Art's collection. By measuring the "happiness scores" of titles associated with various cultural traditions, we explore whether Western aesthetic ideals tend toward more positive emotional expression while Eastern concepts embrace a wider emotional range, including contemplative and bittersweet themes. In order to investigate this concept, this raises the question:
 
 **How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles?**
 
-We hypothesized that Western aesthetic terms (such as "beauty," "sublime," and "glory") would cluster toward the positive end of the happiness scale, reflecting cultural emphasis on idealized forms and emotional clarity. In contrast, we expected Eastern concepts (like "zen," "wabi-sabi," and "impermanence") to show a greater range of scores, capturing the nuanced emotional palette of traditions that value transience, simplicity, and contemplative experience.
+We hypothesized that Western aesthetic terms (such as "beauty," "sublime," and "glory") would cluster toward the positive side of the happiness scale, reflecting cultural emphasis on idealized forms and emotional clarity. In contrast, we expected Eastern concepts (like "zen," "wabi-sabi," and "impermanence") to show a greater range of scores, capturing the nuanced emotional palette of traditions that value transience, simplicity, and contemplative experience.
 
 ## Data Acquisition & Provenance
 
@@ -467,8 +465,6 @@ The processed dataset (`data/processed/met_aesthetic_scored.csv`) contains the f
 | `coverage` | float | Proportion of words matched (matched / total) | 0 |
 
 ## Happiness Scoring
-
-### How We Calculated Happiness Scores
 
 We followed the standard method from Dodds et al. (2011) to measure how "happy" each artwork title is. Here's how it works:
 

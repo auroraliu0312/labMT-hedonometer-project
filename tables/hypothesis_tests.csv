@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-test,statistic,p_value,significant
-t-test,-0.13811101624766883,0.8903959810801854,False
-Mann-Whitney U,1791.5,0.9685945914639071,False
-Cohen's d,-0.02528267564917017,,
-=======
 test,statistic,p_value,significant_at_0.05
 t-test,0.10909839716673905,0.9135247475803976,False
 Mann-Whitney U,842.5,0.8131520605482279,False
 Cohen's d,0.02475217309557546,,
->>>>>>> d3609d5b194e78e1edb494ec7a8beeb20db6b4bf

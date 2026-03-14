@@ -1,17 +1,8 @@
 metric,value
-<<<<<<< HEAD
-total_artworks,133.0
-scored_artworks,120.0
-mean_happiness,5.5584925366300375
-median_happiness,5.512363636363636
-mean_coverage,0.6289475754206661
-eastern_mean,5.566046612521189
-=======
 total_artworks,100.0
 scored_artworks,90.0
 mean_happiness,5.547973472823473
 median_happiness,5.511555555555555
 mean_coverage,0.6372383705475811
 eastern_mean,5.541215803353734
->>>>>>> d3609d5b194e78e1edb494ec7a8beeb20db6b4bf
 western_mean,5.551186135358267

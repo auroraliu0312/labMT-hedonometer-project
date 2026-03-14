@@ -511,7 +511,9 @@ The labMT lexicon was designed for general English, predictably misses several c
 
 - When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they might be systematically underrepresented in our measurements. The coverage statistics help us identify when this is happening.
 
+
 ## Statistical Analysis
+
 We performed:
 - Descriptive statistics (mean, median, SD, range)
 - Bootstrap confidence intervals (10,000 resamples, 95% CI)
@@ -520,32 +522,31 @@ We performed:
 
 All statistical analyses were conducted on the subset of artworks that received valid happiness scores and met the criteria for the analytical dataset. This resulted in a final sample of 119 artworks (62 Eastern and 57 Western).
 
-**Descriptive Statistics**
+### Descriptive Statistics
 
 | Category | Count | Mean | Median | SD | Min | Max |
 |----------|------|------|------|------|------|------|
 | Eastern | 62 | 5.56 | 5.52 | 0.62 | 3.82 | 7.92 |
 | Western | 57 | 5.55 | 5.49 | 0.56 | 3.83 | 6.86 |
 
-
-**Confidence Intervals (95%)**
+### Confidence Intervals (95%)
 
 | Category | Mean [95% CI] | CI Width |
 |----------|---------------|----------|
 | Eastern | 5.48 [5.37, 5.59] | 0.22 |
 | Western | 5.56 [5.49, 5.64] | 0.15 |
 
-**Bootstrap Difference Analysis**
-To complement the classical hypothesis tests above, we estimated the uncertainty of the mean difference between Eastern and Western using bootstrap resampling.
+### Bootstrap Difference Analysis
 
-Bootstrap results (10,000 resamples):
+To complement the descriptive comparison above, we estimated the uncertainty of the mean difference between Eastern and Western titles using bootstrap resampling (10,000 iterations).
+
+Bootstrap results:
 
 | Metric | Value |
 |-------|------|
 | Mean difference (East − West) | -0.085 |
 | 95% CI | [-0.213, 0.049] |
 | Pr(East > West) | 0.105 |
-
 
 The bootstrap estimate suggests that Western titles have slightly higher average happiness scores in this sample. However, the 95% confidence interval spans both negative and positive values, meaning the data remain compatible with small differences in either direction.
 
@@ -554,6 +555,7 @@ The probability that Eastern titles exceed Western titles in the bootstrap distr
 This result reinforces the overall interpretation that the dataset does not provide strong evidence for a systematic difference in average happiness between the two aesthetic traditions.
 
 ![Bootstrap Difference](figures/bootstrap_difference_distribution.png)
+
 *Bootstrap distribution of the estimated difference in mean happiness scores (Eastern − Western). The distribution centers near zero and the 95% interval spans both positive and negative values, indicating substantial uncertainty in the observed difference.*
 
 This figure shows the bootstrap distribution of the estimated difference in mean happiness scores between Eastern and Western titles.
@@ -562,7 +564,49 @@ The distribution is centered very close to zero, and the 95% interval spans both
 
 Bootstrap therefore confirms that the similarity between categories is not an artifact of a single sample draw.
 
+
+## Sampling Audit & Robustness Analysis
+
+In addition to the main inferential analysis, we conducted a sampling and robustness audit to evaluate how stable the results are under different assumptions about measurement quality and sample composition.
+
+This additional analysis was implemented in the script:
+src/stats_sampling_analysis.py
+
+The goal of this step was not to replace the main analysis, but to validate the reliability of the comparison between Eastern and Western titles.
+
+Three questions motivated this additional analytical layer:
+
+1. **Sampling balance**  
+   Are Eastern and Western artworks evenly represented across search terms?
+
+2. **Measurement coverage**  
+   How much of each title is actually interpreted by the hedonometer lexicon?
+
+3. **Statistical stability**  
+   Would the difference between groups change under repeated resampling or stricter lexical coverage requirements?
+
+### 1. Sample Structure Audit
+
+We examined how many artworks were retrieved for each search term and category.
+
+This step is important because the dataset is search-term driven, not randomly sampled from all museum artworks. Some aesthetic terms return far more artworks than others, which may influence the apparent balance of the categories.
+
+### 2. Coverage Sensitivity Analysis
+
+Because the hedonometer only scores words present in the labMT lexicon, some titles are only partially interpreted.
+
+To test whether this affects our conclusions, we repeated the comparison under stricter coverage thresholds:
+
+- coverage ≥ 0.0 (all scored titles)
+- coverage ≥ 0.3
+- coverage ≥ 0.5
+
+If the results remain stable under stricter thresholds, this increases confidence that the observed pattern is not driven by poorly matched titles.
+
+Across all thresholds, the estimated difference between Eastern and Western scores remained close to zero, suggesting that the similarity between categories is not driven by low-coverage titles.
+
 ![Coverage](figures/coverage_by_category.png)
+
 *Boxplot showing lexical coverage (matched words / total words) for Eastern and Western titles. Eastern titles display slightly greater variability, reflecting the presence of transliterated or culturally specific terms not present in the hedonometer lexicon.*
 
 Coverage measures the proportion of title words that were successfully matched to the labMT lexicon.
@@ -571,62 +615,20 @@ Both categories show moderate coverage overall, but Eastern titles display sligh
 
 The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
 
-## Sampling Audit & Robustness Analysis
-In addition to the descriptive and inferential analysis above, we conducted a separate sampling and robustness audit to evaluate how stable the results are under different assumptions about measurement quality and sample composition.
-
-This additional analysis was implemented in a separate script:
-src/stats_sampling_analysis.py
-
-The goal of this step was not to replace the main analysis but to validate the reliability of the comparison between Eastern and Western titles.
-
-Three questions motivated this additional statistical layer:
-	1.	Sampling balance
-Are Eastern and Western artworks evenly represented across search terms?
-	2.	Measurement coverage
-How much of each title is actually interpreted by the hedonometer lexicon?
-	3.	Statistical stability
-Would the difference between groups change under repeated resampling or stricter lexical coverage requirements?
-
-To address these questions, we performed three additional procedures:
-
-1. Sample Structure Audit
-We examined how many artworks were retrieved for each search term and category.
-This step is important because the dataset is search-term driven, not randomly sampled from all museum artworks. Some aesthetic terms return far more artworks than others, which may influence the apparent balance of the categories.
-
-2. Bootstrap Inference
-Instead of relying only on classical statistical tests, we estimated uncertainty using bootstrap resampling (10,000 iterations).
-Bootstrap repeatedly resamples the observed data with replacement to simulate possible alternative samples drawn from the same population.
-
-This allows us to estimate:
-	•	confidence intervals for group means
-	•	confidence intervals for the difference between categories
-	•	the probability that one category exceeds the other
-
-This approach is particularly useful when:
-	•	sample sizes are modest
-	•	group sizes are unequal
-	•	normality assumptions may not hold perfectly
-
-3. Coverage Sensitivity Analysis
-Because the hedonometer only scores words present in the labMT lexicon, some titles are only partially interpreted.
-To test whether this affects our conclusions, we repeated the comparison under stricter coverage thresholds:
-	•	coverage ≥ 0.0 (all scored titles)
-	•	coverage ≥ 0.3
-	•	coverage ≥ 0.5
-If the results remain stable under stricter thresholds, this increases confidence that the observed pattern is not driven by poorly matched titles.
-
-Across all thresholds, the estimated difference between Eastern and Western scores remained close to zero, suggesting that the similarity between categories is **not driven by low-coverage titles**.
 
 ## Illustrative Title Examples
+
 To illustrate how hedonometer scores correspond to specific artwork titles, we highlight several examples from the dataset.
+
 | Title | Category | Score | Note |
-|-------|----------|-------|------|
+|------|------|------|------|
 | "Butterflies" | Eastern | 7.92 | Highest overall |
-| Cherry Blossoms | Eastern | 7.04 | Sakura - beauty and transience |
+| Cherry Blossoms | Eastern | 7.04 | Sakura – beauty and transience |
 | Paris | Western | 6.86 | Highest Western |
 | The Death of Socrates | Eastern | 3.82 | Lowest overall |
 | War club | Western | 3.83 | Lowest Western |
 | The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |
+
 
 ## Additional Statistical Considerations
 

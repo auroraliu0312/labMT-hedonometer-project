@@ -669,7 +669,6 @@ The API returns only English titles, even for artworks originating in non-Englis
 
 Future research should collect titles in original languages where available, not just English translations, preserving the original cultural and emotional valence. This requires developing or adapting sentiment lexicons for multiple languages—Japanese, Chinese, Arabic, Sanskrit, and others—rather than imposing an English-centric instrument on non-English texts. Training culture-specific word embeddings would capture semantic associations unique to each language and cultural context. Comparing sentiment patterns across languages for the same objects or concepts would reveal where translation loses or transforms meaning. Working with native speakers and cultural experts to validate translations and identify concepts that resist direct translation is essential, as is including transliteration alongside translation to preserve phonetic and cultural markers even when direct translation fails.
 
-
 **3. The Problem of Curatorial Voice**
 
 Museum assigned titles raise a fundamental question: whose emotional language are we measuring? For many historical objects, especially from non-Western cultures, the existing title was assigned by a curator, often decades or centuries after the object's creation. A Benin bronze's title may reflect 19th-century European ethnographic categories rather than the intentions of its Edo makers. A Buddhist sculpture's English title may prioritize identification (e.g., "Bodhisattva") over the devotional language that might accompany it in its original context. We are therefore measuring the emotional valence of *curatorial description*, not necessarily the emotional content of the artwork itself or its reception in its source culture.
@@ -681,9 +680,6 @@ Future work should distinguish between artist-given titles and curatorial additi
 The Met's collection is not temporally neutral. It overrepresents certain periods such as 19th-century European painting and ancient Egyptian art while underrepresenting others, including contemporary non-Western art and ephemeral or performance-based traditions. More importantly, the availability of English titles varies dramatically by period and culture. Ancient Egyptian objects often have descriptive curatorial titles created by Western Egyptologists; contemporary Japanese works may retain original titles in translation or have titles supplied by contemporary dealers and collectors. This temporal and cultural stratification interacts with our analysis in ways we cannot fully disentangle. A 12th-century Buddhist sculpture and a 19th-century Japanese print are both categorized as "Eastern," but they come from radically different historical contexts, with different relationships to language, naming practices, and curatorial documentation.
 
 Future research should stratify analysis by historical period rather than treating "Eastern art" as a monolithic category, enabling comparison of how different eras within each tradition are represented. Including creation date metadata in all analyses would help control for temporal confounding. Sampling proportionally across centuries rather than accepting the Met's existing distribution as representative would produce a more balanced dataset. Analyzing how naming practices change over time within each tradition would distinguish between historical naming conventions and contemporary curatorial descriptions. Collaborating with period specialists to understand the specific linguistic and cultural contexts of different eras would ground the analysis in historical knowledge rather than imposing contemporary frameworks on historical materials.
-
-
-Those limitations do not invalidate our findings but rather contextualize them. The similarity between Eastern and Western aesthetic concepts in this dataset is robust within the specific context of the Metropolitan Museum of Art's English-language titles. However, this similarity may reflect institutional practices, translation choices, and lexical biases as much as genuine cultural convergence. Future research that addresses these limitations through multilingual analysis, diverse institutional sampling, and culture-specific lexicons would provide a more complete picture of how emotional language operates across aesthetic traditions. Until then, our conclusions should be understood as a comparison of *museum representations* of Eastern and Western art rather than a direct comparison of the aesthetic traditions themselves.
 
 # How to Run the Code
 
@@ -722,7 +718,7 @@ git clone https://github.com/auroraliu0312/labMT-hedonometer-project
 - Quantitative analyst: Mohan Liu, Anny Li
 - Qualitative & data acquisation lead: Angelina Roman Rosales
 - Provenance & visualisation lead: Simone van Moerkerk
-6. Editor & figure & code curator: Jaena Danaram
+- Editor & figure & code curator: Jaena Danaram
 
 ## Citation of papers:
 Dodds, Peter Sheridan, Kameron Decker Harris, Isabel M. Kloumann, Catherine A. Bliss, and Christopher M. Danforth. 2011. “Temporal Patterns of Happiness and Information in a Global Social Network: Hedonometrics and Twitter.” Edited by Johan Bollen. PLoS ONE 6 (12): e26752. https://doi.org/10.1371/journal.pone.0026752.

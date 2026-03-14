@@ -103,7 +103,7 @@ The words with the lowest happiness scores correspond to negative or sensitive t
 | kill      | 1.56            |
 | killed    | 1.56            |
 
-- The most negative words cluster around violence, death, and trauma. "Suicide" and "murder" appear in all four corpora. These concepts are discussed across all types of texts, from news to songs to casual conversation. The pattern of "terrorism" appearing ONLY in the New York Times is striking: this suggests that in 2011, terrorism was primarily discussed in formal news contexts, not in songs or casual Twitter conversations. "Rape" appears in Twitter, NYT, and Lyrics but NOT in Google Books. This possibly reflecting censorship in historical texts or changing social willingness to discuss sexual violence.The very low scores (1.3-1.5) and low standard deviations show strong cultural agreement about the negativity of these words. 
+- The most negative words cluster around violence, death, and trauma. "Suicide" and "murder" appear in all four corpora. These concepts are discussed across all types of texts, from news to songs to casual conversation. The pattern of "terrorism" appearing only in the New York Times is striking: this suggests that in 2011, terrorism was primarily discussed in formal news contexts, not in songs or casual Twitter conversations. "Rape" appears in Twitter, NYT, and Lyrics but not in Google Books. This possibly reflecting censorship in historical texts or changing social willingness to discuss sexual violence.The very low scores (1.3-1.5) and low standard deviations show strong cultural agreement about the negativity of these words. 
 
 > These checks confirm that the happiness scores and words are reasonable, and no data entry errors are apparent.
 
@@ -152,13 +152,6 @@ On the surface, “whiskey” is a relatively neutral object word. However, it i
 
 5. pussy (4.80, 2.67)
 This word is highly polysemous and gendered. It can be used as an insult (especially towards men, implying weakness), as a sexual term, and in some contexts as a reclaimed or playful expression. Different annotators may respond to different senses and social norms around sexism and sexuality, leading to wide disagreement in how “happy” or “unhappy” the word feels.
-
-Overall, these words may be contested because:
-
-- They can have multiple meanings (ambiguity)
-- Their emotional tone depends on context
-- Some may function as slang
-- Some may carry irony or mixed connotations
 
 The quantitative pattern (high standard deviation) reflects qualitative ambiguity. Words that allow multiple interpretations naturally produce more disagreement among raters. In this sense, standard deviation does not merely capture rating noise, it indexes cultural contestation and semantic instability.
 
@@ -440,6 +433,19 @@ Before scoring, we cleaned each title to make sure words would match the diction
 
 - We kept every word that matched the labMT dictionary. No words were filtered out, even common ones like "the", "and", or "of" that have neutral scores around 5. If we had removed neutral word, Scores would be pulled toward extremes (higher highs, lower lows). Moreover, short titles lose most words may not have a score. For instance, a title containing "The Garden of Earthly Delights" has 5 words, 3 of which are neutral ("the", "of", "delights" is neutral). Removing neutral words would leave only "garden" and "earthly" – losing 60% of the text and potentially misrepresenting the title's emotional tone. On the other hand, different titles affected differently. Some titles have more neutral words than others may lead to unfair comparasion. Therefore, by keeping all words, we are measuring the actual language used in titles, not an artificially filtered version. This means scores reflect real word choices, including the subtle emotional baseline set by neutral words.
 
+## Illustrative Title Examples
+
+To illustrate how hedonometer scores correspond to specific artwork titles, we highlight several examples from the dataset.
+
+| Title | Category | Score | Note |
+|------|------|------|------|
+| "Butterflies" | Eastern | 7.92 | Highest overall |
+| Cherry Blossoms | Eastern | 7.04 | Sakura – beauty and transience |
+| Paris | Western | 6.86 | Highest Western |
+| The Death of Socrates | Eastern | 3.82 | Lowest overall |
+| War club | Western | 3.83 | Lowest Western |
+| The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |## Illustrative Title Examples
+
 # Results
 
 ## Scoring Results
@@ -616,20 +622,6 @@ Both categories show moderate coverage overall, but Eastern titles display sligh
 The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
 
 
-## Illustrative Title Examples
-
-To illustrate how hedonometer scores correspond to specific artwork titles, we highlight several examples from the dataset.
-
-| Title | Category | Score | Note |
-|------|------|------|------|
-| "Butterflies" | Eastern | 7.92 | Highest overall |
-| Cherry Blossoms | Eastern | 7.04 | Sakura – beauty and transience |
-| Paris | Western | 6.86 | Highest Western |
-| The Death of Socrates | Eastern | 3.82 | Lowest overall |
-| War club | Western | 3.83 | Lowest Western |
-| The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |
-
-
 ## Additional Statistical Considerations
 
 The bootstrap and coverage sensitivity analyses reinforce the main conclusion while also clarifying its limitations.
@@ -659,25 +651,25 @@ These assumptions are reasonable for this exploratory study but should be tested
 
 ### Future Directions
 
-**1. Institutional and Collection Bias**
+**Institutional and Collection Bias**
 
 The Metropolitan Museum of Art is itself a product of Western institutional history. Its collection reflects not the universe of Eastern and Western art, but rather what Western collectors, curators, and donors over the past 150 years deemed worthy of preservation and display. The overrepresentation of Western artworks (57% of scored titles) is not a sampling flaw we could correct by collecting more data—it is a structural feature of the source. Eastern artworks in the Met collection are already filtered through Western acquisition priorities: they tend to be objects that fit Western categories of "art" (rather than ritual objects, functional items, or ephemeral works), that survived colonial-era collecting practices, and that were deemed significant by Western aesthetic standards. Our comparison is therefore not between "Eastern art" and "Western art" but between how these two categories are *represented in a Western institutional context*.
 
 Rather than relying on a single Western institution, future work should sample from multiple museums across different cultural contexts, including Tokyo National Museum, British Museum, Musée du Quai Branly, and National Museum of African Art. By comparing how the same objects are described across institutions with different curatorial traditions, researchers could isolate institutional bias from cultural difference. Including museums in countries of origin for non-Western art would capture indigenous curatorial voices and perspectives that are systematically excluded from Western collections. Partnering with institutions in Asia, Africa, and the Middle East would balance representation and reduce Western institutional hegemony in the very structure of the data, moving toward a more genuinely global art history.
 
-**2. Translation as Transformation**
+**Translation as Transformation**
 
 The API returns only English titles, even for artworks originating in non-English-speaking cultures. This is not a neutral translation process but a transformation that necessarily loses cultural and emotional nuance. Japanese aesthetic concepts like "wabi-sabi" (侘寂) or "mono no aware" (物の哀れ) have no direct English equivalents—they are cultural constructs that resist translation. When a Japanese artwork's title is rendered in English as "Cherry Blossoms," it loses the centuries of poetic and philosophical association that "sakura" carries in Japanese. More importantly, these terms are entirely absent from the labMT lexicon, meaning we cannot measure the emotional content they carry in their original cultural contexts. The absence of these words from our analysis is not a random missingness; it is systematic and culturally patterned.
 
 Future research should collect titles in original languages where available, not just English translations, preserving the original cultural and emotional valence. This requires developing or adapting sentiment lexicons for multiple languages—Japanese, Chinese, Arabic, Sanskrit, and others—rather than imposing an English-centric instrument on non-English texts. Training culture-specific word embeddings would capture semantic associations unique to each language and cultural context. Comparing sentiment patterns across languages for the same objects or concepts would reveal where translation loses or transforms meaning. Working with native speakers and cultural experts to validate translations and identify concepts that resist direct translation is essential, as is including transliteration alongside translation to preserve phonetic and cultural markers even when direct translation fails.
 
-**3. The Problem of Curatorial Voice**
+**The Problem of Curatorial Voice**
 
 Museum assigned titles raise a fundamental question: whose emotional language are we measuring? For many historical objects, especially from non-Western cultures, the existing title was assigned by a curator, often decades or centuries after the object's creation. A Benin bronze's title may reflect 19th-century European ethnographic categories rather than the intentions of its Edo makers. A Buddhist sculpture's English title may prioritize identification (e.g., "Bodhisattva") over the devotional language that might accompany it in its original context. We are therefore measuring the emotional valence of *curatorial description*, not necessarily the emotional content of the artwork itself or its reception in its source culture.
 
 Future work should distinguish between artist-given titles and curatorial additions through metadata tagging, enabling analysis of whose voice is being measured. Collecting multiple title sources where available—original artist titles, historical titles, current curatorial titles, and vernacular titles from the culture of origin—would provide a richer understanding of how artworks are named across contexts. Analyzing how titles change over time as curatorial practices evolve and as objects move between collections and cultures could reveal the institutional dynamics shaping art historical description. Including provenance texts and acquisition notes alongside titles would capture the institutional context in which descriptions were created. Most importantly, partnering with source communities to understand how objects are named and described in their original cultural contexts would ground the analysis in indigenous knowledge systems rather than Western curatorial frameworks.
 
-**4. Temporal Bias and Historical Stratification**
+**Temporal Bias and Historical Stratification**
 
 The Met's collection is not temporally neutral. It overrepresents certain periods such as 19th-century European painting and ancient Egyptian art while underrepresenting others, including contemporary non-Western art and ephemeral or performance-based traditions. More importantly, the availability of English titles varies dramatically by period and culture. Ancient Egyptian objects often have descriptive curatorial titles created by Western Egyptologists; contemporary Japanese works may retain original titles in translation or have titles supplied by contemporary dealers and collectors. This temporal and cultural stratification interacts with our analysis in ways we cannot fully disentangle. A 12th-century Buddhist sculpture and a 19th-century Japanese print are both categorized as "Eastern," but they come from radically different historical contexts, with different relationships to language, naming practices, and curatorial documentation.
 

@@ -111,7 +111,7 @@ The words with the lowest happiness scores correspond to negative or sensitive t
 
 ## Distribution of Happiness Scores
 
-![Figure 1: Distribution of Happiness Scores](figures/happiness_average_hist.png)
+![Figure 1b: Distribution with Highlighted Tails and Extremes](figures/happiness_distribution_enhanced.png)
 
 Summary Statistics:
 - Mean: 5.38
@@ -123,10 +123,8 @@ Summary Statistics:
 The distribution of happiness scores is centered slightly above 5, with mean and median very close (5.38 and 5.44), indicating approximate symmetry. Most words fall between 4.5 and 6.5, suggesting that everyday English vocabulary leans mildly positive. Extremely positive and extremely negative words are relatively rare, with only 5% of words scoring below 3.18 and 5% scoring above 7.08. This pattern suggests that common language tends toward moderate positivity, with strong emotional words occupying the tails of the distribution.
 
  One interesting pattern is the distribution reveals the negative tail (scores below 3.18) is slightly longer than the positive tail (scores above 7.08). This means that when words do deviate from the neutral range, they are slightly more likely to be negative than positive. However, the overall mass of the distribution sits in the 5-6 range, indicating that everyday language maintains a mild positivity bias. This suggests that English vocabulary has a wider range of mildly negative words, but the most intensely positive words are more extremely positive than the most intensely negative words are extremely negative. 
- 
- ![Figure 1b: Distribution with Highlighted Tails and Extremes](figures/happiness_distribution_enhanced.png)
- 
- According to the advanced figure 1 above, a closer examination of the tails reveals an interesting asymmetry. The negative tail extends from 1 to 3.18, spanning 2.18 points, while the positive tail extends from 7.08 to 9, spanning only 1.92 points. This means that when words deviate from the neutral range, they are slightly more likely to be negative than positive English vocabulary. However, the extremes tell a different story. The most positive word "laughter" (8.50) lies 3.12 points above the mean, while the most negative word "suicide" (1.30) lies 4.08 points below the mean. This indicates that although there are more mildly negative words, the most intensely negative words reach further from neutrality than the most intensely positive words. Overall, these patterns suggest that English vocabulary is structured with a broad spectrum of mild negativity but reserves its most extreme emotional intensity for positive expression. The strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
+
+ According to the figure  above, a closer examination of the tails reveals an interesting asymmetry. The negative tail extends from 1 to 3.18, spanning 2.18 points, while the positive tail extends from 7.08 to 9, spanning only 1.92 points. This means that when words deviate from the neutral range, they are slightly more likely to be negative than positive English vocabulary. However, the extremes tell a different story. The most positive word "laughter" (8.50) lies 3.12 points above the mean, while the most negative word "suicide" (1.30) lies 4.08 points below the mean. This indicates that although there are more mildly negative words, the most intensely negative words reach further from neutrality than the most intensely positive words. Overall, these patterns suggest that English vocabulary is structured with a broad spectrum of mild negativity but reserves its most extreme emotional intensity for positive expression. The strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
 
 ## Disagreement: Words with High Standard Deviation
 
@@ -343,59 +341,6 @@ If we were to rebuild this instrument today, we would introduce several improvem
 
 These changes would make the dataset more sensitive to ambiguity, social variation, and contextual nuance while retaining its usefulness for large-scale computational analysis.
 
-# How to Run the Code
-
-## Structure layout 
-
- - `src/` — Python analysis scripts
- - `data/raw/` — input data (E.g Data_Set_1.txt)
- - `data/processed/` - cleaned dataset used for analysis
- - `figures/` — PNG plots
- - `tables/` — CSV tables/summaries
- - README.md
- - requirements.txt
-
-## Setup Steps 
-
- 1. Clone the repository
-git clone https://github.com/auroraliu0312/labMT-hedonometer-project
-
- 2. Create and activate virtual environment
- python3 -m venv .venv
- source .venv/bin/activate  # On Mac/Linux
- or .venv\Scripts\activate  # On Windows
-
- 3. Install dependencies
- pip install -r requirements.txt
-
- 4. Run the analysis
- python3 src/data_analysis.py
-
- 5. What gets generated?
- After running, look in/Users/luciana/Downloads/labMT-hedonometer-project-main/.venv/bin/python /Users/luciana/Downloads/labMT-hedonometer-project-main/labMT-hedonometer-project/src/data_analysis.py
-
-# Credits
-
-## Team roles:
-1. Repo & workflow lead: Anny Li
-2. Data wrangler: Mohan Liu
-3. Quantitative analyst: Mohan Liu, Anny Li
-4. Qualitative / close-reading lead: Angelina Roman Rosales
-5. Provenance & critique lead: Simone van Moerkerk
-6. Editor & figure curator: Jaena Danaram
-
-## Citation of papers:
-Dodds, Peter Sheridan, Kameron Decker Harris, Isabel M. Kloumann, Catherine A. Bliss, and Christopher M. Danforth. 2011. “Temporal Patterns of Happiness and Information in a Global Social Network: Hedonometrics and Twitter.” Edited by Johan Bollen. PLoS ONE 6 (12): e26752. https://doi.org/10.1371/journal.pone.0026752.
-
-## Academic integrity & AI note
-During the code construction process, we made limited use of AI-based tools for support purposes.
-
-In the early stages of development, we consulted DeepSeek to help debug code and clarify specific technical questions. For parts of the Results section, we used ChatGPT to refine phrasing, improve clarity, and structure initial drafts of explanations. Throughout both the drafting and revision stages, we also used the UvA AI assistant to review wording, check coherence, and strengthen academic tone.
-
-All code included in the repository was revised and verified by us. We understand the logic and functionality of each script and are able to explain the analytical steps, statistical calculations, and design choices in detail. AI tools were used as writing and debugging support rather than as a substitute for conceptual understanding or interpretive reasoning.
-
-Additionally, all interpretive claims, methodological decisions, and critical reflections represent our own academic judgment and responsibility.
-
 
 # Eastern vs. Western Aesthetic Concepts in Met Museum
 
@@ -425,7 +370,7 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 4. **Duplicate removal**: Removed duplicate objects that appeared under multiple search terms, keeping the first occurrence
 5. **Rate limiting**: Implemented 0.3-second delays between requests to respect the API's rate limits (80 requests per second max)
 
-**Raw data:** The unprocessed API responses are saved in `data/raw/met_aesthetic_raw.csv`.
+**Raw data:** The unprocessed API responses are saved in `data/raw/met_raw_data.csv`.
 
 **Date of access:** March 2026
 
@@ -446,7 +391,7 @@ Because the same artwork may appear under multiple search terms, duplicate objec
 
 ### Data Dictionary
 
-The processed dataset (`data/processed/met_aesthetic_scored.csv`) contains the following columns:
+The processed dataset (`data/processed/met_aesthetic_scored132.csv`) contains the following columns:
 
 | Column | Type | Description | Missing Values |
 |--------|------|-------------|----------------|
@@ -582,6 +527,7 @@ All statistical analyses were conducted on the subset of artworks that received 
 | Eastern | 62 | 5.56 | 5.52 | 0.62 | 3.82 | 7.92 |
 | Western | 57 | 5.55 | 5.49 | 0.56 | 3.83 | 6.86 |
 
+
 **Confidence Intervals (95%)**
 
 | Category | Mean [95% CI] | CI Width |
@@ -606,6 +552,24 @@ The bootstrap estimate suggests that Western titles have slightly higher average
 The probability that Eastern titles exceed Western titles in the bootstrap distribution is 0.105.
 
 This result reinforces the overall interpretation that the dataset does not provide strong evidence for a systematic difference in average happiness between the two aesthetic traditions.
+
+![Bootstrap Difference](figures/bootstrap_difference_distribution.png)
+*Bootstrap distribution of the estimated difference in mean happiness scores (Eastern − Western). The distribution centers near zero and the 95% interval spans both positive and negative values, indicating substantial uncertainty in the observed difference.*
+
+This figure shows the bootstrap distribution of the estimated difference in mean happiness scores between Eastern and Western titles.
+
+The distribution is centered very close to zero, and the 95% interval spans both positive and negative values. This indicates that the observed difference in the sample is small relative to the uncertainty introduced by sampling variability.
+
+Bootstrap therefore confirms that the similarity between categories is not an artifact of a single sample draw.
+
+![Coverage](figures/coverage_by_category.png)
+*Boxplot showing lexical coverage (matched words / total words) for Eastern and Western titles. Eastern titles display slightly greater variability, reflecting the presence of transliterated or culturally specific terms not present in the hedonometer lexicon.*
+
+Coverage measures the proportion of title words that were successfully matched to the labMT lexicon.
+
+Both categories show moderate coverage overall, but Eastern titles display slightly greater variability. This likely reflects the presence of transliterated cultural concepts or non-English terms that do not appear in the hedonometer lexicon.
+
+The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
 
 ## Sampling Audit & Robustness Analysis
 In addition to the descriptive and inferential analysis above, we conducted a separate sampling and robustness audit to evaluate how stable the results are under different assumptions about measurement quality and sample composition.
@@ -653,41 +617,6 @@ If the results remain stable under stricter thresholds, this increases confidenc
 
 Across all thresholds, the estimated difference between Eastern and Western scores remained close to zero, suggesting that the similarity between categories is **not driven by low-coverage titles**.
 
-
-## Visualizations
-
-### Figure 1: Boxplot with Confidence Intervals
-![Boxplot with CI](figures/figure1_boxplot_with_ci.png)
-*Boxplot showing distribution of happiness scores. Red lines indicate means with 95% confidence intervals.*
-
-### Figure 2: Distribution Overlay
-![Distribution](figures/figure2_distribution.png)
-*Density plot showing the spread of scores. Eastern concepts (green) show wider range despite similar means.*
-
-### Figure 3: Confidence Interval Comparison
-![CI Comparison](figures/figure3_ci_comparison.png)
-*Direct comparison of means with 95% confidence intervals. Overlapping intervals confirm no significant difference.*
-
-### Figure 4: Bootstrap Distribution of Mean Difference
-![Bootstrap Difference](figures/bootstrap_difference_distribution.png)
-*Bootstrap distribution of the estimated difference in mean happiness scores (Eastern − Western). The distribution centers near zero and the 95% interval spans both positive and negative values, indicating substantial uncertainty in the observed difference.*
-
-This figure shows the bootstrap distribution of the estimated difference in mean happiness scores between Eastern and Western titles.
-
-The distribution is centered very close to zero, and the 95% interval spans both positive and negative values. This indicates that the observed difference in the sample is small relative to the uncertainty introduced by sampling variability.
-
-Bootstrap therefore confirms that the similarity between categories is not an artifact of a single sample draw.
-
-### Figure 5: Lexical Coverage by Category
-![Coverage](figures/coverage_by_category.png)
-*Boxplot showing lexical coverage (matched words / total words) for Eastern and Western titles. Eastern titles display slightly greater variability, reflecting the presence of transliterated or culturally specific terms not present in the hedonometer lexicon.*
-
-Coverage measures the proportion of title words that were successfully matched to the labMT lexicon.
-
-Both categories show moderate coverage overall, but Eastern titles display slightly greater variability. This likely reflects the presence of transliterated cultural concepts or non-English terms that do not appear in the hedonometer lexicon.
-
-The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
-
 ## Illustrative Title Examples
 To illustrate how hedonometer scores correspond to specific artwork titles, we highlight several examples from the dataset.
 | Title | Category | Score | Note |
@@ -699,11 +628,7 @@ To illustrate how hedonometer scores correspond to specific artwork titles, we h
 | War club | Western | 3.83 | Lowest Western |
 | The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |
 
-
-## Critical Reflection
-
-
-### Additional Statistical Considerations
+## Additional Statistical Considerations
 
 The bootstrap and coverage sensitivity analyses reinforce the main conclusion while also clarifying its limitations.
 
@@ -715,42 +640,102 @@ Finally, lexical coverage varies across titles because culturally specific words
 
 For these reasons, the statistical analysis should be interpreted as a robust comparison within this dataset, rather than as a universal statement about Eastern and Western aesthetics.
 
+## Future Improvements
 
-## Reproducibility
+### What We Can Trust
+The analysis provides a robust comparison of how the Metropolitan Museum of Art describes Eastern and Western aesthetic concepts in English language titles. The bootstrap and coverage sensitivity analyses confirm that the absence of a significant difference is stable across multiple analytical choices. The method reliably identifies extreme examples (e.g., "Butterflies" scoring 7.92, "The Death of Socrates" scoring 3.82) and captures meaningful variation within each category.
 
-### Repository Structure
+### Assumptions
 
-labMT-hedonometer-project/
-├── README.md                  # Project description and analysis report
-├── requirements.txt           # Python dependencies
-├── src/
-│   ├── met_fetch.py           # Retrieve artwork metadata from the Met Museum API
-│   ├── score_aesthetic.py     # Apply labMT hedonometer scoring to artwork titles
-│   └── stats_sampling_analysis.py  # Statistical analysis, bootstrap inference, and robustness checks
-├── data/
-│   ├── raw/                   # Raw API output data
-│   └── processed/             # Cleaned and scored datasets
-├── figures/                   # Generated visualizations
-└── tables/                    # Summary statistics and analysis tables
+Our analysis assumes that:
+- Artwork titles reflect meaningful emotional content
+- English translations capture enough of the original meaning for comparison
+- The labMT lexicon's coverage is similar across categories (partially validated by coverage analysis)
+- Artworks are independent observations (though search-term retrieval introduces some dependence)
 
-### Data Availability
+These assumptions are reasonable for this exploratory study but should be tested in future work with more diverse data sources.
 
-All scored data and summaries have been saved to:
-- `data/processed/met_aesthetic_scored.csv` – Complete dataset with happiness scores for every artwork
-- `tables/met_aesthetic_summary.csv` – Summary statistics in table format
-- `tables/met_aesthetic_oov.csv` – The list of words not found in labMT for further analysis
+### Limitations and Future Directions
+
+**1. Institutional and Collection Bias**
+
+The Metropolitan Museum of Art is itself a product of Western institutional history. Its collection reflects not the universe of Eastern and Western art, but rather what Western collectors, curators, and donors over the past 150 years deemed worthy of preservation and display. The overrepresentation of Western artworks (57% of scored titles) is not a sampling flaw we could correct by collecting more data—it is a structural feature of the source. Eastern artworks in the Met collection are already filtered through Western acquisition priorities: they tend to be objects that fit Western categories of "art" (rather than ritual objects, functional items, or ephemeral works), that survived colonial-era collecting practices, and that were deemed significant by Western aesthetic standards. Our comparison is therefore not between "Eastern art" and "Western art" but between how these two categories are *represented in a Western institutional context*.
+
+Rather than relying on a single Western institution, future work should sample from multiple museums across different cultural contexts, including Tokyo National Museum, British Museum, Musée du Quai Branly, and National Museum of African Art. By comparing how the same objects are described across institutions with different curatorial traditions, researchers could isolate institutional bias from cultural difference. Including museums in countries of origin for non-Western art would capture indigenous curatorial voices and perspectives that are systematically excluded from Western collections. Partnering with institutions in Asia, Africa, and the Middle East would balance representation and reduce Western institutional hegemony in the very structure of the data, moving toward a more genuinely global art history.
+
+**2. Translation as Transformation**
+
+The API returns only English titles, even for artworks originating in non-English-speaking cultures. This is not a neutral translation process but a transformation that necessarily loses cultural and emotional nuance. Japanese aesthetic concepts like "wabi-sabi" (侘寂) or "mono no aware" (物の哀れ) have no direct English equivalents—they are cultural constructs that resist translation. When a Japanese artwork's title is rendered in English as "Cherry Blossoms," it loses the centuries of poetic and philosophical association that "sakura" carries in Japanese. More importantly, these terms are entirely absent from the labMT lexicon, meaning we cannot measure the emotional content they carry in their original cultural contexts. The absence of these words from our analysis is not a random missingness; it is systematic and culturally patterned.
+
+Future research should collect titles in original languages where available, not just English translations, preserving the original cultural and emotional valence. This requires developing or adapting sentiment lexicons for multiple languages—Japanese, Chinese, Arabic, Sanskrit, and others—rather than imposing an English-centric instrument on non-English texts. Training culture-specific word embeddings would capture semantic associations unique to each language and cultural context. Comparing sentiment patterns across languages for the same objects or concepts would reveal where translation loses or transforms meaning. Working with native speakers and cultural experts to validate translations and identify concepts that resist direct translation is essential, as is including transliteration alongside translation to preserve phonetic and cultural markers even when direct translation fails.
 
 
-### How to Run
-```bash
-# 1. Clone repository
-git clone https://github.com/auroraliu0312/labMT-hedonometer-project.git
-cd labMT-hedonometer-project
+**3. The Problem of Curatorial Voice**
 
-# 2. Install dependencies
-pip install -r requirements.txt
+Museum assigned titles raise a fundamental question: whose emotional language are we measuring? For many historical objects, especially from non-Western cultures, the existing title was assigned by a curator, often decades or centuries after the object's creation. A Benin bronze's title may reflect 19th-century European ethnographic categories rather than the intentions of its Edo makers. A Buddhist sculpture's English title may prioritize identification (e.g., "Bodhisattva") over the devotional language that might accompany it in its original context. We are therefore measuring the emotional valence of *curatorial description*, not necessarily the emotional content of the artwork itself or its reception in its source culture.
 
-# 3. Run full pipeline
-python3 src/met_fetch.py          # Collect data
-python3 src/score_artworks.py     # Add happiness scores
-python3 src/comprehensive_analysis.py  # Generate stats + figures
+Future work should distinguish between artist-given titles and curatorial additions through metadata tagging, enabling analysis of whose voice is being measured. Collecting multiple title sources where available—original artist titles, historical titles, current curatorial titles, and vernacular titles from the culture of origin—would provide a richer understanding of how artworks are named across contexts. Analyzing how titles change over time as curatorial practices evolve and as objects move between collections and cultures could reveal the institutional dynamics shaping art historical description. Including provenance texts and acquisition notes alongside titles would capture the institutional context in which descriptions were created. Most importantly, partnering with source communities to understand how objects are named and described in their original cultural contexts would ground the analysis in indigenous knowledge systems rather than Western curatorial frameworks.
+
+**4. Temporal Bias and Historical Stratification**
+
+The Met's collection is not temporally neutral. It overrepresents certain periods such as 19th-century European painting and ancient Egyptian art while underrepresenting others, including contemporary non-Western art and ephemeral or performance-based traditions. More importantly, the availability of English titles varies dramatically by period and culture. Ancient Egyptian objects often have descriptive curatorial titles created by Western Egyptologists; contemporary Japanese works may retain original titles in translation or have titles supplied by contemporary dealers and collectors. This temporal and cultural stratification interacts with our analysis in ways we cannot fully disentangle. A 12th-century Buddhist sculpture and a 19th-century Japanese print are both categorized as "Eastern," but they come from radically different historical contexts, with different relationships to language, naming practices, and curatorial documentation.
+
+Future research should stratify analysis by historical period rather than treating "Eastern art" as a monolithic category, enabling comparison of how different eras within each tradition are represented. Including creation date metadata in all analyses would help control for temporal confounding. Sampling proportionally across centuries rather than accepting the Met's existing distribution as representative would produce a more balanced dataset. Analyzing how naming practices change over time within each tradition would distinguish between historical naming conventions and contemporary curatorial descriptions. Collaborating with period specialists to understand the specific linguistic and cultural contexts of different eras would ground the analysis in historical knowledge rather than imposing contemporary frameworks on historical materials.
+
+
+Those limitations do not invalidate our findings but rather contextualize them. The similarity between Eastern and Western aesthetic concepts in this dataset is robust within the specific context of the Metropolitan Museum of Art's English-language titles. However, this similarity may reflect institutional practices, translation choices, and lexical biases as much as genuine cultural convergence. Future research that addresses these limitations through multilingual analysis, diverse institutional sampling, and culture-specific lexicons would provide a more complete picture of how emotional language operates across aesthetic traditions. Until then, our conclusions should be understood as a comparison of *museum representations* of Eastern and Western art rather than a direct comparison of the aesthetic traditions themselves.
+
+# How to Run the Code
+
+## Structure layout 
+
+ - `src/` — Python analysis scripts
+ - `data/raw/` — input data (E.g Data_Set_1.txt)
+ - `data/processed/` - cleaned dataset used for analysis
+ - `figures/` — PNG plots
+ - `tables/` — CSV tables/summaries
+ - README.md
+ - requirements.txt
+
+## Setup Steps 
+
+ 1. Clone the repository
+git clone https://github.com/auroraliu0312/labMT-hedonometer-project
+
+ 2. Create and activate virtual environment
+ python3 -m venv .venv
+ source .venv/bin/activate  # On Mac/Linux
+ or .venv\Scripts\activate  # On Windows
+
+ 3. Install dependencies
+ pip install -r requirements.txt
+
+ 4. Run the analysis
+ python3 src/data_analysis.py for Hedonometer Dataset Analysis
+ python 3 src/met_fetch.py for raw data acquisation
+ 
+# Credits
+
+## Team roles:
+- Repo & workflow lead: Anny Li
+- Data wrangler & measurement lead: Mohan Liu
+- Quantitative analyst: Mohan Liu, Anny Li
+- Qualitative & data acquisation lead: Angelina Roman Rosales
+- Provenance & visualisation lead: Simone van Moerkerk
+6. Editor & figure & code curator: Jaena Danaram
+
+## Citation of papers:
+Dodds, Peter Sheridan, Kameron Decker Harris, Isabel M. Kloumann, Catherine A. Bliss, and Christopher M. Danforth. 2011. “Temporal Patterns of Happiness and Information in a Global Social Network: Hedonometrics and Twitter.” Edited by Johan Bollen. PLoS ONE 6 (12): e26752. https://doi.org/10.1371/journal.pone.0026752.
+
+## Academic integrity & AI note
+During the code construction process, we made limited use of AI-based tools for support purposes.
+
+In the early stages of development, we consulted DeepSeek to help debug code and clarify specific technical questions. For parts of the Results section, we used ChatGPT to refine phrasing, improve clarity, and structure initial drafts of explanations. Throughout both the drafting and revision stages, we also used the UvA AI assistant to review wording, check coherence, and strengthen academic tone.
+
+All code included in the repository was revised and verified by us. We understand the logic and functionality of each script and are able to explain the analytical steps, statistical calculations, and design choices in detail. AI tools were used as writing and debugging support rather than as a substitute for conceptual understanding or interpretive reasoning.
+
+Additionally, all interpretive claims, methodological decisions, and critical reflections represent our own academic judgment and responsibility.
+
+
+
+

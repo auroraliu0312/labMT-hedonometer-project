@@ -342,7 +342,7 @@ If we were to rebuild this instrument today, we would introduce several improvem
 These changes would make the dataset more sensitive to ambiguity, social variation, and contextual nuance while retaining its usefulness for large-scale computational analysis.
 
 
-# Eastern vs. Western Aesthetic Concepts in Met Museum
+# Hedonometer Application in Met Museum
 
 ## Overview
 

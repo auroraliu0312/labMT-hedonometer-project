@@ -300,3 +300,6 @@ print("✅ DATA ACQUISITION COMPLETE")
 print("=" * 70)
 print("\nNext steps: Run scoring with labMT word list")
 print("> python src/score_artworks.py")
+
+
+

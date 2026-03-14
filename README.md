@@ -3,7 +3,7 @@
 
 # Project Overview
 
-This project analyzes the labMT 1.0 dataset, which contains happiness scores for 10,222 English words rated by Amazon Mechanical Turk workers. The dataset enables measurement of emotional valence in large-scale texts across four different corpora: Twitter, Google Books, NY Times, and song lyrics. Our analysis combines quantitative exploration (distributions, disagreements, corpus overlaps) with qualitative interpretation of selected words to understand how emotional meaning varies across contexts and communities.
+This project analyzes the labMT 1.0 dataset, which contains happiness scores for 10,222 English words rated by Amazon Mechanical Turk workers. The dataset enables measurement of emotional valence in large-scale texts across four different corpora: Twitter, Google Books, NY Times, and song lyrics. Our analysis combines quantitative exploration (distributions, disagreements, corpus overlaps) with qualitative interpretation of selected words to understand how emotional meaning varies across contexts and communities. Building on this foundation, we extend the hedonometer methodology to the artwork titles from the Metropolitan Museum of Art. By applying the same scoring procedure to titles associated with Eastern and Western aesthetic concepts, we investigate whether emotional language differs across cultural traditions in the context of museum collections.Based on our findings, we offer critical reflections on the limitations of applying a general purpose sentiment lexicon to specialized texts. We conclude with concrete recommendations for improving the hedonometer instrument and multidimensional affect models to better capture the nuanced emotional language of art historical and culturally diverse corpora.
 
 ## Dataset
 
@@ -655,7 +655,7 @@ Our analysis assumes that:
 
 These assumptions are reasonable for this exploratory study but should be tested in future work with more diverse data sources.
 
-### Limitations and Future Directions
+### Future Directions
 
 **1. Institutional and Collection Bias**
 

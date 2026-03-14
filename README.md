@@ -688,9 +688,8 @@ Both categories show moderate coverage overall, but Eastern titles display sligh
 
 The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
 
-
-## Notable Examples
-
+## Illustrative Title Examples
+To illustrate how hedonometer scores correspond to specific artwork titles, we highlight several examples from the dataset.
 | Title | Category | Score | Note |
 |-------|----------|-------|------|
 | "Butterflies" | Eastern | 7.92 | Highest overall |
@@ -701,41 +700,8 @@ The coverage analysis highlights an important limitation of lexical sentiment me
 | The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |
 
 
-## Interpretation
-
-### What We Found
-Despite our hypothesis, **no statistically significant difference** emerged between Eastern and Western aesthetic concepts in artwork titles. Both categories center around neutral-to-slightly-positive scores (≈5.5).
-
-However, **qualitative patterns** emerged:
-- **Eastern concepts** show greater emotional range, containing both the happiest ("Butterflies") and saddest ("Death of Socrates") titles
-- **Western concepts** cluster more tightly, suggesting more consistent emotional valence
-- The highest Eastern scores come from nature themes (butterflies, cherry blossoms) - universal beauty
-- The lowest Eastern scores involve death/impermanence - Buddhist philosophical themes
-
-### Why No Difference?
-Possible explanations:
-1. **Museum context**: The Met's collection and cataloging may Westernize Eastern art titles
-2. **Translation effect**: Original nuances lost in English titles
-3. **Universal aesthetics**: Beauty transcends cultural boundaries
-4. **Small sample**: 119 artworks may not capture full diversity
-
-
 ## Critical Reflection
 
-### What We Would Trust
-- The comparison shows that **on average**, Eastern and Western aesthetic terms produce similar happiness scores in this specific context
-- The method works for detecting **extreme examples** (like "Butterflies" vs "Death of Socrates")
-
-### What We Would Not Claim
-- That Eastern and Western aesthetics are emotionally equivalent
-- That these scores represent how people from those cultures actually feel
-- That titles reflect artist intention (many are curatorial additions)
-
-### If We Rebuilt This Instrument
-- Include **multilingual titles** (original language)
-- Collect **cultural context** metadata (region, religion, period)
-- Use **multidimensional affect** model (not just happy-sad)
-- Sample more **non-Western institutions**
 
 ### Additional Statistical Considerations
 
@@ -773,8 +739,6 @@ All scored data and summaries have been saved to:
 - `data/processed/met_aesthetic_scored.csv` – Complete dataset with happiness scores for every artwork
 - `tables/met_aesthetic_summary.csv` – Summary statistics in table format
 - `tables/met_aesthetic_oov.csv` – The list of words not found in labMT for further analysis
-
-
 
 
 ### How to Run

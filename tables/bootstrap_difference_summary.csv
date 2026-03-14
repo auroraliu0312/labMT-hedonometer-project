@@ -1,0 +1,2 @@
+estimand,estimate,ci_lower,ci_upper,pr_east_gt_west,median_diff,median_ci_lower,median_ci_upper
+mean_diff_east_minus_west,-0.009970332004533233,-0.2468200930915392,0.21865749630684564,0.4774,0.0008888888888893831,-0.15733333333333466,0.3200000000000003

@@ -280,18 +280,14 @@ plt.tight_layout()
 save_figure("happiness_distribution_enhanced.png")
 plt.close()
 
-print_section("2.2 Disagreement: happiness_standard_deviation")
-
-<<<<<<< HEAD
 show_cols = ["word", "happiness_average", "happiness_standard_deviation"]
-=======
+
 print_section("2.2 Disagreement: happiness_standard_deviation")
 
 # ---------------------------
 # 2.2 Disagreement: which words are “contested”?
 # ---------------------------
 print("\n--- Disagreement analysis (average vs standard deviation) ---")
->>>>>>> eea16d636ce3100fbe22a4674e3489e792846623
 
 # Scatter: happiness score vs standard deviation
 plt.figure()

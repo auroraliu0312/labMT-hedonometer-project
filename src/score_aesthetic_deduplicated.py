@@ -255,3 +255,87 @@ print("\nFiles created:")
 print(f"  - {PROCESSED_DIR / 'met_aesthetic_scored.csv'}")
 print(f"  - {TABLES_DIR / 'met_aesthetic_summary.csv'}")
 print(f"  - {TABLES_DIR / 'met_aesthetic_oov.csv'}")
+
+# ============================================================================
+# CREATE VISUALIZATION
+# ============================================================================
+
+print("\n" + "="*60)
+print("CREATING VISUALIZATION")
+print("="*60)
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Define FIGURES_DIR if not already defined
+FIGURES_DIR = ROOT / "figures"
+FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
+def plot_score_distribution(df_scored):
+    """
+    Create a histogram showing the distribution of happiness scores
+    """
+    # Get scores (drop NaN values)
+    scores = df_scored['score'].dropna()
+    
+    if len(scores) == 0:
+        print("  No scores to plot")
+        return
+    
+    # Calculate statistics
+    mean_score = scores.mean()
+    median_score = scores.median()
+    std_score = scores.std()
+    n_scored = len(scores)
+    total_n = len(df_scored)
+    
+    # Create figure
+    plt.figure(figsize=(10, 6))
+    
+    # Plot histogram
+    n, bins, patches = plt.hist(scores, bins=20, color='skyblue', 
+                                 edgecolor='black', alpha=0.7)
+    
+    # Add vertical lines for statistics
+    plt.axvline(mean_score, color='red', linestyle='--', linewidth=2, 
+                label=f'Mean: {mean_score:.2f}')
+    plt.axvline(median_score, color='green', linestyle='--', linewidth=2, 
+                label=f'Median: {median_score:.2f}')
+    plt.axvline(mean_score + std_score, color='purple', linestyle=':', linewidth=1.5, 
+                alpha=0.7, label=f'±1 SD')
+    plt.axvline(mean_score - std_score, color='purple', linestyle=':', linewidth=1.5, alpha=0.7)
+    
+    # Add text box with statistics
+    stats_text = (f'Scored artworks: {n_scored}/{total_n} ({n_scored/total_n*100:.1f}%)\n'
+                  f'Mean: {mean_score:.2f}\n'
+                  f'Median: {median_score:.2f}\n'
+                  f'Std Dev: {std_score:.2f}\n'
+                  f'Min: {scores.min():.2f}\n'
+                  f'Max: {scores.max():.2f}')
+    
+    plt.text(0.02, 0.98, stats_text, transform=plt.gca().transAxes, fontsize=10,
+             verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+    
+    # Labels and title
+    plt.xlabel('Happiness Score (1-9)', fontsize=12)
+    plt.ylabel('Number of Artworks', fontsize=12)
+    plt.title('Distribution of Happiness Scores\nMET Aesthetic Concepts', 
+              fontsize=14, fontweight='bold')
+    plt.legend(loc='upper right')
+    plt.grid(alpha=0.3)
+    
+    # Save figure
+    output_path = FIGURES_DIR / "score_distribution.png"
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"  Figure saved to: {output_path}")
+    
+    return output_path
+
+# Call the plotting function
+plot_score_distribution(df_scored)
+
+print("\n" + "="*60)
+print("ALL PROCESSING COMPLETE")
+print("="*60)

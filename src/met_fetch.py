@@ -202,10 +202,7 @@ for i, obj_id in enumerate(object_ids_list):
                 'status': f'error_{response.status_code}',
                 'has_title': False
             })
-            if response.status_code == 403:
-                print(f"  ⚠️  Access denied (403) for {obj_id} - API may be rate limiting")
-            else:
-                print(f"  ⚠️  Error fetching {obj_id}: HTTP {response.status_code}")
+            print(f"  ⚠️  Error fetching {obj_id}: HTTP {response.status_code}")
     except Exception as e:
         failed_fetches += 1
         fetch_log.append({
@@ -277,6 +274,7 @@ duplicate_report = {
     'timestamp': datetime.now().isoformat()
 }
 
+# Save duplicate report
 with open(RAW_DIR / "duplicate_report.json", 'w') as f:
     json.dump(duplicate_report, f, indent=2)
 print(f"✅ Saved duplicate report to: {RAW_DIR / 'duplicate_report.json'}")
@@ -345,12 +343,14 @@ for dept, count in dept_stats.items():
 print(f"\n📊 Century distribution:")
 century_stats = df_processed['century'].value_counts().head(5)
 for century, count in century_stats.items():
-    print(f"  • {int(century)}s: {count} artworks" if pd.notna(century) else f"  • Unknown: {count} artworks")
+    century_val = int(century) if pd.notna(century) else "Unknown"
+    print(f"  • {century_val}s: {count} artworks")
 
 print(f"\n📊 Culture distribution:")
 culture_stats = df_processed['culture'].value_counts().head(5)
 for culture, count in culture_stats.items():
-    print(f"  • {culture if pd.notna(culture) else 'Unknown'}: {count} artworks")
+    culture_val = culture if pd.notna(culture) else 'Unknown'
+    print(f"  • {culture_val}: {count} artworks")
 
 print(f"\n📊 Missing data summary:")
 for col in ['culture', 'artist_name', 'artist_nationality', 'period']:

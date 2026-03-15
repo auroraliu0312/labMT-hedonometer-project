@@ -373,6 +373,13 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 - **Temporal**: Collection reflects Western collecting priorities over centuries
 - **Interpretation**: Titles may be curatorial additions, not artist-given
 
+- Given these limitations, our analysis can identify patterns in how the Metropolitan Museum of Art describes artworks associated with different aesthetic traditions, but cannot make strong claims about the original artists' intent, about how people from those cultures actually experience the art, or about the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
+
+### Population Context
+This dataset represents a curated sample of the Metropolitan Museum of Art's collection, filtered through specific search terms related to aesthetic concepts. It is important to understand that this is not a random  sample of Eastern or Western art. Rather, it reflects:
+
+- The museum's holdings overrepresent Western European art, ancient Mediterranean objects, and artworks that align with Western aesthetic categories. Eastern art in the collection has been filtered through decades of Western collecting practices and may overrepresent objects deemed "exotic," "masterpieces," or culturally significant by Western standards. Our choice of aesthetic concepts (e.g., "beauty," "sublime" for Western; "wabi-sabi," "mono no aware" for Eastern) reflects Western academic frameworks for categorizing aesthetic philosophy. These terms may not map neatly onto how these traditions conceptualize aesthetic experience, and some concepts may be ove- or under-represented as a result.
+
 ### Dataset Characteristics
 
 The final dataset contains **132 unique artworks**:
@@ -432,7 +439,7 @@ Before scoring, we cleaned each title to make sure words would match the diction
 
 - We kept every word that matched the labMT dictionary. No words were filtered out, even common ones like "the", "and", or "of" that have neutral scores around 5. If we had removed neutral word, Scores would be pulled toward extremes (higher highs, lower lows). Moreover, short titles lose most words may not have a score. For instance, a title containing "The Garden of Earthly Delights" has 5 words, 3 of which are neutral ("the", "of", "delights" is neutral). Removing neutral words would leave only "garden" and "earthly" – losing 60% of the text and potentially misrepresenting the title's emotional tone. On the other hand, different titles affected differently. Some titles have more neutral words than others may lead to unfair comparasion. Therefore, by keeping all words, we are measuring the actual language used in titles, not an artificially filtered version. This means scores reflect real word choices, including the subtle emotional baseline set by neutral words.
 
-## Illustrative Title Examples
+### Illustrative Title Examples
 
 To illustrate how hedonometer scores correspond to specific artwork titles, we highlight several examples from the dataset.
 
@@ -465,16 +472,6 @@ The initial dataset contained 132 unique artworks retrieved from the Met API aft
 - Median: 5.51
 
 - The average happiness score of 5.56 is slightly above the neutral midpoint of 5, suggesting that artwork titles tend to lean mildly positive in their word choice. The range from 3.82 to 7.92 shows that while some titles use distinctly negative language, others can be quite positive, nevertheless, the extreme scores are rare. The fact that mean (5.56) and median (5.51) are very close tells us the scores are roughly symmetric, not skewed by outliers.
-
-
-## Eastern vs Western
-
-| Category | Count | Mean Score | Std Dev | Interpretation |
-|----------|-------|------------|---------|----------------|
-| Eastern concepts | 62 | 5.56 | 0.62 | Slightly more variable language |
-| Western concepts | 57 | 5.55 | 0.56 | Slightly more consistent language |
-
-- The Eastern artworks scored marginally higher on average (5.56 vs 5.55), but the difference is tiny – only 0.015 points. More interesting is the standard deviation. Eastern titles show more variation (0.631 vs 0.543), meaning their language ranges more widely from very positive to less positive. Western titles are more clustered around the average. This could reflect differences in how aesthetic concepts are described across traditions, although the small magnitude of the difference suggests caution in interpretation. A more rigorous statistical test would be needed to determine if this difference is meaningful.
 
 ## Coverage Analysis
 
@@ -514,7 +511,6 @@ The labMT lexicon was designed for general English, predictably misses several c
 
 - When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they might be systematically underrepresented in our measurements. The coverage statistics help us identify when this is happening.
 
-
 ## Statistical Analysis
 
 We performed:
@@ -531,6 +527,8 @@ All statistical analyses were conducted on the subset of artworks that received 
 |----------|------|------|------|------|------|------|
 | Eastern | 62 | 5.56 | 5.52 | 0.62 | 3.82 | 7.92 |
 | Western | 57 | 5.55 | 5.49 | 0.56 | 3.83 | 6.86 |
+
+- The Eastern artworks scored marginally higher on average (5.56 vs 5.55), but the difference is only 0.015 points. Both categories center around similar median values (Eastern 5.52, Western 5.49), confirming that the average difference is not driven by outliers. More interesting is the spread of scores. Eastern titles show greater variation (SD = 0.62) compared to Western titles (SD = 0.56), indicating that emotional language in Eastern aesthetic concepts ranges more widely from very positive to less positive.  The highest overall score (7.92) belongs to an Eastern artwork, as does the lowest (3.82), suggesting that Eastern aesthetic concepts encompass both more intensely positive and more intensely negative expressions than their Western counterparts. Western titles, by contrast, are more tightly clustered around the average, with no scores above 6.86 or below 3.83. This consistency may reflect a more uniform curatorial voice or a narrower range of emotional expression within Western aesthetic terminology.
 
 ### Confidence Intervals (95%)
 
@@ -632,9 +630,6 @@ Finally, lexical coverage varies across titles because culturally specific words
 For these reasons, the statistical analysis should be interpreted as a robust comparison within this dataset, rather than as a universal statement about Eastern and Western aesthetics.
 
 ## Future Improvements
-
-### What We Can Trust
-The analysis provides a robust comparison of how the Metropolitan Museum of Art describes Eastern and Western aesthetic concepts in English language titles. The bootstrap and coverage sensitivity analyses confirm that the absence of a significant difference is stable across multiple analytical choices. The method reliably identifies extreme examples (e.g., "Butterflies" scoring 7.92, "The Death of Socrates" scoring 3.82) and captures meaningful variation within each category.
 
 ### Assumptions
 

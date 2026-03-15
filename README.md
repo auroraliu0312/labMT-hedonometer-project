@@ -523,12 +523,22 @@ All statistical analyses were conducted on the subset of artworks that received 
 
 ### Descriptive Statistics
 
-| Category | Count | Mean | Median | SD | Min | Max |
-|----------|------|------|------|------|------|------|
-| Eastern | 62 | 5.56 | 5.52 | 0.62 | 3.82 | 7.92 |
-| Western | 57 | 5.55 | 5.49 | 0.56 | 3.83 | 6.86 |
+The descriptive analysis reveals several important patterns in how emotional language differs between Eastern and Western aesthetic concepts in Met artwork titles.
 
-- The Eastern artworks scored marginally higher on average (5.56 vs 5.55), but the difference is only 0.015 points. Both categories center around similar median values (Eastern 5.52, Western 5.49), confirming that the average difference is not driven by outliers. More interesting is the spread of scores. Eastern titles show greater variation (SD = 0.62) compared to Western titles (SD = 0.56), indicating that emotional language in Eastern aesthetic concepts ranges more widely from very positive to less positive.  The highest overall score (7.92) belongs to an Eastern artwork, as does the lowest (3.82), suggesting that Eastern aesthetic concepts encompass both more intensely positive and more intensely negative expressions than their Western counterparts. Western titles, by contrast, are more tightly clustered around the average, with no scores above 6.86 or below 3.83. This consistency may reflect a more uniform curatorial voice or a narrower range of emotional expression within Western aesthetic terminology.
+| Category | Count | Mean | Median | SD | Min | Max | Range |
+|----------|------|------|------|------|------|------|-------|
+| Eastern | 62 | 5.566 | 5.513 | 0.631 | 3.820 | 7.920 | 4.10 |
+| Western | 57 | 5.551 | 5.511 | 0.543 | 3.830 | 6.860 | 3.03 |
+
+![Figure 1: Descriptive Statistics - Eastern vs Western Aesthetic Concepts](figures/descriptive_statistics.png)
+
+*Comprehensive visualization of happiness scores for Eastern and Western aesthetic concepts. Boxplots show the distribution of scores with individual data points overlaid. Blue diamonds mark the mean values, while red and green points indicate minimum and maximum scores. Statistical summaries are provided in the side panels.*
+
+The descriptive analysis reveals a subtle but meaningful pattern in how emotional language differs between Eastern and Western aesthetic concepts in Met artwork titles. The Eastern artworks scored marginally higher on average (5.56 vs 5.55), but the difference is only 0.015 points. Both categories center around similar median values (Eastern 5.52, Western 5.49), confirming that the average difference is not driven by outliers and that the central tendency of emotional expression is virtually identical across both traditions.
+
+More interesting than the averages is the spread of scores. Eastern titles show greater variation (SD = 0.62) compared to Western titles (SD = 0.56), indicating that emotional language in Eastern aesthetic concepts ranges more widely from very positive to less positive. This broader variability is further illustrated by the ranges: Eastern scores span 4.10 points (from 3.82 to 7.92), while Western scores span only 3.03 points (from 3.83 to 6.86). The Eastern range is approximately 35% wider, suggesting that the vocabulary and descriptive language associated with Eastern aesthetic concepts allows for more expansive emotional expression.
+
+The extreme values are particularly revealing. The highest overall score (7.92) belongs to an Eastern artwork, as does the lowest (3.82), suggesting that Eastern aesthetic concepts encompass both more intensely positive and more intensely negative expressions than their Western counterparts. Western titles, by contrast, are more tightly clustered around the average, with no scores above 6.86 or below 3.83. This consistency may reflect a more uniform curatorial voice, a narrower range of emotional expression within Western aesthetic terminology, or potentially institutional biases in how the Metropolitan Museum catalogs and describes artworks from different cultural traditions. These patterns suggest that while Eastern and Western aesthetic concepts are described with similar average emotional valence, Eastern traditions embrace a wider emotional palette—capturing both higher peaks of positivity and deeper troughs of contemplation or sorrow—while Western descriptions remain more consistently moderate.
 
 ### Confidence Intervals (95%)
 
@@ -564,7 +574,6 @@ This figure shows the bootstrap distribution of the estimated difference in mean
 The distribution is centered very close to zero, and the 95% interval spans both positive and negative values. This indicates that the observed difference in the sample is small relative to the uncertainty introduced by sampling variability.
 
 Bootstrap therefore confirms that the similarity between categories is not an artifact of a single sample draw.
-
 
 ## Sampling Audit & Robustness Analysis
 

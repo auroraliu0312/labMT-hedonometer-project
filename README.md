@@ -9,7 +9,7 @@ This project analyzes the labMT 1.0 dataset, which contains happiness scores for
 
 - Source
 
-The dataset comes from Dodds et al. (2011) "Temporal Patterns of Happiness and Information in a Global Social Network:  Hedonometrics and Twitter," published in PLOS ONE. It was constructed by collecting frequency rankings from four corpora and crowdsourcing happiness ratings for each word via Amazon Mechanical Turk.
+The dataset is from Dodds et al. (2011) "Temporal Patterns of Happiness and Information in a Global Social Network:  Hedonometrics and Twitter," published in PLOS ONE. It was constructed by collecting frequency rankings from four corpora and crowdsourcing happiness ratings for each word via Amazon Mechanical Turk.
 
 - Data Dictionary
 
@@ -42,9 +42,9 @@ A missing rank (`--`) indicates that the word does not appear in that particular
 
 ## Sanity Checks
 
- We performed several sanity checks to ensure the dataset is clean and reasonable.
+We performed several sanity checks to ensure the dataset is clean and reasonable.
 
- There are no duplicated words in the dataset, confirming unique entries for each word.
+There are no duplicated words in the dataset, confirming unique entries for each word.
 
 ## Random sample of 15 rows:
  We inspected a random subset of 15 rows to verify that values appear consistent and correct. Example sample:
@@ -84,7 +84,7 @@ The words with the highest happiness scores are logical and correspond to highly
 | laughs    | 8.18            |
 | joy       | 8.16            |
 
-- The very positive words reveal what English speakers collectively associate with happiness. "Laughter," "happiness," and "love" represent universal human experiences that transcend cultural boundaries—this explains their presence across multiple corpora. Interestingly, "laughed" (past tense) scores slightly lower than "laughter" (noun), suggesting that the abstract concept of joy feels more positive than specific instances. These words are used by all communities from journalists to songwriters to Twitter users, which explains why they appear in all four corpora. The low standard deviations (0.93-1.16) indicate strong consensus: people generally agree these words feel happy, regardless of context.
+- We noticed that the very positive words reveal what English speakers collectively associate with happiness. "Laughter," "happiness," and "love" represent universal human experiences that transcend cultural boundaries, explaining their presence across multiple corpora. Interestingly, "laughed" (past tense) scores slightly lower than "laughter" (noun), suggesting that the abstract concept of joy feels more positive than specific instances. These words appear in all four corpora, being used by all types of communities from journalists to songwriters to Twitter users. The low standard deviations (0.93-1.16) indicate a strong consensus, in which, people generally agree these words feel happy, regardless of context.
 
 ## Top 10 negative words:
 
@@ -103,7 +103,7 @@ The words with the lowest happiness scores correspond to negative or sensitive t
 | kill      | 1.56            |
 | killed    | 1.56            |
 
-- The most negative words cluster around violence, death, and trauma. "Suicide" and "murder" appear in all four corpora. These concepts are discussed across all types of texts, from news to songs to casual conversation. The pattern of "terrorism" appearing only in the New York Times is striking: this suggests that in 2011, terrorism was primarily discussed in formal news contexts, not in songs or casual Twitter conversations. "Rape" appears in Twitter, NYT, and Lyrics but not in Google Books. This possibly reflecting censorship in historical texts or changing social willingness to discuss sexual violence.The very low scores (1.3-1.5) and low standard deviations show strong cultural agreement about the negativity of these words. 
+- We observed that most negative words cluster around violence, death, and trauma. "Suicide" and "murder" appear in all four corpora. These concepts are discussed across all types of texts from news to songs to casual conversation. The pattern of "terrorism" appearing only in the New York Times is striking: this suggests that in 2011, terrorism was primarily discussed in formal news contexts, not in songs or casual Twitter conversations. "Rape" appears in Twitter, NYT, and Lyrics but not in Google Books. This possibly reflecting censorship in historical texts or changing social willingness to discuss sexual violence.The very low scores (1.3-1.5) and low standard deviations show strong cultural agreement about the negativity of these words. 
 
 > These checks confirm that the happiness scores and words are reasonable, and no data entry errors are apparent.
 
@@ -122,9 +122,9 @@ Summary Statistics:
 
 The distribution of happiness scores is centered slightly above 5, with mean and median very close (5.38 and 5.44), indicating approximate symmetry. Most words fall between 4.5 and 6.5, suggesting that everyday English vocabulary leans mildly positive. Extremely positive and extremely negative words are relatively rare, with only 5% of words scoring below 3.18 and 5% scoring above 7.08. This pattern suggests that common language tends toward moderate positivity, with strong emotional words occupying the tails of the distribution.
 
- One interesting pattern is the distribution reveals the negative tail (scores below 3.18) is slightly longer than the positive tail (scores above 7.08). This means that when words do deviate from the neutral range, they are slightly more likely to be negative than positive. However, the overall mass of the distribution sits in the 5-6 range, indicating that everyday language maintains a mild positivity bias. This suggests that English vocabulary has a wider range of mildly negative words, but the most intensely positive words are more extremely positive than the most intensely negative words are extremely negative. 
+An interesting pattern is the distribution reveals the negative tail (scores below 3.18) is slightly longer than the positive tail (scores above 7.08). This means that when words do deviate from the neutral range, they are slightly more likely to be negative than positive. However, the overall mass of the distribution sits in the 5-6 range, indicating that everyday language maintains a mild positivity bias. This suggests that English vocabulary has a wider range of mildly negative words, but the most intensely positive words are more extremely positive than the most intensely negative words are extremely negative. 
 
- According to the figure  above, a closer examination of the tails reveals an interesting asymmetry. The negative tail extends from 1 to 3.18, spanning 2.18 points, while the positive tail extends from 7.08 to 9, spanning only 1.92 points. This means that when words deviate from the neutral range, they are slightly more likely to be negative than positive English vocabulary. However, the extremes tell a different story. The most positive word "laughter" (8.50) lies 3.12 points above the mean, while the most negative word "suicide" (1.30) lies 4.08 points below the mean. This indicates that although there are more mildly negative words, the most intensely negative words reach further from neutrality than the most intensely positive words. Overall, these patterns suggest that English vocabulary is structured with a broad spectrum of mild negativity but reserves its most extreme emotional intensity for positive expression. The strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
+According to the figure  above, a closer examination of the tails reveals an interesting asymmetry. The negative tail extends from 1 to 3.18, spanning 2.18 points, while the positive tail extends from 7.08 to 9, spanning only 1.92 points. This means that when words deviate from the neutral range, they are slightly more likely to be negative than positive English vocabulary. However, the extremes tell a different story. The most positive word "laughter" (8.50) lies 3.12 points above the mean, while the most negative word "suicide" (1.30) lies 4.08 points below the mean. This indicates that although there are more mildly negative words, the most intensely negative words reach further from neutrality than the most intensely positive words. Overall, these patterns suggest that English vocabulary is structured with a broad spectrum of mild negativity but reserves its most extreme emotional intensity for positive expression. The strongly negative words (very low scores) are much less common than neutral or slightly positive words. This suggests that common language tends to lean slightly positive overall.
 
 ## Disagreement: Words with High Standard Deviation
 
@@ -311,7 +311,6 @@ For example, words like rt, lol, blog appear as very frequent on Twitter in our 
 
 This generation process explains several features we observed in our analysis:
 
-
 1. Missing ranks occur because a word wasn't frequent enough in a particular corpus to make its top 5000. It is not because the word doesn't exist in that domain.
 2. Standard deviation measures genuine disagreement among raters, not ambiguity in the word itself.
 3. The 2011 time stamp means all ratings and frequency data reflect language use from approximately 2008-2010. Words like "tweet" (rank 107 on Twitter, missing from NYT) had different meanings.
@@ -333,7 +332,6 @@ If we were to rebuild this instrument today, we would introduce several improvem
 
 These changes would make the dataset more sensitive to ambiguity, social variation, and contextual nuance while retaining its usefulness for large-scale computational analysis.
 
-
 # Hedonometer Application in Met Museum
 
 ## Overview
@@ -347,7 +345,7 @@ We hypothesized that Western aesthetic terms (such as "beauty," "sublime," and "
 ## Data Acquisition & Provenance
 
 ### Source
-We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github.io/) to search for artwork titles containing aesthetic concepts from both traditions.
+We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github.io/) to search for artwork titles that contain aesthetic concepts from both Western and Eastern traditions.
 
 **Search Terms:**
 - **Western** (10 terms): beauty, sublime, pastoral, romantic, ideal, grace, glory, divine, harmony, splendor
@@ -373,11 +371,11 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 - **Temporal**: Collection reflects Western collecting priorities over centuries
 - **Interpretation**: Titles may be curatorial additions, not artist-given
 
-- Given these limitations, our analysis can identify patterns in how the Metropolitan Museum of Art describes artworks associated with different aesthetic traditions, but cannot make strong claims about the original artists' intent, about how people from those cultures actually experience the art, or about the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
+- Given these limitations, our analysis can identify patterns in how the Metropolitan Museum of Art describes artworks associated with different aesthetic traditions, but cannot make strong claims about the original artists' intent, how people from those cultures actually experience the art, or the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
 
 ### Population Context
 
-This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. It is important to be clear about what this dataset does and does not represent. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English-language titles, as provided by the museum, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, this dataset does not represent a representative sample of all Eastern or Western art, nor does it capture the full diversity of aesthetic concepts within either tradition. The Met's collection inherently overrepresents Western European art and objects that Western collectors historically deemed significant, meaning Eastern artworks in the collection may overrepresent objects considered "exotic" or "masterpieces" by Western standards.Therefore, any conclusions drawn from this analysis should be understood as comparisons of how the Metropolitan Museum of Art describes artworks associated with different aesthetic traditions, rather than as universal statements about Eastern versus Western art or aesthetics.
+This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. We want to to be very clear about what this dataset does and does not represent. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English-language titles, as provided by the museum, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, this dataset does not represent a representative sample of all Eastern or Western art, nor does it capture the full diversity of aesthetic concepts within either tradition. The Met's collection inherently overrepresents Western European art and objects that Western collectors historically deemed significant, meaning Eastern artworks in the collection may overrepresent objects considered "exotic" or "masterpieces" by Western standards.Therefore, any conclusions drawn from this analysis should be understood as comparisons of how the Metropolitan Museum of Art describes artworks associated with different aesthetic traditions, rather than as universal statements about Eastern versus Western art or aesthetics.
 
 ### Dataset Characteristics
 
@@ -723,7 +721,3 @@ In the early stages of development, we consulted DeepSeek to help debug code and
 All code included in the repository was revised and verified by us. We understand the logic and functionality of each script and are able to explain the analytical steps, statistical calculations, and design choices in detail. AI tools were used as writing and debugging support rather than as a substitute for conceptual understanding or interpretive reasoning.
 
 Additionally, all interpretive claims, methodological decisions, and critical reflections represent our own academic judgment and responsibility.
-
-
-
-

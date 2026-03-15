@@ -222,13 +222,63 @@ print(f"✅ Saved fetch log to: {fetch_log_file}")
 # Create DataFrame
 df = pd.DataFrame(artworks)
 
-# Save raw data
+print("\n" + "=" * 70)
+print("STEP 3: DEDUPLICATION & PROCESSING")
+print("=" * 70)
+
+# === TRACK AND REMOVE DUPLICATES ===
+initial_count = len(df)
+print(f"\n📊 RAW DATA SUMMARY (before deduplication):")
+print(f"  Total rows in raw data: {initial_count}")
+
+# Check for duplicates
+duplicate_mask = df.duplicated(subset=['object_id'], keep='first')
+duplicate_count = duplicate_mask.sum()
+
+if duplicate_count > 0:
+    print(f"  Found {duplicate_count} duplicate object_ids")
+    
+    # Show examples of duplicates
+    duplicate_ids = df[duplicate_mask]['object_id'].head(3).tolist()
+    print(f"  Example duplicate IDs: {duplicate_ids}")
+    
+    # Show which categories the duplicates come from
+    duplicate_cats = df[duplicate_mask]['category'].value_counts()
+    print(f"  Duplicates by category:")
+    for cat, count in duplicate_cats.items():
+        print(f"    • {cat}: {count}")
+    
+    # Remove duplicates, keeping first occurrence
+    df = df.drop_duplicates(subset=['object_id'], keep='first')
+    print(f"\n  ✅ Removed {duplicate_count} duplicate objects")
+else:
+    print(f"  ✅ No duplicates found in raw data")
+
+print(f"  Final unique artworks: {len(df)}")
+print(f"  Total removed: {initial_count - len(df)} objects")
+print(f"  Removal rate: {(initial_count - len(df)) / initial_count * 100:.1f}%")
+
+# Save duplicate report for reference
+duplicate_report = {
+    'original_count': initial_count,
+    'duplicate_count': duplicate_count,
+    'final_count': len(df),
+    'removal_rate': f"{(initial_count - len(df)) / initial_count * 100:.1f}%",
+    'timestamp': datetime.now().isoformat()
+}
+
+with open(RAW_DIR / "duplicate_report.json", 'w') as f:
+    json.dump(duplicate_report, f, indent=2)
+print(f"✅ Saved duplicate report to: {RAW_DIR / 'duplicate_report.json'}")
+# ====================================
+
+# Save raw data (now deduplicated)
 raw_file = RAW_DIR / "met_aesthetic_raw.csv"
 df.to_csv(raw_file, index=False)
-print(f"✅ Saved raw data to: {raw_file}")
+print(f"✅ Saved deduplicated raw data to: {raw_file}")
 
 print("\n" + "=" * 70)
-print("STEP 3: PROCESSING DATA")
+print("STEP 4: PROCESSING DATA")
 print("=" * 70)
 
 # Basic cleaning for processed data
@@ -237,7 +287,8 @@ initial_rows = len(df_processed)
 
 # Remove rows with no title
 df_processed = df_processed[df_processed['title'].notna()]
-print(f"✅ Removed {initial_rows - len(df_processed)} rows with missing titles")
+titles_removed = initial_rows - len(df_processed)
+print(f"✅ Removed {titles_removed} rows with missing titles")
 
 # Create century column from object_begin
 def get_century(year):
@@ -262,13 +313,15 @@ df_processed.to_csv(processed_file, index=False)
 print(f"✅ Saved processed data to: {processed_file}")
 
 print("\n" + "=" * 70)
-print("DATA SUMMARY")
+print("FINAL DATA SUMMARY")
 print("=" * 70)
-print(f"Total artworks: {len(df_processed)}")
-print(f"Total columns: {len(df_processed.columns)}")
-print(f"Columns: {', '.join(df_processed.columns)}")
+print(f"Original raw objects (from API): {initial_count}")
+print(f"Duplicate objects removed: {duplicate_count}")
+print(f"Objects missing titles: {titles_removed}")
+print(f"Final unique artworks with titles: {len(df_processed)}")
+print(f"Overall reduction: {((initial_count - len(df_processed)) / initial_count * 100):.1f}%")
 
-print(f"\n📊 Category distribution:")
+print(f"\n📊 Category distribution (unique artworks with titles):")
 cat_stats = df_processed['category'].value_counts()
 for cat, count in cat_stats.items():
     pct = (count / len(df_processed)) * 100
@@ -298,8 +351,20 @@ for col in ['culture', 'artist_name', 'artist_nationality', 'period']:
 print("\n" + "=" * 70)
 print("✅ DATA ACQUISITION COMPLETE")
 print("=" * 70)
+print("\n📁 Files created:")
+print(f"  • Raw data (deduplicated): {raw_file}")
+print(f"  • Processed data: {processed_file}")
+print(f"  • Duplicate report: {RAW_DIR / 'duplicate_report.json'}")
+print(f"  • Search log: {search_log_file}")
+print(f"  • Fetch log: {fetch_log_file}")
+print(f"  • Object IDs: {object_ids_file}")
+
+print("\n📊 Summary statistics:")
+print(f"  • Initial API objects: {initial_count}")
+print(f"  • Duplicates removed: {duplicate_count}")
+print(f"  • Missing titles removed: {titles_removed}")
+print(f"  • FINAL UNIQUE ARTWORKS: {len(df_processed)}")
+
+print("\n✅ All data files saved successfully!")
 print("\nNext steps: Run scoring with labMT word list")
 print("> python src/score_artworks.py")
-
-
-

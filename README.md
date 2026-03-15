@@ -525,14 +525,15 @@ All statistical analyses were conducted on the subset of artworks that received 
 
 The descriptive analysis reveals several important patterns in how emotional language differs between Eastern and Western aesthetic concepts in Met artwork titles.
 
-| Category | Count | Mean | Median | SD | Min | Max | Range |
-|----------|------|------|------|------|------|------|-------|
-| Eastern | 62 | 5.566 | 5.513 | 0.631 | 3.820 | 7.920 | 4.10 |
-| Western | 57 | 5.551 | 5.511 | 0.543 | 3.830 | 6.860 | 3.03 |
+| Category | Count | Mean | Median | SD | Min | Max |
+|----------|------|------|------|------|------|------|
+| Eastern | 62 | 5.56 | 5.52 | 0.62 | 3.82 | 7.92 |
+| Western | 57 | 5.55 | 5.49 | 0.56 | 3.83 | 6.86 |
+
 
 ![Figure 1: Descriptive Statistics - Eastern vs Western Aesthetic Concepts](figures/descriptive_statistics.png)
 
-*Comprehensive visualization of happiness scores for Eastern and Western aesthetic concepts. Boxplots show the distribution of scores with individual data points overlaid. Blue diamonds mark the mean values, while red and green points indicate minimum and maximum scores. Statistical summaries are provided in the side panels.*
+> *Comprehensive visualization of happiness scores for Eastern and Western aesthetic concepts. Boxplots show the distribution of scores with individual data points overlaid. Blue diamonds mark the mean values, while red and green points indicate minimum and maximum scores. Statistical summaries are provided in the side panels.*
 
 The descriptive analysis reveals a subtle but meaningful pattern in how emotional language differs between Eastern and Western aesthetic concepts in Met artwork titles. The Eastern artworks scored marginally higher on average (5.56 vs 5.55), but the difference is only 0.015 points. Both categories center around similar median values (Eastern 5.52, Western 5.49), confirming that the average difference is not driven by outliers and that the central tendency of emotional expression is virtually identical across both traditions.
 
@@ -625,7 +626,6 @@ Both categories show moderate coverage overall, but Eastern titles display sligh
 
 The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
 
-
 ## Additional Statistical Considerations
 
 The bootstrap and coverage sensitivity analyses reinforce the main conclusion while also clarifying its limitations.
@@ -638,19 +638,16 @@ Finally, lexical coverage varies across titles because culturally specific words
 
 For these reasons, the statistical analysis should be interpreted as a robust comparison within this dataset, rather than as a universal statement about Eastern and Western aesthetics.
 
-## Future Improvements
-
-### Assumptions
+## Future Directions
 
 Our analysis assumes that:
+
 - Artwork titles reflect meaningful emotional content
 - English translations capture enough of the original meaning for comparison
 - The labMT lexicon's coverage is similar across categories (partially validated by coverage analysis)
 - Artworks are independent observations (though search-term retrieval introduces some dependence)
 
-These assumptions are reasonable for this exploratory study but should be tested in future work with more diverse data sources.
-
-### Future Directions
+These assumptions are reasonable for this exploratory study but should be tested in future work with more diverse data sources. The following improvements could be make:
 
 **Institutional and Collection Bias**
 

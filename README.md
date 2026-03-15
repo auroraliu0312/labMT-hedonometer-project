@@ -376,9 +376,8 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 - Given these limitations, our analysis can identify patterns in how the Metropolitan Museum of Art describes artworks associated with different aesthetic traditions, but cannot make strong claims about the original artists' intent, about how people from those cultures actually experience the art, or about the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
 
 ### Population Context
-This dataset represents a curated sample of the Metropolitan Museum of Art's collection, filtered through specific search terms related to aesthetic concepts. It is important to understand that this is not a random  sample of Eastern or Western art. Rather, it reflects:
 
-- The museum's holdings overrepresent Western European art, ancient Mediterranean objects, and artworks that align with Western aesthetic categories. Eastern art in the collection has been filtered through decades of Western collecting practices and may overrepresent objects deemed "exotic," "masterpieces," or culturally significant by Western standards. Our choice of aesthetic concepts (e.g., "beauty," "sublime" for Western; "wabi-sabi," "mono no aware" for Eastern) reflects Western academic frameworks for categorizing aesthetic philosophy. These terms may not map neatly onto how these traditions conceptualize aesthetic experience, and some concepts may be ove- or under-represented as a result.
+This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. It is important to be clear about what this dataset does and does not represent. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English-language titles, as provided by the museum, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, this dataset does not represent a representative sample of all Eastern or Western art, nor does it capture the full diversity of aesthetic concepts within either tradition. The Met's collection inherently overrepresents Western European art and objects that Western collectors historically deemed significant, meaning Eastern artworks in the collection may overrepresent objects considered "exotic" or "masterpieces" by Western standards.Therefore, any conclusions drawn from this analysis should be understood as comparisons of how the Metropolitan Museum of Art describes artworks associated with different aesthetic traditions, rather than as universal statements about Eastern versus Western art or aesthetics.
 
 ### Dataset Characteristics
 
@@ -569,7 +568,7 @@ This result reinforces the overall interpretation that the dataset does not prov
 
 ![Bootstrap Difference](figures/bootstrap_difference_distribution.png)
 
-*Bootstrap distribution of the estimated difference in mean happiness scores (Eastern − Western). The distribution centers near zero and the 95% interval spans both positive and negative values, indicating substantial uncertainty in the observed difference.*
+> *Bootstrap distribution of the estimated difference in mean happiness scores (Eastern − Western). The distribution centers near zero and the 95% interval spans both positive and negative values, indicating substantial uncertainty in the observed difference.*
 
 This figure shows the bootstrap distribution of the estimated difference in mean happiness scores between Eastern and Western titles.
 
@@ -619,7 +618,7 @@ Across all thresholds, the estimated difference between Eastern and Western scor
 
 ![Coverage](figures/coverage_by_category.png)
 
-*Boxplot showing lexical coverage (matched words / total words) for Eastern and Western titles. Eastern titles display slightly greater variability, reflecting the presence of transliterated or culturally specific terms not present in the hedonometer lexicon.*
+> *Boxplot showing lexical coverage (matched words / total words) for Eastern and Western titles. Eastern titles display slightly greater variability, reflecting the presence of transliterated or culturally specific terms not present in the hedonometer lexicon.*
 
 Coverage measures the proportion of title words that were successfully matched to the labMT lexicon.
 

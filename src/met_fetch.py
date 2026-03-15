@@ -151,10 +151,12 @@ obj_to_category = {obj_id: cat for (obj_id, cat, term) in all_object_ids}
 artworks = []
 object_ids_list = [obj_id for (obj_id, cat, term) in all_object_ids]
 fetch_log = []
+successful_fetches = 0
+failed_fetches = 0
 
 for i, obj_id in enumerate(object_ids_list):
     if i % 10 == 0:
-        print(f"  Progress: {i}/{len(object_ids_list)} objects fetched")
+        print(f"  Progress: {i}/{len(object_ids_list)} objects fetched (Success: {successful_fetches}, Failed: {failed_fetches})")
     
     detail_url = f"https://collectionapi.metmuseum.org/public/collection/v1/objects/{obj_id}"
     
@@ -184,6 +186,7 @@ for i, obj_id in enumerate(object_ids_list):
                 'tags': json.dumps([tag['term'] for tag in data.get('tags', [])]) if data.get('tags') else None
             }
             artworks.append(artwork)
+            successful_fetches += 1
             
             fetch_log.append({
                 'object_id': obj_id,
@@ -192,14 +195,19 @@ for i, obj_id in enumerate(object_ids_list):
                 'has_title': bool(data.get('title'))
             })
         else:
+            failed_fetches += 1
             fetch_log.append({
                 'object_id': obj_id,
                 'timestamp': datetime.now().isoformat(),
                 'status': f'error_{response.status_code}',
                 'has_title': False
             })
-            print(f"  ⚠️  Error fetching {obj_id}: HTTP {response.status_code}")
+            if response.status_code == 403:
+                print(f"  ⚠️  Access denied (403) for {obj_id} - API may be rate limiting")
+            else:
+                print(f"  ⚠️  Error fetching {obj_id}: HTTP {response.status_code}")
     except Exception as e:
+        failed_fetches += 1
         fetch_log.append({
             'object_id': obj_id,
             'timestamp': datetime.now().isoformat(),
@@ -211,7 +219,9 @@ for i, obj_id in enumerate(object_ids_list):
     # Rate limiting
     time.sleep(0.2)
 
-print(f"\n✅ Successfully fetched {len(artworks)} artworks")
+print(f"\n✅ Fetching complete!")
+print(f"  Successfully fetched: {successful_fetches} artworks")
+print(f"  Failed fetches: {failed_fetches}")
 
 # Save fetch log
 fetch_log_df = pd.DataFrame(fetch_log)
@@ -258,11 +268,11 @@ print(f"  Final unique artworks: {len(df)}")
 print(f"  Total removed: {initial_count - len(df)} objects")
 print(f"  Removal rate: {(initial_count - len(df)) / initial_count * 100:.1f}%")
 
-# Save duplicate report for reference
+# Save duplicate report for reference (convert numpy ints to Python ints)
 duplicate_report = {
-    'original_count': initial_count,
-    'duplicate_count': duplicate_count,
-    'final_count': len(df),
+    'original_count': int(initial_count),  # Convert to Python int
+    'duplicate_count': int(duplicate_count),  # Convert to Python int
+    'final_count': int(len(df)),  # Convert to Python int
     'removal_rate': f"{(initial_count - len(df)) / initial_count * 100:.1f}%",
     'timestamp': datetime.now().isoformat()
 }
@@ -335,12 +345,12 @@ for dept, count in dept_stats.items():
 print(f"\n📊 Century distribution:")
 century_stats = df_processed['century'].value_counts().head(5)
 for century, count in century_stats.items():
-    print(f"  • {century}s: {count} artworks")
+    print(f"  • {int(century)}s: {count} artworks" if pd.notna(century) else f"  • Unknown: {count} artworks")
 
 print(f"\n📊 Culture distribution:")
 culture_stats = df_processed['culture'].value_counts().head(5)
 for culture, count in culture_stats.items():
-    print(f"  • {culture}: {count} artworks")
+    print(f"  • {culture if pd.notna(culture) else 'Unknown'}: {count} artworks")
 
 print(f"\n📊 Missing data summary:")
 for col in ['culture', 'artist_name', 'artist_nationality', 'period']:
@@ -360,7 +370,10 @@ print(f"  • Fetch log: {fetch_log_file}")
 print(f"  • Object IDs: {object_ids_file}")
 
 print("\n📊 Summary statistics:")
-print(f"  • Initial API objects: {initial_count}")
+print(f"  • Initial API objects targeted: {len(all_terms) * objects_per_term}")
+print(f"  • Unique object IDs collected: {len(all_object_ids)}")
+print(f"  • Successful fetches: {successful_fetches}")
+print(f"  • Failed fetches: {failed_fetches}")
 print(f"  • Duplicates removed: {duplicate_count}")
 print(f"  • Missing titles removed: {titles_removed}")
 print(f"  • FINAL UNIQUE ARTWORKS: {len(df_processed)}")

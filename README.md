@@ -464,14 +464,15 @@ To illustrate how hedonometer scores correspond to specific artwork titles, we h
 
 The initial dataset contained 132 unique artworks retrieved from the Met API after duplicate objects were removed. After applying the hedonometer scoring procedure, 119 titles contained at least one word matched in the labMT lexicon and could therefore receive a happiness score. The remaining 13 titles contained only specialized or non-English terms and were excluded from sentiment analysis.
 
-**Happiness score distribution:**
-- Average score: 5.56
-- Typical range: 4.98 to 6.15
-- Lowest score: 3.82
-- Highest score: 7.92
-- Median: 5.51
+![Figure 2: Distribution of Happiness Scores](figures/score_distribution.png)
 
-- The average happiness score of 5.56 is slightly above the neutral midpoint of 5, suggesting that artwork titles tend to lean mildly positive in their word choice. The range from 3.82 to 7.92 shows that while some titles use distinctly negative language, others can be quite positive, nevertheless, the extreme scores are rare. The fact that mean (5.56) and median (5.51) are very close tells us the scores are roughly symmetric, not skewed by outliers.
+> *Histogram showing the distribution of happiness scores across all scored artworks (n=119). The blue bars represent the frequency of scores in each bin. Red dashed line indicates the mean (5.56), green dashed line the median (5.51), and purple dotted lines show ±1 standard deviation (0.62).*
+
+The distribution of happiness scores reveals several important characteristics of the dataset. The scores range from a minimum of 3.82 to a maximum of 7.92, with the majority of artworks clustering between 5.0 and 6.5. The distribution is roughly symmetric, as evidenced by the close alignment between the mean (5.56) and median (5.51), indicating that extreme values do not disproportionately skew the central tendency.
+
+The histogram shows a clear peak in the 5.5-6.0 range, where approximately 30% of the scored sample are concentrated. This clustering suggests that most artwork titles, regardless of cultural origin, tend to employ mildly positive language. The frequency gradually decreases on both sides of this central peak, with relatively few artworks scoring below 4.5 or above 7.0.
+
+The shape of the distribution confirms that the hedonometer captures meaningful variation in emotional language across the collection. The absence of extreme skewness supports the validity of parametric statistical comparisons between Eastern and Western categories. Furthermore, the spread of scores (±1 SD = 4.94 to 6.18) indicates that while most titles cluster around the neutral-to-positive range, there is sufficient variation to detect differences between groups.
 
 ## Coverage Analysis
 

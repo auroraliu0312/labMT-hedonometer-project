@@ -4,7 +4,9 @@
 
 ### Research Question
 
-This project investigates how emotional language differs across cultural traditions by applying the labMT hedonometer to artwork titles from the Metropolitan Museum of Art. Our central research question asks: **How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles, and does this relationship remain stable across historical periods?** 
+This project investigates how emotional language differs across cultural traditions by applying the labMT hedonometer to artwork titles from the Metropolitan Museum of Art. Our central research question asks: 
+
+**How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles, and does this relationship remain stable across historical periods?** 
 
 This question addresses a fundamental challenge in whether a general sentiment lexicon built from contemporary American English, can meaningfully capture emotional expression in culturally and historically diverse texts. In global digital heritage projects, researchers frequently apply computational tools developed in one cultural context to texts from another. This makes methodological transparency essential. We need to know whether instruments like the labMT hedonometer remain valid when they cross cultural boundaries. Our project directly tests this assumption.
 
@@ -64,6 +66,7 @@ To test our research question, we collected artwork titles from the Metropolitan
 5. Rate limiting: 0.3-second delays between requests to respect API limits (80 requests/second)
 
 **Raw data:** `data/raw/met_raw_data.csv`
+
 **Date of access:** March 2026
 
 ### Dataset Characteristics
@@ -82,6 +85,10 @@ Because the same artwork may appear under multiple search terms, duplicate objec
 - Only English titles are available; translations may lose cultural and emotional nuance
 - Titles may be curatorial additions rather than artist-given
 - The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art
+
+### Population Context
+
+This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English-language titles, as provided by the museum, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, given above limitations, our analysis cannot make strong claims about the original artists' intent, how people from those cultures actually experience the art, or the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
 
 ### Data Dictionary
 
@@ -195,7 +202,7 @@ For each artwork title, we followed the standard hedonometer scoring procedure:
 
 **Example:** "love" (8.42) + "painting" (5.20) → (8.42 + 5.20) ÷ 2 = 6.81
 
-**Tokenization:**
+**Tokenization**
 
 Before scoring, we cleaned each title to make sure words would match the dictionary properly:
 
@@ -206,7 +213,7 @@ Before scoring, we cleaned each title to make sure words would match the diction
 
 We kept every word that matched the labMT dictionary. No words were filtered out, even common ones like "the", "and", or "of" that have neutral scores around 5. If we had removed neutral word, Scores would be pulled toward extremes (higher highs, lower lows). Moreover, short titles lose most words may not have a score. For instance, a title containing "The Garden of Earthly Delights" has 5 words, 3 of which are neutral ("the", "of", "delights" is neutral). Removing neutral words would leave only "garden" and "earthly", losing 60% of the text and potentially misrepresenting the title's emotional tone. On the other hand, different titles affected differently. Some titles have more neutral words than others may lead to unfair comparasion. Therefore, by keeping all words, we are measuring the actual language used in titles, not an artificially filtered version. This means scores reflect real word choices, including the subtle emotional baseline set by neutral words.
 
-**Methodological choices:**
+**Methodological choices**
 
 - Words that aren't in the labMT dictionary are simply ignored. They don't raise or lower the score. This is the standard approach (Dodds et al., 2011) because assigning arbitrary scores to unknown words would introduce bias. If an artwork title contains many specialized art terms or non-English words, its happiness score is based on fewer words. This doesn't make the score wrong, but it does mean we're measuring only part of the text. The coverage metric helps us track this.
 
@@ -218,13 +225,13 @@ We kept every word that matched the labMT dictionary. No words were filtered out
 
 ### Coverage and Out-of-Vocabulary Analysis
 
+The high median coverage (66.7%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 13 unscorable titles are worth examining separately. They likely contain specialized terminology (like "statuette" or "verso") that a general dictionary misses.
+
 | Coverage Metric | Value | Interpretation |
 |-----------------|-------|----------------|
 | Mean coverage | 62.9% | About two-thirds of words measurable |
 | Median coverage | 66.7% | Half of titles exceed 67% coverage |
 | No matches | 13 | 9.8% of titles unscorable |
-
-The high median coverage (66.7%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 13 unscorable titles are worth examining separately. They likely contain specialized terminology (like "statuette" or "verso") that a general dictionary misses.
 
 The most common words that appeared in titles but weren't in my dictionary tell us about the limits of applying a general sentiment tool to art historical texts:
 
@@ -468,7 +475,7 @@ Rather than relying on a single Western institution, future work should sample f
 **Multilingual Analysis** 
 Future research should collect titles in original languages, rather than just English translations to preserve the original cultural and emotional valence. This requires developing or adapting sentiment lexicons for multiple languages, such as Japanese, Chinese, Arabic, Sanskrit, and others. Comparing sentiment patterns across languages for the same objects or concepts would reveal where translation loses or transforms meaning. Working with native speakers and cultural experts to validate translations and identify concepts that resist direct translation is essential, as is including transliteration alongside translation to preserve phonetic and cultural markers even when direct translation fails.
 
-**Curatorial Voice:** 
+**Curatorial Voice** 
 
 Future work should distinguish between artist given titles and curatorial additions through metadata tagging, enabling analysis of whose voice is being measured. Collecting multiple title sources where available, including original artist titles, historical titles, current curatorial titles, and vernacular titles from the culture of origin would provide a richer understanding of how artworks are named across contexts. Analyzing how titles change over time as curatorial practices evolve and as objects move between collections and cultures could reveal the institutional dynamics shaping art historical description. Including provenance texts and acquisition notes alongside titles would capture the institutional context in which descriptions were created. Most importantly, partnering with source communities to understand how objects are named and described in their original cultural contexts would ground the analysis in indigenous knowledge systems rather than Western curatorial frameworks.
 

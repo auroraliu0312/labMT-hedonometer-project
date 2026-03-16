@@ -12,7 +12,7 @@ This question addresses a fundamental challenge, in which a general sentiment le
 
 ### Relevant
 
-Digital Humanities research often uses sentiment analysis tools without questioning whether they work across different cultures. Our project asks a basic question: does a happiness lexicon built from American English actually capture how Eastern and Western art is described? By comparing scores across cultural traditions and historical periods, we show that the tool works differently for Eastern and Western titles. It is not because the art is different, but because the tool misses culturally specific words like "bodhisattva" and "wabi-sabi." This is important as computational tools are never neutral; they carry the assumptions and bias of previous context they were built from.
+Digital Humanities research often uses sentiment analysis tools without questioning whether they work across different cultures. Our project asks a basic question: does a happiness lexicon built from American English actually capture how Eastern and Western art is described? By comparing scores across cultural traditions and historical periods, we show that the tool works differently for Eastern and Western titles. It is not because the art is different, but because the tool misses culturally specific words like "bodhisattva" and "wabi-sabi." This is important as computational tools are never neutral, they carry the assumptions and bias of previous context they were built from.
 
 ### Procedure
 
@@ -22,11 +22,11 @@ Testing these hypotheses required us to first understand the instrument we were 
 
 ### Key Findings
 
-Our central finding is that **Eastern and Western aesthetic concepts show no statistically significant difference in average happiness scores**. However Eastern titles exhibiting greater variability and capturing both the highest and lowest extreme values. The Eastern artworks scored marginally higher on average (5.56 vs. 5.55), but the difference is only 0.015 points—a negligible gap on a 1-9 scale. Both categories center around similar median values (Eastern 5.52, Western 5.49), confirming that the average difference is not driven by outliers. More interesting than the averages is the spread of scores. Eastern titles show greater variation (SD = 0.62 vs. 0.56), with a range of 4.10 points compared to Western's 3.03 points—a 35% wider range. The highest overall score (7.92) belongs to an Eastern artwork, as does the lowest (3.82), suggesting that Eastern aesthetic concepts encompass both more intensely positive and more intensely negative expressions than their Western counterparts. Western titles, by contrast, are more tightly clustered around the average, with no scores above 6.86 or below 3.83.
+Our central finding is that **Eastern and Western aesthetic concepts show no statistically significant difference in average happiness scores**. However Eastern titles exhibiting greater variability and capturing both the highest and lowest extreme values. The Eastern artworks scored marginally higher on average (5.56 vs. 5.55), but the difference is only 0.015 points. Both categories center around similar median values (Eastern 5.52, Western 5.49), confirming that the average difference is not driven by outliers. More interesting than the averages is the spread of scores. Eastern titles show greater variation (SD = 0.62 vs. 0.56), with a range of 4.10 points compared to Western's 3.03 points—a 35% wider range. The highest overall score (7.92) belongs to an Eastern artwork, as does the lowest (3.82), suggesting that Eastern aesthetic concepts encompass both more intensely positive and more intensely negative expressions than their Western counterparts. Western titles, by contrast, are more tightly clustered around the average, with no scores above 6.86 or below 3.83.
 
-Furthermore, the **temporal analysis** reveals that the East–West difference remains small in both historical periods, with overlapping confidence intervals indicating no strong evidence of temporal change. In the pre-1800 subset, the estimated difference is close to zero (-0.02 [-0.20, 0.16]). In the post-1800 subset, it becomes slightly positive (0.12 [-0.12, 0.36]), though uncertainty is larger due to smaller sample size. **Lexical coverage analysis** shows that Western titles tend to have higher average coverage, with the gap more pronounced in pre-1800 artworks, suggesting that earlier Eastern titles contain more words falling outside the labMT lexicon.
+Furthermore, the **temporal analysis** reveals that the East - West difference remains small in both historical periods, with overlapping confidence intervals indicating no strong evidence of temporal change. In the pre-1800 subset, the estimated difference is close to zero (-0.02 [-0.20, 0.16]). In the post-1800 subset, it becomes slightly positive (0.12 [-0.12, 0.36]), though uncertainty is larger due to smaller sample size. **Lexical coverage analysis** shows that Western titles tend to have higher average coverage, with the gap more pronounced in pre--800 artworks, suggesting that earlier Eastern titles contain more words falling outside the labMT lexicon.
 
-More importantly, our analysis reveals that the labMT lexicon systematically misses culturally specific terminology (e.g., "bodhisattva," "wabi-sabi," "statuette," "verso"), raising fundamental questions about the instrument's cross-cultural validity. The coverage analysis shows that Eastern titles display slightly greater variability in lexical coverage, reflecting the presence of transliterated cultural concepts or non-English terms that do not appear in the hedonometer lexicon. Based on these findings, we offer critical reflections on the limitations of applying general-purpose sentiment lexicons to specialized, cross-cultural texts and propose concrete recommendations for improving computational cultural analysis.
+More importantly, our analysis reveals that the labMT lexicon systematically misses culturally specific terminology (e.g., "bodhisattva," "wabi-sabi," "statuette," "verso"), raising fundamental questions about the instrument's cross-cultural validity. The coverage analysis shows that Eastern titles display slightly greater variability in lexical coverage, reflecting the presence of transliterated cultural concepts or non-English terms that do not appear in the hedonometer lexicon. Based on these findings, we offer critical reflections on the limitations of applying general purpose sentiment lexicons to specialized, cross-cultural texts and propose concrete recommendations for improving computational cultural analysis.
 
 ## Corpus and Data Acquisition
 
@@ -114,7 +114,7 @@ In addition to supporting chronological description, the `object_begin` field wa
 
 ### Understanding the Instrument: labMT Analysis
 
-Before applying the hedonometer to our Met corpus, we analyzed the labMT 1.0 dataset to understand what the instrument measures and where its limitations lie. The dataset contains 10,222 English words rated by Amazon Mechanical Turk workers on a 1-9 happiness scale, with frequency ranks from four corpora (Twitter, Google Books, NY Times, and song lyrics). We loaded the data using pandas `read_csv` with `skiprows=3` to bypass metadata lines and `na_values="--"` to treat '--' as missing values (`NaN`). Basic sanity checks confirmed no duplicate words to ensure data quality. 
+Before applying the hedonometer to our Met corpus, we analyzed the labMT 1.0 dataset to understand what the instrument measures and where its limitations lie. We loaded the data using pandas `read_csv` with `skiprows=3` to bypass metadata lines and `na_values="--"` to treat '--' as missing values (`NaN`). Basic sanity checks confirmed no duplicate words to ensure data quality. 
 
 **Distribution of Happiness Scores**
 
@@ -186,10 +186,8 @@ Similarly, slang or profanity terms (e.g., “fucking”) tend to appear in Twit
 This analysis of the labMT lexicon reveals three key points that inform our application to the Met corpus:
 
 - The instrument captures meaningful variation in emotional language, with a roughly symmetric distribution and interpretable disagreement patterns.
-
 - The same word can have different frequencies and associations depending on context, which we must consider when interpreting titles from an art museum.
-
-- The lexicon has culturally specific, religious, and art-historical terminology (like those we will encounter in Eastern titles) may fall outside its scope, a limitation we track through coverage analysis.
+- The lexicon has culturally specific, religious, and artistic terminology (like those we will encounter in Eastern titles) may fall outside its scope, a limitation we track through coverage analysis.
 
 With this understanding of what the hedonometer can and cannot measure, we now apply it to our corpus of Met artwork titles.
 
@@ -201,7 +199,7 @@ For each artwork title, we followed the standard hedonometer scoring procedure:
 2. Look up each word in the labMT dictionary
 3. Take the average of all matched words
 
-**Example:** "love" (8.42) + "painting" (5.20) → (8.42 + 5.20) ÷ 2 = 6.81
+**Simple Example:** "love" (8.42) + "painting" (5.20) → (8.42 + 5.20) ÷ 2 = 6.81
 
 **Tokenization**
 
@@ -290,7 +288,7 @@ The shape of the distribution confirms that the hedonometer captures meaningful 
 
 ### Descriptive Statistics by Category
 
-|The descriptive analysis reveals several important patterns in how emotional language differs between Eastern and Western aesthetic concepts in Met artwork titles.
+The descriptive analysis reveals several important patterns in how emotional language differs between Eastern and Western aesthetic concepts in Met artwork titles.
 
 | Category | Count | Mean | Median | SD | Min | Max |
 |----------|------|------|------|------|------|------|

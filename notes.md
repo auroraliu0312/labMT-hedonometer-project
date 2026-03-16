@@ -129,6 +129,7 @@ According to the figure  above, a closer examination of the tails reveals an int
 **Disagreement Analysis**
 
 We used happiness_standard_deviation to measure how much people disagreed when rating each word.
+
 ![Figure 2: Happiness Average vs Standard Deviation](figures/happiness_vs_std_scatter.png)
 
 Most words cluster in the middle of the plot. Their average happiness lies between roughly 4 and 7, and their standard deviation is around 1.0. This indicates that for the majority of words, annotators broadly agree on whether the word feels positive, neutral, or negative. In contrast, a small group of words have very high standard deviations (above 2.4). These “contested” words are those where annotators’ ratings strongly disagree.
@@ -473,6 +474,7 @@ The Met's collection is not temporally neutral. It overrepresents certain period
 Rather than relying on a single Western institution, future work should sample from multiple museums across different cultural contexts, including Tokyo National Museum, British Museum, Musée du Quai Branly, and National Museum of African Art. By comparing how the same objects are described across institutions with different curatorial traditions, researchers could isolate institutional bias from cultural difference. Including museums in countries of origin for non-Western art would capture indigenous curatorial voices and perspectives that are systematically excluded from Western collections. Partnering with institutions in Asia, Africa, and the Middle East would balance representation and reduce Western institutional hegemony in the very structure of the data, moving toward a more genuinely global art history.
 
 **Multilingual Analysis** 
+
 Future research should collect titles in original languages, rather than just English translations to preserve the original cultural and emotional valence. This requires developing or adapting sentiment lexicons for multiple languages, such as Japanese, Chinese, Arabic, Sanskrit, and others. Comparing sentiment patterns across languages for the same objects or concepts would reveal where translation loses or transforms meaning. Working with native speakers and cultural experts to validate translations and identify concepts that resist direct translation is essential, as is including transliteration alongside translation to preserve phonetic and cultural markers even when direct translation fails.
 
 **Curatorial Voice** 

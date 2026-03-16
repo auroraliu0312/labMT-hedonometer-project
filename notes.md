@@ -2,13 +2,23 @@
 
 ## Project Overview
 
-This project investigates how emotional language differs across cultural traditions by applying the labMT hedonometer to artwork titles from the Metropolitan Museum of Art. Our central research question asks: **How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles, and does this relationship remain stable across historical periods?** This question addresses a fundamental challenge in whether a general sentiment lexicon built from contemporary American English, can meaningfully capture emotional expression in culturally and historically diverse texts. In global digital heritage projects, researchers frequently apply computational tools developed in one cultural context to texts from another. This makes methodological transparency essential. We need to know whether instruments like the labMT hedonometer remain valid when they cross cultural boundaries. Our project directly tests this assumption.
+### Research Question
+
+This project investigates how emotional language differs across cultural traditions by applying the labMT hedonometer to artwork titles from the Metropolitan Museum of Art. Our central research question asks: **How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles, and does this relationship remain stable across historical periods?** 
+
+This question addresses a fundamental challenge in whether a general sentiment lexicon built from contemporary American English, can meaningfully capture emotional expression in culturally and historically diverse texts. In global digital heritage projects, researchers frequently apply computational tools developed in one cultural context to texts from another. This makes methodological transparency essential. We need to know whether instruments like the labMT hedonometer remain valid when they cross cultural boundaries. Our project directly tests this assumption.
+
+### Relevant
 
 Digital Humanities research often uses sentiment analysis tools without questioning whether they work across different cultures. Our project asks a basic question: does a happiness lexicon built from American English actually capture how Eastern and Western art is described? By comparing scores across cultural traditions and historical periods, we show that the tool works differently for Eastern and Western titles. It is not because the art is different, but because the tool misses culturally specific words like "bodhisattva" and "wabi-sabi." This matters because it reminds us that computational tools are never neutral; they carry the assumptions of the context they were built in.
+
+### Procedure
 
 We hypothesized that Western aesthetic terms (such as "beauty," "sublime," and "glory") would cluster toward the positive end of the happiness scale, reflecting cultural emphasis on idealized forms and emotional clarity. In contrast, we expected Eastern concepts (like "zen," "wabi-sabi," and "impermanence") to show a greater range of scores, capturing the nuanced emotional palette of traditions that value transience, simplicity, and contemplative experience. We also hypothesized that these patterns might shift over time, with more recent artworks potentially showing greater convergence due to globalization or continued divergence due to persistent cultural differences.
 
 Testing these hypotheses required us to first understand the instrument we were applying. Hence, our analysis of the labMT 1.0 dataset's distributional properties, disagreement patterns, and corpus overlaps before extending the methodology to artwork titles retrieved from the Met API using 24 aesthetic search terms (10 Western, 14 Eastern). We then introduced a temporal dimension using the `object_begin` metadata field, dividing the dataset into pre-1800 and post-1800 periods to examine whether the East-West happiness gap changes across historical eras and whether lexical coverage varies over time.
+
+### Key Findings
 
 Our central finding is that **Eastern and Western aesthetic concepts show no statistically significant difference in average happiness scores**. However Eastern titles exhibiting greater variability and capturing both the highest and lowest extreme values. The Eastern artworks scored marginally higher on average (5.56 vs. 5.55), but the difference is only 0.015 points—a negligible gap on a 1-9 scale. Both categories center around similar median values (Eastern 5.52, Western 5.49), confirming that the average difference is not driven by outliers. More interesting than the averages is the spread of scores. Eastern titles show greater variation (SD = 0.62 vs. 0.56), with a range of 4.10 points compared to Western's 3.03 points—a 35% wider range. The highest overall score (7.92) belongs to an Eastern artwork, as does the lowest (3.82), suggesting that Eastern aesthetic concepts encompass both more intensely positive and more intensely negative expressions than their Western counterparts. Western titles, by contrast, are more tightly clustered around the average, with no scores above 6.86 or below 3.83.
 
@@ -21,6 +31,8 @@ More importantly, our analysis reveals that the labMT lexicon systematically mis
 ### The labMT Lexicon
 
 The labMT 1.0 dataset comes from Dodds et al. (2011) and contains happiness scores for 10,222 English words rated by Amazon Mechanical Turk workers. Each word was rated by 50 unique individuals on a 1-9 scale, with the dataset including frequency ranks from four corpora: Twitter, Google Books, NY Times, and song lyrics. This lexicon serves as our measurement instrument, and understanding its properties is essential before applying it cross-culturally.
+
+The dataset contains 10222 rows and 8 columns:
 
 | Column | Type | Missing | Description |
 |--------|------|---------|-------------|
@@ -41,10 +53,8 @@ To test our research question, we collected artwork titles from the Metropolitan
 
 **Search Terms:**
 
-| Tradition | Terms |
-|-----------|-------|
-| Western (10) | beauty, sublime, pastoral, romantic, ideal, grace, glory, divine, harmony, splendor |
-| Eastern (14) | zen, ukiyo, wabi sabi, mono no aware, feng shui, simplicity, impermanence, emptiness, enlightenment, meditation, bamboo, cherry blossom, lotus, nirvana |
+- **Western** (10 terms): beauty, sublime, pastoral, romantic, ideal, grace, glory, divine, harmony, splendor
+- **Eastern** (14 terms): zen, ukiyo, wabi sabi, mono no aware, feng shui, simplicity, impermanence, emptiness, enlightenment, meditation, bamboo, cherry blossom, lotus, nirvana
 
 **Acquisition Pipeline:**
 1. API search with `q={term}` and `hasImages=true` to ensure objects with images
@@ -60,10 +70,10 @@ To test our research question, we collected artwork titles from the Metropolitan
 
 After duplicate removal, the final dataset contains **132 unique artworks**:
 
-| Category | Count |
-|----------|-------|
-| Western | 62 |
-| Eastern | 70 |
+- **Western aesthetic concepts**: 62 artworks
+- **Eastern aesthetic concepts**: 70 artworks
+
+Because the same artwork may appear under multiple search terms, duplicate objects were removed using the `object_id` field before analysis.
 
 ### Ethics and Limitations
 
@@ -97,19 +107,11 @@ In addition to supporting chronological description, the `object_begin` field wa
 
 ### Understanding the Instrument: labMT Analysis
 
-Before applying the hedonometer to our Met corpus, we analyzed the labMT 1.0 dataset to understand what the instrument measures and where its limitations lie. The dataset contains 10,222 English words rated by Amazon Mechanical Turk workers on a 1-9 happiness scale, with frequency ranks from four corpora (Twitter, Google Books, NY Times, and song lyrics). We loaded the data using pandas read_csv with skiprows=3 to bypass metadata lines and na_values="--" to handle missing values. Basic sanity checks confirmed no duplicate words to ensure data quality.
+Before applying the hedonometer to our Met corpus, we analyzed the labMT 1.0 dataset to understand what the instrument measures and where its limitations lie. The dataset contains 10,222 English words rated by Amazon Mechanical Turk workers on a 1-9 happiness scale, with frequency ranks from four corpora (Twitter, Google Books, NY Times, and song lyrics). We loaded the data using pandas `read_csv` with `skiprows=3` to bypass metadata lines and `na_values="--"` to treat '--' as missing values (`NaN`). Basic sanity checks confirmed no duplicate words to ensure data quality. 
 
 **Distribution of Happiness Scores**
 
 ![Distribution with Highlighted Tails and Extremes](figures/happiness_distribution_enhanced.png)
-
-| Statistic | Value |
-|-----------|-------|
-| Mean | 5.38 |
-| Median | 5.44 |
-| Standard Deviation | 1.08 |
-| 5th Percentile | 3.18 |
-| 95th Percentile | 7.08 |
 
 The distribution of happiness scores is centered slightly above 5, with mean and median very close (5.38 and 5.44), indicating approximate symmetry. Most words fall between 4.5 and 6.5, suggesting that everyday English vocabulary leans mildly positive. Extremely positive and extremely negative words are relatively rare, with only 5% of words scoring below 3.18 and 5% scoring above 7.08. This pattern suggests that common language tends toward moderate positivity, with strong emotional words occupying the tails of the distribution.
 
@@ -119,14 +121,8 @@ According to the figure  above, a closer examination of the tails reveals an int
 
 **Disagreement Analysis**
 
-![Happiness Average vs Standard Deviation](figures/happiness_vs_std_scatter.png)
-
 We used happiness_standard_deviation to measure how much people disagreed when rating each word.
 ![Figure 2: Happiness Average vs Standard Deviation](figures/happiness_vs_std_scatter.png)
-
-We plotted a scatterplot with:
-happiness_average on the x-axis
-happiness_standard_deviation on the y-axis
 
 Most words cluster in the middle of the plot. Their average happiness lies between roughly 4 and 7, and their standard deviation is around 1.0. This indicates that for the majority of words, annotators broadly agree on whether the word feels positive, neutral, or negative. In contrast, a small group of words have very high standard deviations (above 2.4). These “contested” words are those where annotators’ ratings strongly disagree.
 
@@ -154,9 +150,9 @@ In contrast, words with more extreme average scores (very positive or very negat
 
 **Corpus Comparison**
 
-![Corpus Overlap Heatmap](figures/corpus_overlap_heatmap.png)
-
 This is a heatmap-like overlap matrix. It shows the overlap between the top-5000 most frequent words in each corpus. Diagonal cells are 5000 by construction (each corpus contributes its top-5000 words), while off-diagonal cells indicate how many words appear in both corpora’s lists.
+
+![Corpus Overlap Heatmap](figures/corpus_overlap_heatmap.png)
 
 The corpora share a substantial “core vocabulary,” but overlaps vary a lot depending on the pair:
 •	NYT ∩ Google Books is relatively high (3414) → both are more formal/edited writing, so their frequent vocabulary overlaps more.
@@ -178,6 +174,7 @@ It appears in Twitter and NYT but is much less prominent in Lyrics. This reflect
 Similarly, slang or profanity terms (e.g., “fucking”) tend to appear in Twitter and Lyrics but are less common in formal corpora like Google Books, reflecting editorial filtering and stylistic norms.
 
 **From Instrument to Application**
+
 This analysis of the labMT lexicon reveals three key points that inform our application to the Met corpus:
 
 - The instrument captures meaningful variation in emotional language, with a roughly symmetric distribution and interpretable disagreement patterns.
@@ -214,6 +211,7 @@ We kept every word that matched the labMT dictionary. No words were filtered out
 - Words that aren't in the labMT dictionary are simply ignored. They don't raise or lower the score. This is the standard approach (Dodds et al., 2011) because assigning arbitrary scores to unknown words would introduce bias. If an artwork title contains many specialized art terms or non-English words, its happiness score is based on fewer words. This doesn't make the score wrong, but it does mean we're measuring only part of the text. The coverage metric helps us track this.
 
 - Repeated words count multiple times, preserving natural emphasis. For instance, saying "love, love, love" expresses stronger emotion than saying "love" once. Our method preserves this natural emphasis.
+
 - Neutral words are kept (including "the," "and," "of"). Removing them would pull scores toward extremes, unfairly affect short titles, and create inconsistent comparisons.
 
 - Coverage = matched words / total words tells us how much of each title we're actually measuring. A high coverage score (like 80%) is based on most of the words and can be trusted. A low coverage score (like 30%) might miss important emotional content carried by specialized vocabulary. When comparing Eastern and Western artworks, we need to check whether one group systematically has lower coverage – if so, any observed differences might reflect dictionary coverage rather than real emotional differences.
@@ -442,35 +440,44 @@ Despite our hypothesis, no statistically significant difference emerged between 
 ### What We Cannot Claim
 
 **Institutional and Collection Bias**
+
 The Metropolitan Museum of Art is itself a product of Western institutional history. Its collection reflects not the universe of Eastern and Western art, but rather what Western collectors, curators, and donors over the past 150 years deemed worthy of preservation and display. Eastern artworks in the Met collection are already filtered through Western acquisition priorities. They tend to be objects that fit Western categories of "art", rather than ritual objects or functional items. Our comparison is therefore not between "Eastern art" and "Western art" but between how these two categories are represented in a Western institutional context.
 
 **Translation as Transformation**
+
 The API returns only English titles, even for artworks originating in non-English speaking cultures. This is not a neutral translation process but a transformation that necessarily loses cultural and emotional nuance. Japanese aesthetic concepts like "wabi-sabi" (侘寂) or "mono no aware" (物の哀れ) have no direct English equivalents. When a Japanese artwork's title is rendered in English as "Cherry Blossoms," it loses the centuries of poetic and philosophical association that "sakura" carries in Japanese. More importantly, these terms are entirely absent from the labMT lexicon, meaning we cannot measure the emotional content they carry in their original cultural contexts. The absence of these words from our analysis is therefore systematic and culturally patterned.
 
 **Curatorial Voice**
+
  Museum assigned titles raise a fundamental question - whose emotional language are we measuring? For many historical objects, especially from non-Western cultures, the existing title was assigned by a curator, often decades or centuries after the object's creation. A Buddhist sculpture's English title may prioritize identification (e.g., "Bodhisattva") over the devotional language that might accompany it in its original context. We are therefore measuring the emotional valence of curatorial description, not necessarily the emotional content of the artwork itself or its reception in its source culture.
 
 **Lexicon Bias**
+
 The labMT lexicon, while valuable for general English sentiment analysis, exhibits systematic biases that limit its applicability to specialized corpora. Our out-of-vocabulary (OOV) analysis reveals that the lexicon consistently misses categories of words essential to art historical texts.Art-specific terminology like "statuette" and "verso," religious and cultural concepts like "bodhisattva" and "shrine," non-English terms like "mono," and proper names like "garcini." These are not rare words—they appear repeatedly in our corpus and are central to how artworks are described, yet they contribute nothing to happiness scores. This limitation disproportionately affects Eastern titles, which contain more culturally specific vocabulary. When we observe low coverage for an Eastern artwork, it may not mean the title is emotionally neutral; it may simply mean the title uses vocabulary that falls outside the lexicon's cultural horizon. The problem is not random missingness but systematic, culturally patterned absence. Words like "wabi-sabi" and "mono no aware" have no direct English equivalents and carry centuries of philosophical meaning that a general-purpose English lexicon cannot capture. More fundamentally, the labMT ratings themselves reflect the emotional associations of a specific population—US-based Mechanical Turk workers circa 2011—not universal human response. Words tied to religious or political debates (e.g., "churches," "capitalism") are colored by that population's attitudes, meaning the instrument embeds cultural assumptions that may not travel well to other contexts. The single happiness dimension further collapses complex emotional experiences into one number, losing distinctions that matter for aesthetic concepts. These limitations do not invalidate the instrument but fundamentally shape what we can and cannot claim from our analysis.
 
 **Temporal Bias**
+
 The Met's collection is not temporally neutral. It overrepresents certain periods such as 19th-century European painting and ancient Egyptian art while underrepresenting others, including contemporary non-Western art and ephemeral or performance-based traditions. More importantly, the availability of English titles varies dramatically by period and culture. This temporal and cultural stratification interacts with our analysis in ways we cannot fully disentangle. A 12th-century Buddhist sculpture and a 19th-century Japanese print are both categorized as "Eastern," but they come from radically different historical contexts, with different relationships to language, naming practices, and curatorial documentation.
 
 ### Future Directions
 
 **Institutional Diversity** 
+
 Rather than relying on a single Western institution, future work should sample from multiple museums across different cultural contexts, including Tokyo National Museum, British Museum, Musée du Quai Branly, and National Museum of African Art. By comparing how the same objects are described across institutions with different curatorial traditions, researchers could isolate institutional bias from cultural difference. Including museums in countries of origin for non-Western art would capture indigenous curatorial voices and perspectives that are systematically excluded from Western collections. Partnering with institutions in Asia, Africa, and the Middle East would balance representation and reduce Western institutional hegemony in the very structure of the data, moving toward a more genuinely global art history.
 
 **Multilingual Analysis** 
 Future research should collect titles in original languages, rather than just English translations to preserve the original cultural and emotional valence. This requires developing or adapting sentiment lexicons for multiple languages, such as Japanese, Chinese, Arabic, Sanskrit, and others. Comparing sentiment patterns across languages for the same objects or concepts would reveal where translation loses or transforms meaning. Working with native speakers and cultural experts to validate translations and identify concepts that resist direct translation is essential, as is including transliteration alongside translation to preserve phonetic and cultural markers even when direct translation fails.
 
 **Curatorial Voice:** 
+
 Future work should distinguish between artist given titles and curatorial additions through metadata tagging, enabling analysis of whose voice is being measured. Collecting multiple title sources where available, including original artist titles, historical titles, current curatorial titles, and vernacular titles from the culture of origin would provide a richer understanding of how artworks are named across contexts. Analyzing how titles change over time as curatorial practices evolve and as objects move between collections and cultures could reveal the institutional dynamics shaping art historical description. Including provenance texts and acquisition notes alongside titles would capture the institutional context in which descriptions were created. Most importantly, partnering with source communities to understand how objects are named and described in their original cultural contexts would ground the analysis in indigenous knowledge systems rather than Western curatorial frameworks.
 
 **Temporal Stratification** 
+
 Future research should stratify analysis by historical period rather than treating "Eastern art" as a monolithic category, enabling comparison of how different eras within each tradition are represented. Including creation date metadata in all analyses would help control for temporal confounding. Sampling proportionally across centuries rather than accepting the Met's existing distribution as representative would produce a more balanced dataset. Analyzing how naming practices change over time within each tradition would distinguish between historical naming conventions and contemporary curatorial descriptions. Collaborating with period specialists to understand the specific linguistic and cultural contexts of different eras would ground the analysis in historical knowledge rather than imposing contemporary frameworks on historical materials.
 
 **Instrument Development** 
+
 Addressing these limitations requires moving beyond a single, static, English-centric lexicon toward more flexible and culturally aware instruments. First, future work should develop multilingual lexicons built from the ground up for languages relevant to global art history, such as Chinese, Japanese and Arabic. Rather than translating English concepts and hoping meaning survives. This would require collaboration with native speakers and cultural experts to validate translations and identify concepts that resist direct translation. Second, domain-specific extensions should allow researchers to add curated lists of art-historical terminology (e.g., "tempera," "stela," "mandorla") with culturally appropriate sentiment scores, developed collaboratively with domain experts. Third, multidimensional affect models should replace the single valence dimension with measures of arousal, dominance, or discrete emotional categories (anger, fear, joy, sorrow, nostalgia) that better capture aesthetic experience. Fourth, contextualized ratings collected within short sentence fragments would better handle polysemy and irony than isolated word ratings. Fifth, diverse rater pools across regions, age groups, and cultural backgrounds would make visible how emotional associations vary across populations, rather than encoding one group's perspective as universal. Sixth, temporal updating would track linguistic change, adding new vocabulary and detecting semantic drift, allowing researchers to match instruments to the time period of their texts. Finally, transparent coverage reporting should standardize how we communicate what portion of each text is actually measured, making it impossible to interpret scores without knowing whether they represent 90% or 30% of the words. These improvements would not replace the labMT approach but extend it, making sentiment analysis more sensitive to cultural specificity, domain vocabulary, contextual meaning, and historical change while maintaining the reproducibility that makes lexical methods valuable for computational humanities.
 
 ## Repository and Reproducibility
@@ -516,14 +523,12 @@ python3 src/data_analysis.py
 
 ### Team Roles
 
-| Role | Team Member |
-|------|-------------|
-| Repo & Workflow Lead | Anny Li |
-| Data Wrangler & Measurement Lead | Mohan Liu |
-| Quantitative Analyst | Mohan Liu, Anny Li |
-| Qualitative & Data Acquisition Lead | Angelina Roman Rosales |
-| Provenance & Visualization Lead | Simone van Moerkerk |
-| Editor & Figure Curator | Jaena Danaram |
+- Repo & workflow lead: Anny Li
+- Data wrangler & measurement lead: Mohan Liu
+- Quantitative analyst: Mohan Liu, Anny Li
+- Qualitative & data acquisation lead: Angelina Roman Rosales
+- Provenance & visualisation lead: Simone van Moerkerk
+- Editor & figure & code curator: Jaena Danaram
 
 ### Citation
 

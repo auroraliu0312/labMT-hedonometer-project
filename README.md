@@ -403,13 +403,15 @@ The processed dataset (`data/processed/met_aesthetic_scored132.csv`) contains th
 | `total` | integer | Total words in cleaned title | 0 |
 | `coverage` | float | Proportion of words matched (matched / total) | 0 |
 
+In addition to supporting chronological description, the `object_begin` field was also used as a temporal variable in the supplementary analysis. We grouped artworks into two broad historical periods using an 1800 cutoff (`Pre-1800` vs. `Post-1800`) in order to examine whether lexical coverage patterns differ across time as well as across Eastern and Western categories.
+
 ## Happiness Scoring
 
 We followed the standard method from Dodds et al. (2011) to measure how "happy" each artwork title is. Here's how it works:
 
 For each artwork title, we carry on the following scoring process:
 1. Break the title into individual words
-2. Look up each word in the labMT dictionary (labMT_cleaned.csv)
+2. Look up each word in the labMT dictionary (`labMT_cleaned.csv`)
 3. Take the average of all the words that we found in the dictionary
 
 Simple example:
@@ -445,7 +447,7 @@ To illustrate how hedonometer scores correspond to specific artwork titles, we h
 | Paris | Western | 6.86 | Highest Western |
 | The Death of Socrates | Eastern | 3.82 | Lowest overall |
 | War club | Western | 3.83 | Lowest Western |
-| The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |## Illustrative Title Examples
+| The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |
 
 # Results
 
@@ -481,6 +483,27 @@ Coverage tells us what percentage of words in each title were actually found in 
 
 - The high median coverage (66.7%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 13 unscorable titles are worth examining separately. They likely contain specialized terminology (like "statuette" or "verso") that a general dictionary misses.
 
+## Temporal Analysis
+
+To enrich the analysis, we introduced a temporal variable based on the `object_begin` field and divided the dataset into two broad historical periods:
+
+- **Pre-1800**
+- **Post-1800**
+
+This temporal split was not used to redefine the main research question, but to examine whether the lexical properties of the titles vary across time as well as across cultural categories. In particular, we asked whether the proportion of title words matched by the labMT lexicon changes between earlier and later artworks, and whether this pattern differs for Eastern and Western concepts.
+
+The temporal analysis focused on **lexical coverage rather than happiness score**. This is because coverage directly reflects how well the hedonometer can interpret the language of the titles. If one group or period systematically has lower coverage, then any happiness comparison may partly reflect dictionary fit rather than genuine emotional difference.
+
+Using the 1800 cutoff, we calculated mean coverage for Eastern and Western titles within each period and added 95% confidence intervals to visualize uncertainty.
+
+![Lexical Coverage by Time Period](figures/lexical_coverage_by_time_period_1800.png)
+
+> *Lexical coverage by time period (1800 cutoff) and category. Bars show the mean proportion of matched words in artwork titles, error bars indicate 95% confidence intervals, and the line shows the East–West coverage difference within each period.*
+
+The temporal coverage analysis shows a small shift in the East–West relationship across time. In the **Pre-1800** subset, Western titles show somewhat higher average lexical coverage than Eastern titles. In the **Post-1800** subset, the pattern becomes more balanced, with Eastern titles showing slightly higher average coverage. However, the confidence intervals remain fairly wide, especially in the later period where sample sizes are smaller, so these temporal differences should be interpreted cautiously.
+
+This temporal result does not overturn the main findings of the project. Instead, it provides methodological context: the hedonometer's lexical fit is not perfectly constant across historical periods. This matters because title language changes over time, and older or more culturally specific titles may contain more words that fall outside a general English sentiment lexicon. Adding the temporal variable therefore strengthens the project by showing that dictionary coverage itself has a historical dimension.
+
 ## Words That Didn't Match（OOV）
 
 The most common words that appeared in titles but weren't in my dictionary tell us about the limits of applying a general sentiment tool to art historical texts:
@@ -514,6 +537,7 @@ We performed:
 - Bootstrap confidence intervals (10,000 resamples, 95% CI)
 - Bootstrap difference estimation between categories
 - Coverage sensitivity analysis
+- Temporal lexical coverage analysis using an 1800 cutoff
 
 All statistical analyses were conducted on the subset of artworks that received valid happiness scores and met the criteria for the analytical dataset. This resulted in a final sample of 119 artworks (62 Eastern and 57 Western).
 
@@ -581,7 +605,7 @@ src/stats_sampling_analysis.py
 
 The goal of this step was not to replace the main analysis, but to validate the reliability of the comparison between Eastern and Western titles.
 
-Three questions motivated this additional analytical layer:
+Four questions motivated this additional analytical layer:
 
 1. **Sampling balance**  
    Are Eastern and Western artworks evenly represented across search terms?
@@ -591,6 +615,9 @@ Three questions motivated this additional analytical layer:
 
 3. **Statistical stability**  
    Would the difference between groups change under repeated resampling or stricter lexical coverage requirements?
+
+4. **Temporal variation**  
+   Does lexical coverage differ across historical periods, and does the East–West relationship remain stable before and after 1800?
 
 ### 1. Sample Structure Audit
 
@@ -622,6 +649,16 @@ Both categories show moderate coverage overall, but Eastern titles display sligh
 
 The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
 
+### 3. Temporal Coverage Analysis
+
+We also introduced a temporal variable using the `object_begin` metadata field and divided the dataset into two broad historical periods: **Pre-1800** and **Post-1800**.
+
+Rather than repeating the main happiness comparison across time, we used this step to examine **lexical coverage**. This choice was methodological: coverage tells us how well the labMT lexicon can interpret titles from different periods. If titles from one historical period contain more unmatched or culturally specific terms, then differences in happiness scores may partly reflect differences in lexical fit.
+
+The temporal analysis showed that the East–West coverage relationship shifts modestly across the two periods. In earlier artworks, Western titles tended to have somewhat higher average coverage, while in the later period the gap narrowed and slightly reversed. Because the post-1800 subset contains fewer observations, these differences remain uncertain and should not be overinterpreted. Still, the analysis usefully demonstrates that the lexicon’s coverage is not historically uniform.
+
+This temporal extension strengthens the robustness of the study by showing that the measurement instrument itself interacts with historical variation in title language.
+
 ## Additional Statistical Considerations
 
 The bootstrap and coverage sensitivity analyses reinforce the main conclusion while also clarifying its limitations.
@@ -631,6 +668,8 @@ First, the similarity between Eastern and Western scores remains stable under re
 Second, the sampling audit reveals that the dataset is shaped by search-term retrieval patterns rather than random sampling. Some aesthetic concepts produce many more results in the Met collection than others.
 
 Finally, lexical coverage varies across titles because culturally specific words may fall outside the labMT lexicon. This means the hedonometer captures only part of the emotional signal present in artwork titles.
+
+The temporal coverage analysis adds a further caution. Because lexical match rates vary somewhat across historical periods, the hedonometer does not engage all titles equally well over time. This does not invalidate the main comparison, but it reminds us that the instrument’s fit is shaped not only by cultural specificity, but also by historical variation in title language.
 
 For these reasons, the statistical analysis should be interpreted as a robust comparison within this dataset, rather than as a universal statement about Eastern and Western aesthetics.
 
@@ -643,19 +682,19 @@ Our analysis assumes that:
 - The labMT lexicon's coverage is similar across categories (partially validated by coverage analysis)
 - Artworks are independent observations (though search-term retrieval introduces some dependence)
 
-These assumptions are reasonable for this exploratory study but should be tested in future work with more diverse data sources. The following improvements could be make:
+These assumptions are reasonable for this exploratory study but should be tested in future work with more diverse data sources. The following improvements could be made:
 
 **Institutional and Collection Bias**
 
-The Metropolitan Museum of Art is itself a product of Western institutional history. Its collection reflects not the universe of Eastern and Western art, but rather what Western collectors, curators, and donors over the past 150 years deemed worthy of preservation and display. Eastern artworks in the Met collection are already filtered through Western acquisition priorities. They tend to be objects that fit Western categories of "art" ,rather than ritual objects or functional items. Our comparison is therefore not between "Eastern art" and "Western art" but between how these two categories are represented in a Western institutional context.
+The Metropolitan Museum of Art is itself a product of Western institutional history. Its collection reflects not the universe of Eastern and Western art, but rather what Western collectors, curators, and donors over the past 150 years deemed worthy of preservation and display. Eastern artworks in the Met collection are already filtered through Western acquisition priorities. They tend to be objects that fit Western categories of "art", rather than ritual objects or functional items. Our comparison is therefore not between "Eastern art" and "Western art" but between how these two categories are represented in a Western institutional context.
 
 Rather than relying on a single Western institution, future work should sample from multiple museums across different cultural contexts, including Tokyo National Museum, British Museum, Musée du Quai Branly, and National Museum of African Art. By comparing how the same objects are described across institutions with different curatorial traditions, researchers could isolate institutional bias from cultural difference. Including museums in countries of origin for non-Western art would capture indigenous curatorial voices and perspectives that are systematically excluded from Western collections. Partnering with institutions in Asia, Africa, and the Middle East would balance representation and reduce Western institutional hegemony in the very structure of the data, moving toward a more genuinely global art history.
 
 **Translation as Transformation**
 
-The API returns only English titles, even for artworks originating in non-English speaking cultures. This is not a neutral translation process but a transformation that necessarily loses cultural and emotional nuance. Japanese aesthetic concepts like "wabi-sabi" (侘寂) or "mono no aware" (物の哀れ) have no direct English equivalents. When a Japanese artwork's title is rendered in English as "Cherry Blossoms," it loses the centuries of poetic and philosophical association that "sakura" carries in Japanese. More importantly, these terms are entirely absent from the labMT lexicon, meaning we cannot measure the emotional content they carry in their original cultural contexts. The absence of these words from our analysis are therefore systematic and culturally patterned.
+The API returns only English titles, even for artworks originating in non-English speaking cultures. This is not a neutral translation process but a transformation that necessarily loses cultural and emotional nuance. Japanese aesthetic concepts like "wabi-sabi" (侘寂) or "mono no aware" (物の哀れ) have no direct English equivalents. When a Japanese artwork's title is rendered in English as "Cherry Blossoms," it loses the centuries of poetic and philosophical association that "sakura" carries in Japanese. More importantly, these terms are entirely absent from the labMT lexicon, meaning we cannot measure the emotional content they carry in their original cultural contexts. The absence of these words from our analysis is therefore systematic and culturally patterned.
 
-Future research should collect titles in original languages, rather than just English translations to preserve the original cultural and emotional valence. This requires developing or adapting sentiment lexicons for multiple languages, such as apanese, Chinese, Arabic, Sanskrit, and others. Comparing sentiment patterns across languages for the same objects or concepts would reveal where translation loses or transforms meaning. Working with native speakers and cultural experts to validate translations and identify concepts that resist direct translation is essential, as is including transliteration alongside translation to preserve phonetic and cultural markers even when direct translation fails.
+Future research should collect titles in original languages, rather than just English translations to preserve the original cultural and emotional valence. This requires developing or adapting sentiment lexicons for multiple languages, such as Japanese, Chinese, Arabic, Sanskrit, and others. Comparing sentiment patterns across languages for the same objects or concepts would reveal where translation loses or transforms meaning. Working with native speakers and cultural experts to validate translations and identify concepts that resist direct translation is essential, as is including transliteration alongside translation to preserve phonetic and cultural markers even when direct translation fails.
 
 **The Problem of Curatorial Voice**
 
@@ -695,8 +734,9 @@ git clone https://github.com/auroraliu0312/labMT-hedonometer-project
  pip install -r requirements.txt
 
  4. Run the analysis
- python3 src/data_analysis.py for Hedonometer Dataset Analysis
- python 3 src/met_fetch.py for raw data acquisation
+ python3 src/met_fetch.py                    # Collect raw data from the Met API
+ python3 src/score_aesthetic_deduplicated.py # Score titles with the labMT hedonometer
+ python3 src/stats_sampling_analysis.py      # Statistical analysis, coverage checks, and temporal analysis
  
 # Credits
 

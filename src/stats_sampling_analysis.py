@@ -848,3 +848,109 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def plot_descriptive_summary(df):
+    """
+    Create a single comprehensive figure showing all descriptive statistics
+    """
+    # Use only scored data
+    scored = df[df["score"].notna()].copy()
+    
+    eastern_scores = scored[scored["category"] == "eastern"]["score"]
+    western_scores = scored[scored["category"] == "western"]["score"]
+    
+    # Calculate statistics
+    east_mean = eastern_scores.mean()
+    west_mean = western_scores.mean()
+    east_median = eastern_scores.median()
+    west_median = western_scores.median()
+    east_std = eastern_scores.std()
+    west_std = western_scores.std()
+    east_min = eastern_scores.min()
+    east_max = eastern_scores.max()
+    west_min = western_scores.min()
+    west_max = western_scores.max()
+    
+    # Create figure
+    fig, ax = plt.subplots(figsize=(14, 10))
+    
+    # Colors
+    east_color = '#FF8C00'  # Orange
+    west_color = '#1E90FF'  # Blue
+    
+    # Boxplots
+    data = [eastern_scores, western_scores]
+    positions = [1, 2.5]
+    
+    bp = ax.boxplot(data, positions=positions, widths=0.6, patch_artist=True,
+                    showmeans=True, meanline=True,
+                    medianprops={'color': 'black', 'linewidth': 2},
+                    meanprops={'color': 'red', 'linewidth': 2, 'linestyle': '--'})
+    
+    bp['boxes'][0].set_facecolor(east_color)
+    bp['boxes'][0].set_alpha(0.6)
+    bp['boxes'][1].set_facecolor(west_color)
+    bp['boxes'][1].set_alpha(0.6)
+    
+    # Add individual points
+    x_east = np.random.normal(positions[0], 0.1, size=len(eastern_scores))
+    x_west = np.random.normal(positions[1], 0.1, size=len(western_scores))
+    
+    ax.scatter(x_east, eastern_scores, alpha=0.3, s=30, color='black', edgecolor='white', linewidth=0.5)
+    ax.scatter(x_west, western_scores, alpha=0.3, s=30, color='black', edgecolor='white', linewidth=0.5)
+    
+    # Highlight extremes
+    ax.scatter([positions[0], positions[0], positions[1], positions[1]], 
+               [east_min, east_max, west_min, west_max], 
+               s=200, color=['red', 'green', 'red', 'green'], 
+               edgecolor='black', linewidth=2, zorder=5)
+    
+    # Add mean markers
+    ax.scatter([positions[0], positions[1]], [east_mean, west_mean], 
+               s=200, color='blue', marker='d', edgecolor='black', linewidth=2, zorder=5)
+    
+    # Statistics boxes
+    east_stats = f"EASTERN (n=62)\nMean: {east_mean:.3f}\nMedian: {east_median:.3f}\nSD: {east_std:.3f}\nMin: {east_min:.3f}\nMax: {east_max:.3f}\nRange: {east_max-east_min:.2f}"
+    west_stats = f"WESTERN (n=57)\nMean: {west_mean:.3f}\nMedian: {west_median:.3f}\nSD: {west_std:.3f}\nMin: {west_min:.3f}\nMax: {west_max:.3f}\nRange: {west_max-west_min:.2f}"
+    
+    ax.text(positions[0]-0.3, 8.0, east_stats, fontsize=10, fontweight='bold',
+            bbox=dict(boxstyle='round', facecolor=east_color, alpha=0.3), ha='left', va='top')
+    ax.text(positions[1]+0.3, 8.0, west_stats, fontsize=10, fontweight='bold',
+            bbox=dict(boxstyle='round', facecolor=west_color, alpha=0.3), ha='right', va='top')
+    
+    # Key insights
+    diff = east_mean - west_mean
+    insight_text = f"KEY INSIGHTS:\n• Mean diff: {abs(diff):.3f}\n• Eastern SD ({east_std:.2f}) > Western ({west_std:.2f})\n• Eastern range: {east_max-east_min:.2f}\n• Highest: Eastern ({east_max:.2f})\n• Lowest: Eastern ({east_min:.2f})"
+    ax.text(0.5, -0.1, insight_text, transform=ax.transAxes, fontsize=11, ha='center',
+            bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
+    
+    # Labels
+    ax.set_xticks(positions)
+    ax.set_xticklabels(['Eastern', 'Western'], fontsize=14, fontweight='bold')
+    ax.set_ylabel('Happiness Score (1-9)', fontsize=12)
+    ax.set_title('Descriptive Statistics: Eastern vs Western Aesthetic Concepts', fontsize=16, fontweight='bold')
+    ax.set_ylim(3.0, 9.0)
+    ax.grid(axis='y', alpha=0.3)
+    
+    # Save figure
+    output_path = FIGURES_DIR / "descriptive_statistics.png"
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"✅ Figure saved to: {output_path}")
+    
+    return output_path
+
+
+def main():
+    df = load_scored_data()
+    
+  
+    plot_descriptive_summary(df)
+    
+    print("\nDone.")
+
+
+if __name__ == "__main__":
+    main()

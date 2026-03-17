@@ -6,7 +6,7 @@
 
 This project investigates how emotional language differs across cultural traditions by applying the labMT hedonometer to artwork titles from the Metropolitan Museum of Art. Our central research question asks: 
 
-**How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles, and does this relationship remain stable across historical periods?** 
+**How do happiness scores differ between Eastern and Western aesthetic concepts found in Met Museum artwork titles from the Pre-1800s to Post-1800s historical periods?** 
 
 This question addresses a fundamental challenge, in which a general sentiment lexicon built from contemporary American English, can meaningfully capture emotional expression in culturally and historically diverse texts. In global digital heritage projects, researchers frequently apply computational tools developed in one cultural context to texts from another. This makes methodological transparency essential. We need to know whether instruments like the labMT hedonometer remain valid when they cross cultural boundaries. Our project directly tests this assumption.
 

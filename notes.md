@@ -53,6 +53,8 @@ The dataset contains 10222 rows and 8 columns:
 
 To test our research question, we collected artwork titles from the Metropolitan Museum of Art using their public API. We selected search terms representing Western and Eastern aesthetic concepts based on a review of aesthetic philosophy literature, though we recognize that these terms reflect Western academic frameworks for categorizing aesthetic concepts and may not map neatly onto how these traditions conceptualize aesthetic experience.
 
+We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github.io/) to search for artwork titles that contain aesthetic concepts from both Western and Eastern traditions.
+
 **Search Terms:**
 
 - **Western** (10 terms): beauty, sublime, pastoral, romantic, ideal, grace, glory, divine, harmony, splendor

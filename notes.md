@@ -238,24 +238,27 @@ The high median coverage (66.7%) indicates that most artwork titles are largely 
 | Median coverage | 66.7% | Half of titles exceed 67% coverage |
 | No matches | 13 | 9.8% of titles unscorable |
 
-The most common words that appeared in titles but weren't in my dictionary tell us about the limits of applying a general sentiment tool to art historical texts:
+The table below shows out-of-vocabulary (OOV) words that appeared most frequently in our dataset but were absent from the labMT lexicon. We selected words with frequency ≥ 2 to focus on recurring patterns rather than one-off occurrence, ensuring that our analysis captures systematic blind spots rather than random noise. These OOV words cluster into distinct categories that reveal the cultural and domain-specific biases embedded in general purpose sentiment tools:
 
-| Word | Frequency | Type | Why Missing |
-|------|-----------|------|-------------|
-| shrine | 4 | Religious place | Too specific |
-| sphinx | 3 | Mythological figure | Proper noun |
-| statuette | 3 | Art object | Art-specific |
-| mono | 3 | Japanese word | Non-English |
-| blossoms | 3 | Nature | Preprocessing? |
-| bodhisattva | 3 | Buddhist deity | Religious/cultural |
-| verso | 2 | Art term | Art-specific |
+| Category | Examples | Frequency | Why They're Missing | Impact on Measurement |
+|----------|----------|-----------|---------------------|----------------------|
+| **Art-specific terminology** | statuette, verso | 3, 2 | labMT was built from general English corpora, not art historical texts | Titles describing artistic form or technique become partially illegible |
+| **Religious/cultural concepts** | shrine, bodhisattva, baptist | 4, 3, 2 | Sacred vocabulary is often excluded from secular, general-purpose lexicons | Spiritually significant works appear emotionally neutral |
+| **Non-English words** | mono (from Japanese "mono no aware") | 3 | labMT is English-only by design | Eastern aesthetics are systematically underrepresented |
+| **Proper nouns** | garcini (artist name), sphinx | 2, 3 | Names are intentionally excluded from sentiment lexicons | Artist attributions don't contribute to measurable content |
 
-The labMT lexicon was designed for general English, predictably misses several categories of words that matter in art historical texts:
+#### The Direction of Bias
 
-1. **Art-specific terminology** (statuette, verso) – these are precisely the words that might carry aesthetic meaning, yet they're invisible to our measurement
-2. **Religious and cultural concepts** (shrine, bodhisattva, baptist) – central to understanding many artworks, but absent from a secular, general-purpose dictionary
-3. **Non-English words** (mono) – art historical discourse often incorporates foreign terms
-4. **Proper names** (garcini) – artists, patrons, and historical figures are everywhere in titles
+If we were to estimate hypothetical scores for these missing words based on their semantic context:
+
+- **bodhisattva** (Buddhist enlightened being, frequency: 3): would likely score high (associated with compassion, wisdom, spiritual ideal)
+- **shrine** (sacred place, frequency: 4): would likely score moderate-to-high (reverence, peace, spiritual significance)
+- **statuette** (small sculpture, frequency: 3): would likely score neutral-to-moderate (aesthetic appreciation, but descriptive)
+- **mono** (as in "mono no aware" - the pathos of things, frequency: 3): would likely score moderate (bittersweet, reflective)
+- **sphinx** (mythological figure, frequency: 3): would likely score neutral (mythological reference, context-dependent)
+- **blossoms** (nature term, frequency: 3): would likely score high (associated with beauty, spring, renewal) – its absence suggests preprocessing inconsistencies
+
+The key insight is that the bias is not random, it is **directional and systematic**. Eastern titles, which more frequently contain non-English terms (like "mono") and culturally specific concepts (like "bodhisattva"), are more likely to have meaningful content rendered invisible. This means our measurements systematically **under-represent Eastern aesthetic vocabulary**, creating the appearance that Eastern titles are less emotionally charged when the limitation is actually in the tool, not the texts.
 
 When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they might be systematically underrepresented in our measurements. The coverage statistics help us identify when this is happening.
 

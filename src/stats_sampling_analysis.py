@@ -636,7 +636,42 @@ def plot_temporal_waterfall_1800(temporal_df):
     ):
         height = bar.get_height()
 
+        plt.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            height + ci + 0.1,
+            f"E-W: {diff:+.2f} ± {ci:.2f}",
+            ha="center",
+            va="bottom",
+            fontsize=12,
+            fontweight="bold",
+            color=trend_color,
+            bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.9, edgecolor=trend_color),
+        )
+
+        plt.text(
+            bar.get_x() + bar.get_width() / 2.0 - 0.15,
+            height + 0.3,
+            f"E: {east:.2f} ± {east_ci_val:.2f}",
+            ha="center",
+            va="bottom",
+            fontsize=10,
+            color=east_color,
+            fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.9, edgecolor=east_color),
+        )
+
         west_y = -0.2 if diff > 0 else height - 0.3
+        plt.text(
+            bar.get_x() + bar.get_width() / 2.0 + 0.15,
+            west_y,
+            f"W: {west:.2f} ± {west_ci_val:.2f}",
+            ha="center",
+            va="top" if diff > 0 else "bottom",
+            fontsize=10,
+            color=west_color,
+            fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.9, edgecolor=west_color),
+        )
 
         plt.text(
             bar.get_x() + bar.get_width() / 2.0 - 0.15,
@@ -872,6 +907,9 @@ def main():
     }])
     diff_summary_df.to_csv(TABLES_DIR / "bootstrap_difference_summary.csv", index=False)
 
+    print("\nRunning coverage sensitivity analysis...")
+    sensitivity_df = coverage_sensitivity(df)
+
     print("\nRunning temporal lexical coverage analysis with 1800 cutoff...")
     temporal_coverage_df = temporal_coverage_analysis_1800(df)
 
@@ -879,6 +917,7 @@ def main():
     temporal_happiness_df = temporal_happiness_analysis_1800(df)
 
     print("\nCreating figures...")
+    plot_descriptive_summary(df)
     plot_bootstrap_difference(diff_ci)
     plot_term_sample_sizes(df)
     plot_coverage_by_category(df)

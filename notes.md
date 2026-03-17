@@ -12,7 +12,11 @@ This question addresses a fundamental challenge, in which a general sentiment le
 
 ### Relevant
 
-Digital Humanities research often uses sentiment analysis tools without questioning whether they work across different cultures. Our project asks a basic question: does a happiness lexicon built from American English actually capture how Eastern and Western art is described? By comparing scores across cultural traditions and historical periods, we show that the tool works differently for Eastern and Western titles. It is not because the art is different, but because the tool misses culturally specific words like "bodhisattva" and "wabi-sabi." This is important as computational tools are never neutral, they carry the assumptions and bias of previous context they were built from.
+Digital Humanities research often uses sentiment analysis tools without questioning whether they work across different cultures. Our project asks a basic question: does a happiness lexicon built from American English actually capture how Eastern and Western art is described? By comparing scores across cultural traditions and historical periods, we show that the tool works differently for Eastern and Western titles. It is not because the art is different, but because the tool misses culturally specific words like "bodhisattva" and "wabi-sabi." This is important as computational tools are never neutral; they carry the assumptions and bias of the context they were built from.
+
+This finding speaks to a broader archival bias issue in digital humanities. Every computational tool is trained on a corpus that reflects particular cultural, historical, and linguistic priorities. In our case, the labMT lexicon was built from English language texts, predominantly from Western sources. When applied to non-Western cultural objects, the tool effectively enforces a Western emotional vocabulary as the universal standard. This is not merely a technical limitation, but a form of epistemic violence. It renders culturally significant concepts illegible, and in doing so, risks erasing the very differences that make cross-cultural study valuable.
+
+Our project thus contributes to ongoing DH conversations about algorithmic transparency and critical data studies. It demonstrates that sentiment analysis is not a neutral measurement, but a culturally situated practice. The tool does not reveal "universal" emotional content. It reflects what its training archive considers emotionally salient. By making this archive visible, we challenge the field to move beyond one-size-fits-all models and toward more culturally aware computational methods. This means building better dictionaries, but also questioning whether quantification is always the right approach. 
 
 ### Procedure
 
@@ -78,7 +82,7 @@ After duplicate removal, the final dataset contains **132 unique artworks**:
 - **Western aesthetic concepts**: 62 artworks
 - **Eastern aesthetic concepts**: 70 artworks
 
-Because the same artwork may appear under multiple search terms, duplicate objects were removed using the `object_id` field before analysis.
+Because the same artwork may appear under multiple search terms, duplicate objects were removed using the `object_id` field before analysis (double-checked).
 
 ### Ethics and Limitations
 

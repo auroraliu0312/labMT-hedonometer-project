@@ -29,7 +29,7 @@ def load_scored_data():
         "score",
         "coverage",
         "matched",
-        "total"
+        "total",
     ]
 
     missing_required = [col for col in required_cols if col not in df.columns]
@@ -64,7 +64,7 @@ def sample_audit(df):
         scored_artworks=("score", lambda x: x.notna().sum()),
         mean_coverage=("coverage", "mean"),
         median_coverage=("coverage", "median"),
-        no_match_count=("coverage", lambda x: (x == 0).sum())
+        no_match_count=("coverage", lambda x: (x == 0).sum()),
     ).reset_index()
 
     category_audit["scoring_rate"] = (
@@ -85,7 +85,7 @@ def sample_audit(df):
             scored_n=("score", lambda x: x.notna().sum()),
             mean_score=("score", "mean"),
             median_score=("score", "median"),
-            mean_coverage=("coverage", "mean")
+            mean_coverage=("coverage", "mean"),
         ).reset_index()
 
         term_audit.to_csv(TABLES_DIR / "sample_audit_by_term.csv", index=False)
@@ -113,7 +113,7 @@ def bootstrap_mean_ci(values, n_boot=10000, seed=42):
         "mean": values.mean(),
         "ci_lower": np.percentile(boots, 2.5),
         "ci_upper": np.percentile(boots, 97.5),
-        "boot_dist": boots
+        "boot_dist": boots,
     }
 
 
@@ -138,7 +138,7 @@ def bootstrap_diff_ci(east, west, n_boot=10000, seed=42):
         "ci_lower": np.percentile(diffs, 2.5),
         "ci_upper": np.percentile(diffs, 97.5),
         "pr_east_gt_west": (diffs > 0).mean(),
-        "boot_dist": diffs
+        "boot_dist": diffs,
     }
 
 
@@ -161,7 +161,7 @@ def bootstrap_median_diff_ci(east, west, n_boot=10000, seed=42):
     return {
         "median_diff": np.median(east) - np.median(west),
         "ci_lower": np.percentile(diffs, 2.5),
-        "ci_upper": np.percentile(diffs, 97.5)
+        "ci_upper": np.percentile(diffs, 97.5),
     }
 
 
@@ -187,7 +187,7 @@ def coverage_sensitivity(df, thresholds=(0.0, 0.3, 0.5)):
             "mean_diff_east_minus_west": diff_res["mean_diff"],
             "ci_lower": diff_res["ci_lower"],
             "ci_upper": diff_res["ci_upper"],
-            "pr_east_gt_west": diff_res["pr_east_gt_west"]
+            "pr_east_gt_west": diff_res["pr_east_gt_west"],
         })
 
     out = pd.DataFrame(rows)
@@ -203,11 +203,11 @@ def assign_period_1800(year):
     else:
         return "Post-1800"
 
+
 def temporal_coverage_analysis_1800(df):
     """
     Temporal lexical coverage analysis using 1800 as cutoff.
     Uses coverage (matched / total), not happiness score.
-    CI follows your classmate's logic: SEM * 1.96
     """
     sub = df.copy()
     sub["period_1800"] = sub["object_begin"].apply(assign_period_1800)
@@ -246,12 +246,63 @@ def temporal_coverage_analysis_1800(df):
             "west_mean": west_mean,
             "west_ci": west_ci,
             "diff_east_minus_west": diff,
-            "diff_ci": diff_ci
+            "diff_ci": diff_ci,
         })
 
     out = pd.DataFrame(rows)
     out.to_csv(TABLES_DIR / "temporal_coverage_analysis_1800.csv", index=False)
     return out
+
+
+def temporal_happiness_analysis_1800(df):
+    """
+    Temporal happiness analysis using 1800 as cutoff.
+    Uses score, not coverage.
+    """
+    sub = df[df["score"].notna()].copy()
+    sub["period_1800"] = sub["object_begin"].apply(assign_period_1800)
+    sub = sub[sub["period_1800"].notna()].copy()
+
+    rows = []
+
+    for period in ["Pre-1800", "Post-1800"]:
+        period_df = sub[sub["period_1800"] == period]
+
+        east = period_df[period_df["category"] == "eastern"]["score"].dropna()
+        west = period_df[period_df["category"] == "western"]["score"].dropna()
+
+        if len(east) == 0 or len(west) == 0:
+            continue
+
+        east_mean = east.mean()
+        west_mean = west.mean()
+
+        east_sem = east.sem()
+        west_sem = west.sem()
+
+        east_ci = east_sem * 1.96 if pd.notna(east_sem) else np.nan
+        west_ci = west_sem * 1.96 if pd.notna(west_sem) else np.nan
+
+        diff = east_mean - west_mean
+        diff_se = np.sqrt((east_sem ** 2) + (west_sem ** 2))
+        diff_ci = diff_se * 1.96 if pd.notna(diff_se) else np.nan
+
+        rows.append({
+            "period": period,
+            "n_east": len(east),
+            "n_west": len(west),
+            "east_mean": east_mean,
+            "east_ci": east_ci,
+            "west_mean": west_mean,
+            "west_ci": west_ci,
+            "diff_east_minus_west": diff,
+            "diff_ci": diff_ci,
+        })
+
+    out = pd.DataFrame(rows)
+    out.to_csv(TABLES_DIR / "temporal_happiness_analysis_1800.csv", index=False)
+    return out
+
 
 def plot_bootstrap_difference(diff_result):
     diff_boot = diff_result["boot_dist"]
@@ -287,7 +338,7 @@ def plot_term_sample_sizes(df):
 
     colors = term_counts["category"].map({
         "eastern": "orange",
-        "western": "steelblue"
+        "western": "steelblue",
     })
 
     plt.figure(figsize=(12, 6))
@@ -301,7 +352,7 @@ def plot_term_sample_sizes(df):
     from matplotlib.patches import Patch
     legend_handles = [
         Patch(facecolor="orange", label="Eastern"),
-        Patch(facecolor="steelblue", label="Western")
+        Patch(facecolor="steelblue", label="Western"),
     ]
     plt.legend(handles=legend_handles)
 
@@ -334,12 +385,6 @@ def plot_coverage_by_category(df):
 
 
 def plot_temporal_coverage_comparison_1800(temporal_df):
-    """
-    Lexical coverage by time period (1800 cutoff) and category.
-    Mimics your classmate's figure structure:
-    - left axis: mean coverage
-    - right axis: East-West coverage difference
-    """
     if temporal_df.empty or len(temporal_df) < 2:
         print("Skipping temporal coverage plot: insufficient data.")
         return
@@ -367,7 +412,6 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
 
     fig, ax1 = plt.subplots(figsize=(14, 10))
 
-    # Eastern bars
     ax1.bar(
         x_positions - offset,
         east_means,
@@ -379,10 +423,9 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
         label="Eastern",
         yerr=east_cis,
         capsize=8,
-        error_kw={"linewidth": 2, "ecolor": "black", "capthick": 2}
+        error_kw={"linewidth": 2, "ecolor": "black", "capthick": 2},
     )
 
-    # Western bars
     ax1.bar(
         x_positions + offset,
         west_means,
@@ -394,10 +437,9 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
         label="Western",
         yerr=west_cis,
         capsize=8,
-        error_kw={"linewidth": 2, "ecolor": "black", "capthick": 2}
+        error_kw={"linewidth": 2, "ecolor": "black", "capthick": 2},
     )
 
-    # sample sizes
     for i in range(len(periods)):
         ax1.text(
             x_positions[i] - offset,
@@ -407,7 +449,7 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
             va="bottom",
             fontsize=10,
             fontweight="bold",
-            color=east_color
+            color=east_color,
         )
         ax1.text(
             x_positions[i] + offset,
@@ -417,12 +459,10 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
             va="bottom",
             fontsize=10,
             fontweight="bold",
-            color=west_color
+            color=west_color,
         )
 
-    # second axis for difference
     ax2 = ax1.twinx()
-
     ax2.plot(
         x_positions,
         differences,
@@ -433,7 +473,7 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
         linestyle="-",
         markerfacecolor="white",
         markeredgewidth=3,
-        label="Coverage Difference"
+        label="Coverage Difference",
     )
 
     for i, diff in enumerate(differences):
@@ -450,44 +490,36 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
                 boxstyle="round,pad=0.25",
                 facecolor="#E8E8E8",
                 alpha=0.95,
-                edgecolor=trend_color
-            )
+                edgecolor=trend_color,
+            ),
         )
 
-    # left axis
     ax1.set_ylabel("Mean Lexical Coverage", fontsize=16, fontweight="bold")
     ax1.set_ylim(0.0, 0.85)
     ax1.set_yticks(np.arange(0.0, 0.81, 0.1))
-
-    # 50% coverage reference line
     ax1.axhline(y=0.5, color="gray", linestyle=":", linewidth=1.5, alpha=0.8)
 
-    # right axis
     ax2.set_ylabel("East-West Coverage Difference", fontsize=16, fontweight="bold", color=trend_color)
     ax2.tick_params(axis="y", labelcolor=trend_color, labelsize=12)
 
     max_abs_diff = max(abs(np.nanmin(differences)), abs(np.nanmax(differences))) + 0.05
     ax2.set_ylim(-max_abs_diff * 2.5, max_abs_diff * 2.5)
 
-    # show right axis as percentage-ish labels
     ticks = ax2.get_yticks()
-    ax2.set_yticklabels([f"{int(t*100)}%" if t != 0 else "0%" for t in ticks])
+    ax2.set_yticklabels([f"{int(t * 100)}%" if t != 0 else "0%" for t in ticks])
 
-    # x axis
     ax1.set_xlabel("Historical Period", fontsize=16, fontweight="bold")
     ax1.set_xticks(x_positions)
     ax1.set_xticklabels(["Pre-1800", "Post-1800"], fontsize=13)
 
-    # title
     ax1.set_title(
         "Lexical Coverage by Time Period (1800 Cutoff) and Category\n"
         "(Error bars = 95% Confidence Intervals)",
         fontsize=20,
         fontweight="bold",
-        pad=22
+        pad=22,
     )
 
-    # legend
     from matplotlib.lines import Line2D
     from matplotlib.patches import Patch
 
@@ -502,10 +534,8 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
     ax1.legend(handles=legend_handles, loc="upper left", fontsize=11,
                framealpha=0.95, edgecolor="black")
 
-    # grid
     ax1.grid(True, axis="y", alpha=0.2)
 
-    # summary box
     data_text = (
         "COVERAGE ANALYSIS SUMMARY (1800 Cutoff):\n"
         f"Pre-1800:  Eastern {east_means[0]*100:.1f}% ± {east_cis[0]*100:.1f}% (n={east_ns[0]})  |  "
@@ -515,16 +545,17 @@ def plot_temporal_coverage_comparison_1800(temporal_df):
         f"Difference (East-West): Pre-1800 {differences[0]*100:+.1f}%  |  Post-1800 {differences[1]*100:+.1f}%"
     )
 
+    plt.subplots_adjust(bottom=0.24)
     plt.figtext(
-        0.16,
-        0.03,
+        0.5,
+        0.04,
         data_text,
         fontsize=10,
+        ha="center",
         bbox=dict(boxstyle="round", facecolor="#F0F0F0", alpha=0.95, edgecolor="gray"),
-        family="monospace"
+        family="monospace",
     )
 
-    plt.tight_layout()
     plt.savefig(FIGURES_DIR / "lexical_coverage_by_time_period_1800.png", dpi=300, bbox_inches="tight")
     plt.close()
 
@@ -568,7 +599,7 @@ def plot_temporal_waterfall_1800(temporal_df):
         linewidth=1.5,
         yerr=diff_ci,
         capsize=8,
-        error_kw={"linewidth": 2, "ecolor": "black", "capthick": 2}
+        error_kw={"linewidth": 2, "ecolor": "black", "capthick": 2},
     )
 
     plt.plot(
@@ -581,7 +612,7 @@ def plot_temporal_waterfall_1800(temporal_df):
         markerfacecolor="white",
         markeredgewidth=2,
         markeredgecolor=trend_color,
-        label="Trend Line"
+        label="Trend Line",
     )
 
     x_smooth = np.linspace(0, 1, 50)
@@ -597,7 +628,7 @@ def plot_temporal_waterfall_1800(temporal_df):
         ci_upper_smooth,
         color=trend_color,
         alpha=0.15,
-        label="95% CI Region"
+        label="95% CI Region",
     )
 
     for i, (bar, diff, ci, east, west, east_ci_val, west_ci_val) in enumerate(
@@ -605,42 +636,7 @@ def plot_temporal_waterfall_1800(temporal_df):
     ):
         height = bar.get_height()
 
-        plt.text(
-            bar.get_x() + bar.get_width() / 2.0,
-            height + ci + 0.1,
-            f"E-W: {diff:+.2f} ± {ci:.2f}",
-            ha="center",
-            va="bottom",
-            fontsize=12,
-            fontweight="bold",
-            color=trend_color,
-            bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.9, edgecolor=trend_color)
-        )
-
-        plt.text(
-            bar.get_x() + bar.get_width() / 2.0 - 0.15,
-            height + 0.3,
-            f"E: {east:.2f} ± {east_ci_val:.2f}",
-            ha="center",
-            va="bottom",
-            fontsize=10,
-            color=east_color,
-            fontweight="bold",
-            bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.9, edgecolor=east_color)
-        )
-
         west_y = -0.2 if diff > 0 else height - 0.3
-        plt.text(
-            bar.get_x() + bar.get_width() / 2.0 + 0.15,
-            west_y,
-            f"W: {west:.2f} ± {west_ci_val:.2f}",
-            ha="center",
-            va="top" if diff > 0 else "bottom",
-            fontsize=10,
-            color=west_color,
-            fontweight="bold",
-            bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.9, edgecolor=west_color)
-        )
 
         plt.text(
             bar.get_x() + bar.get_width() / 2.0 - 0.15,
@@ -650,7 +646,7 @@ def plot_temporal_waterfall_1800(temporal_df):
             va="bottom",
             fontsize=9,
             color=east_color,
-            fontweight="bold"
+            fontweight="bold",
         )
         plt.text(
             bar.get_x() + bar.get_width() / 2.0 + 0.15,
@@ -660,29 +656,8 @@ def plot_temporal_waterfall_1800(temporal_df):
             va="bottom",
             fontsize=9,
             color=west_color,
-            fontweight="bold"
+            fontweight="bold",
         )
-
-        if i > 0:
-            prev = differences[i - 1]
-            curr = differences[i]
-
-            if prev != 0:
-                pct_increase = ((curr - prev) / abs(prev)) * 100
-                ci_overlap = (curr - diff_ci[i]) < (prev + diff_ci[i - 1])
-                sig_symbol = "✓" if not ci_overlap else "!"
-                sig_color = "green" if not ci_overlap else "orange"
-
-                plt.annotate(
-                    f"↑ {pct_increase:.0f}%  {sig_symbol}",
-                    xy=(x_pos[i - 1] + 0.3, (prev + curr) / 2),
-                    xytext=(x_pos[i - 1] + 0.4, (prev + curr) / 2 + 0.3),
-                    arrowprops=dict(arrowstyle="->", color=trend_color, lw=2),
-                    fontsize=11,
-                    fontweight="bold",
-                    color=sig_color,
-                    bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.9, edgecolor=sig_color)
-                )
 
     for i, (x, east, west, east_ci_val, west_ci_val) in enumerate(
         zip(x_pos, east_scores, west_scores, east_ci, west_ci)
@@ -701,7 +676,7 @@ def plot_temporal_waterfall_1800(temporal_df):
         "EAST-WEST DIFFERENCE IN HAPPINESS SCORES\n(1800 Cutoff) With 95% Confidence Intervals",
         fontsize=18,
         fontweight="bold",
-        pad=20
+        pad=20,
     )
 
     plt.xticks(x_pos, periods, fontsize=14)
@@ -715,39 +690,138 @@ def plot_temporal_waterfall_1800(temporal_df):
         plt.Line2D([0], [0], color=trend_color, linewidth=3, label="Trend Line"),
         Patch(facecolor=trend_color, alpha=0.15, label="95% CI Region"),
         Patch(facecolor=east_color, alpha=0.5, label="Eastern Mean (background)"),
-        Patch(facecolor=west_color, alpha=0.5, label="Western Mean (background)")
+        Patch(facecolor=west_color, alpha=0.5, label="Western Mean (background)"),
     ]
     plt.legend(handles=legend_elements, loc="upper left", fontsize=10, framealpha=0.9)
-
-    prev = differences[0]
-    curr = differences[1]
-    pct = ((curr - prev) / abs(prev)) * 100 if prev != 0 else np.nan
-    ci_overlap = (curr - diff_ci[1]) < (prev + diff_ci[0])
-    sig_text = "✓ Significant increase (CIs do not overlap)" if not ci_overlap else "! Caution: Confidence intervals overlap"
-
-    data_text = (
-        f"DATA SUMMARY (1800 cutoff):\n"
-        f"Pre-1800:  Eastern {east_scores[0]:.2f}±{east_ci[0]:.2f} (n={east_n[0]})  |  "
-        f"Western {west_scores[0]:.2f}±{west_ci[0]:.2f} (n={west_n[0]})\n"
-        f"Post-1800: Eastern {east_scores[1]:.2f}±{east_ci[1]:.2f} (n={east_n[1]})  |  "
-        f"Western {west_scores[1]:.2f}±{west_ci[1]:.2f} (n={west_n[1]})\n"
-        f"Difference: Pre-1800 {differences[0]:+.2f}±{diff_ci[0]:.2f}  |  "
-        f"Post-1800 {differences[1]:+.2f}±{diff_ci[1]:.2f}\n"
-        f"Change: {pct:.0f}%  |  {sig_text}"
-    )
-
-    plt.figtext(
-        0.15,
-        0.01,
-        data_text,
-        fontsize=10,
-        bbox=dict(boxstyle="round", facecolor="#F0F0F0", alpha=0.9, edgecolor="gray"),
-        family="monospace"
-    )
 
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "east_west_difference_1800_cutoff.png", dpi=300, bbox_inches="tight")
     plt.close()
+
+
+def plot_descriptive_summary(df):
+    scored = df[df["score"].notna()].copy()
+
+    eastern_scores = scored[scored["category"] == "eastern"]["score"]
+    western_scores = scored[scored["category"] == "western"]["score"]
+
+    east_mean = eastern_scores.mean()
+    west_mean = western_scores.mean()
+    east_median = eastern_scores.median()
+    west_median = western_scores.median()
+    east_std = eastern_scores.std()
+    west_std = western_scores.std()
+    east_min = eastern_scores.min()
+    east_max = eastern_scores.max()
+    west_min = western_scores.min()
+    west_max = western_scores.max()
+
+    fig, ax = plt.subplots(figsize=(14, 10))
+
+    east_color = "#FF8C00"
+    west_color = "#1E90FF"
+
+    data = [eastern_scores, western_scores]
+    positions = [1, 2.5]
+
+    bp = ax.boxplot(
+        data,
+        positions=positions,
+        widths=0.6,
+        patch_artist=True,
+        showmeans=True,
+        meanline=True,
+        medianprops={"color": "black", "linewidth": 2},
+        meanprops={"color": "red", "linewidth": 2, "linestyle": "--"},
+    )
+
+    bp["boxes"][0].set_facecolor(east_color)
+    bp["boxes"][0].set_alpha(0.6)
+    bp["boxes"][1].set_facecolor(west_color)
+    bp["boxes"][1].set_alpha(0.6)
+
+    np.random.seed(42)
+    x_east = np.random.normal(positions[0], 0.1, size=len(eastern_scores))
+    x_west = np.random.normal(positions[1], 0.1, size=len(western_scores))
+
+    ax.scatter(x_east, eastern_scores, alpha=0.3, s=30, color="black", edgecolor="white", linewidth=0.5)
+    ax.scatter(x_west, western_scores, alpha=0.3, s=30, color="black", edgecolor="white", linewidth=0.5)
+
+    ax.scatter(
+        [positions[0], positions[0], positions[1], positions[1]],
+        [east_min, east_max, west_min, west_max],
+        s=200,
+        color=["red", "green", "red", "green"],
+        edgecolor="black",
+        linewidth=2,
+        zorder=5,
+    )
+
+    ax.scatter(
+        [positions[0], positions[1]],
+        [east_mean, west_mean],
+        s=200,
+        color="blue",
+        marker="d",
+        edgecolor="black",
+        linewidth=2,
+        zorder=5,
+    )
+
+    east_stats = (
+        f"EASTERN (n={len(eastern_scores)})\n"
+        f"Mean: {east_mean:.3f}\nMedian: {east_median:.3f}\nSD: {east_std:.3f}\n"
+        f"Min: {east_min:.3f}\nMax: {east_max:.3f}\nRange: {east_max-east_min:.2f}"
+    )
+    west_stats = (
+        f"WESTERN (n={len(western_scores)})\n"
+        f"Mean: {west_mean:.3f}\nMedian: {west_median:.3f}\nSD: {west_std:.3f}\n"
+        f"Min: {west_min:.3f}\nMax: {west_max:.3f}\nRange: {west_max-west_min:.2f}"
+    )
+
+    ax.text(
+        positions[0] - 0.3, 8.0, east_stats,
+        fontsize=10, fontweight="bold",
+        bbox=dict(boxstyle="round", facecolor=east_color, alpha=0.3),
+        ha="left", va="top",
+    )
+    ax.text(
+        positions[1] + 0.3, 8.0, west_stats,
+        fontsize=10, fontweight="bold",
+        bbox=dict(boxstyle="round", facecolor=west_color, alpha=0.3),
+        ha="right", va="top",
+    )
+
+    diff = east_mean - west_mean
+    insight_text = (
+        f"KEY INSIGHTS:\n"
+        f"• Mean diff: {abs(diff):.3f}\n"
+        f"• Eastern SD ({east_std:.2f}) > Western ({west_std:.2f})\n"
+        f"• Eastern range: {east_max-east_min:.2f}\n"
+        f"• Highest: Eastern ({east_max:.2f})\n"
+        f"• Lowest: Eastern ({east_min:.2f})"
+    )
+    ax.text(
+        0.5, -0.1, insight_text,
+        transform=ax.transAxes,
+        fontsize=11,
+        ha="center",
+        bbox=dict(boxstyle="round", facecolor="lightyellow", alpha=0.8),
+    )
+
+    ax.set_xticks(positions)
+    ax.set_xticklabels(["Eastern", "Western"], fontsize=14, fontweight="bold")
+    ax.set_ylabel("Happiness Score (1-9)", fontsize=12)
+    ax.set_title("Descriptive Statistics: Eastern vs Western Aesthetic Concepts", fontsize=16, fontweight="bold")
+    ax.set_ylim(3.0, 9.0)
+    ax.grid(axis="y", alpha=0.3)
+
+    output_path = FIGURES_DIR / "descriptive_statistics.png"
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close()
+
+    print(f"✅ Figure saved to: {output_path}")
+    return output_path
 
 
 def main():
@@ -775,14 +849,14 @@ def main():
             "group": "eastern",
             "mean": east_ci["mean"],
             "ci_lower": east_ci["ci_lower"],
-            "ci_upper": east_ci["ci_upper"]
+            "ci_upper": east_ci["ci_upper"],
         },
         {
             "group": "western",
             "mean": west_ci["mean"],
             "ci_lower": west_ci["ci_lower"],
-            "ci_upper": west_ci["ci_upper"]
-        }
+            "ci_upper": west_ci["ci_upper"],
+        },
     ])
     group_ci_df.to_csv(TABLES_DIR / "bootstrap_group_cis.csv", index=False)
 
@@ -794,25 +868,25 @@ def main():
         "pr_east_gt_west": diff_ci["pr_east_gt_west"],
         "median_diff": median_diff["median_diff"],
         "median_ci_lower": median_diff["ci_lower"],
-        "median_ci_upper": median_diff["ci_upper"]
+        "median_ci_upper": median_diff["ci_upper"],
     }])
     diff_summary_df.to_csv(TABLES_DIR / "bootstrap_difference_summary.csv", index=False)
 
-    print("\nRunning coverage sensitivity analysis...")
-    sensitivity_df = coverage_sensitivity(df)
-
     print("\nRunning temporal lexical coverage analysis with 1800 cutoff...")
-    temporal_df = temporal_coverage_analysis_1800(df)
+    temporal_coverage_df = temporal_coverage_analysis_1800(df)
+
+    print("\nRunning temporal happiness analysis with 1800 cutoff...")
+    temporal_happiness_df = temporal_happiness_analysis_1800(df)
 
     print("\nCreating figures...")
     plot_bootstrap_difference(diff_ci)
     plot_term_sample_sizes(df)
     plot_coverage_by_category(df)
-    plot_temporal_coverage_comparison_1800(temporal_df)
+    plot_temporal_coverage_comparison_1800(temporal_coverage_df)
+    plot_temporal_waterfall_1800(temporal_happiness_df)
 
     print("\nDone.")
     print("\nKey outputs created:")
-
     print(f"  TABLE: {TABLES_DIR / 'sample_audit_by_category.csv'}")
     if "term_used" in df.columns:
         print(f"  TABLE: {TABLES_DIR / 'sample_audit_by_term.csv'}")
@@ -820,7 +894,9 @@ def main():
     print(f"  TABLE: {TABLES_DIR / 'bootstrap_difference_summary.csv'}")
     print(f"  TABLE: {TABLES_DIR / 'coverage_sensitivity.csv'}")
     print(f"  TABLE: {TABLES_DIR / 'temporal_coverage_analysis_1800.csv'}")
+    print(f"  TABLE: {TABLES_DIR / 'temporal_happiness_analysis_1800.csv'}")
 
+    print(f"  FIGURE: {FIGURES_DIR / 'descriptive_statistics.png'}")
     print(f"  FIGURE: {FIGURES_DIR / 'bootstrap_difference_distribution.png'}")
     if "term_used" in df.columns:
         print(f"  FIGURE: {FIGURES_DIR / 'sample_size_by_term.png'}")
@@ -841,115 +917,13 @@ def main():
     print("\nCoverage sensitivity summary:")
     print(sensitivity_df.to_string(index=False))
 
-    if not temporal_df.empty:
+    if not temporal_coverage_df.empty:
         print("\nTemporal lexical coverage analysis (1800 cutoff):")
-        print(temporal_df.to_string(index=False))
+        print(temporal_coverage_df.to_string(index=False))
 
-
-if __name__ == "__main__":
-    main()
-
-
-def plot_descriptive_summary(df):
-    """
-    Create a single comprehensive figure showing all descriptive statistics
-    """
-    # Use only scored data
-    scored = df[df["score"].notna()].copy()
-    
-    eastern_scores = scored[scored["category"] == "eastern"]["score"]
-    western_scores = scored[scored["category"] == "western"]["score"]
-    
-    # Calculate statistics
-    east_mean = eastern_scores.mean()
-    west_mean = western_scores.mean()
-    east_median = eastern_scores.median()
-    west_median = western_scores.median()
-    east_std = eastern_scores.std()
-    west_std = western_scores.std()
-    east_min = eastern_scores.min()
-    east_max = eastern_scores.max()
-    west_min = western_scores.min()
-    west_max = western_scores.max()
-    
-    # Create figure
-    fig, ax = plt.subplots(figsize=(14, 10))
-    
-    # Colors
-    east_color = '#FF8C00'  # Orange
-    west_color = '#1E90FF'  # Blue
-    
-    # Boxplots
-    data = [eastern_scores, western_scores]
-    positions = [1, 2.5]
-    
-    bp = ax.boxplot(data, positions=positions, widths=0.6, patch_artist=True,
-                    showmeans=True, meanline=True,
-                    medianprops={'color': 'black', 'linewidth': 2},
-                    meanprops={'color': 'red', 'linewidth': 2, 'linestyle': '--'})
-    
-    bp['boxes'][0].set_facecolor(east_color)
-    bp['boxes'][0].set_alpha(0.6)
-    bp['boxes'][1].set_facecolor(west_color)
-    bp['boxes'][1].set_alpha(0.6)
-    
-    # Add individual points
-    x_east = np.random.normal(positions[0], 0.1, size=len(eastern_scores))
-    x_west = np.random.normal(positions[1], 0.1, size=len(western_scores))
-    
-    ax.scatter(x_east, eastern_scores, alpha=0.3, s=30, color='black', edgecolor='white', linewidth=0.5)
-    ax.scatter(x_west, western_scores, alpha=0.3, s=30, color='black', edgecolor='white', linewidth=0.5)
-    
-    # Highlight extremes
-    ax.scatter([positions[0], positions[0], positions[1], positions[1]], 
-               [east_min, east_max, west_min, west_max], 
-               s=200, color=['red', 'green', 'red', 'green'], 
-               edgecolor='black', linewidth=2, zorder=5)
-    
-    # Add mean markers
-    ax.scatter([positions[0], positions[1]], [east_mean, west_mean], 
-               s=200, color='blue', marker='d', edgecolor='black', linewidth=2, zorder=5)
-    
-    # Statistics boxes
-    east_stats = f"EASTERN (n=62)\nMean: {east_mean:.3f}\nMedian: {east_median:.3f}\nSD: {east_std:.3f}\nMin: {east_min:.3f}\nMax: {east_max:.3f}\nRange: {east_max-east_min:.2f}"
-    west_stats = f"WESTERN (n=57)\nMean: {west_mean:.3f}\nMedian: {west_median:.3f}\nSD: {west_std:.3f}\nMin: {west_min:.3f}\nMax: {west_max:.3f}\nRange: {west_max-west_min:.2f}"
-    
-    ax.text(positions[0]-0.3, 8.0, east_stats, fontsize=10, fontweight='bold',
-            bbox=dict(boxstyle='round', facecolor=east_color, alpha=0.3), ha='left', va='top')
-    ax.text(positions[1]+0.3, 8.0, west_stats, fontsize=10, fontweight='bold',
-            bbox=dict(boxstyle='round', facecolor=west_color, alpha=0.3), ha='right', va='top')
-    
-    # Key insights
-    diff = east_mean - west_mean
-    insight_text = f"KEY INSIGHTS:\n• Mean diff: {abs(diff):.3f}\n• Eastern SD ({east_std:.2f}) > Western ({west_std:.2f})\n• Eastern range: {east_max-east_min:.2f}\n• Highest: Eastern ({east_max:.2f})\n• Lowest: Eastern ({east_min:.2f})"
-    ax.text(0.5, -0.1, insight_text, transform=ax.transAxes, fontsize=11, ha='center',
-            bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
-    
-    # Labels
-    ax.set_xticks(positions)
-    ax.set_xticklabels(['Eastern', 'Western'], fontsize=14, fontweight='bold')
-    ax.set_ylabel('Happiness Score (1-9)', fontsize=12)
-    ax.set_title('Descriptive Statistics: Eastern vs Western Aesthetic Concepts', fontsize=16, fontweight='bold')
-    ax.set_ylim(3.0, 9.0)
-    ax.grid(axis='y', alpha=0.3)
-    
-    # Save figure
-    output_path = FIGURES_DIR / "descriptive_statistics.png"
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    plt.close()
-    
-    print(f"✅ Figure saved to: {output_path}")
-    
-    return output_path
-
-
-def main():
-    df = load_scored_data()
-    
-  
-    plot_descriptive_summary(df)
-    
-    print("\nDone.")
+    if not temporal_happiness_df.empty:
+        print("\nTemporal happiness analysis (1800 cutoff):")
+        print(temporal_happiness_df.to_string(index=False))
 
 
 if __name__ == "__main__":

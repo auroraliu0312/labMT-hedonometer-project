@@ -10,7 +10,7 @@ This project investigates how emotional language differs across cultural traditi
 
 This question addresses a fundamental challenge, in which a general sentiment lexicon built from contemporary American English, can meaningfully capture emotional expression in culturally and historically diverse texts. In global digital heritage projects, researchers frequently apply computational tools developed in one cultural context to texts from another. This makes methodological transparency essential. We need to know whether instruments like the labMT hedonometer remain valid when they cross cultural boundaries. Our project directly tests this assumption.
 
-### Relevant
+### Relevance
 
 Digital Humanities research often uses sentiment analysis tools without questioning whether they work across different cultures. Our project asks a basic question: does a happiness lexicon built from American English actually capture how Eastern and Western art is described? By comparing scores across cultural traditions and historical periods, we show that the tool works differently for Eastern and Western titles. It is not because the art is different, but because the tool misses culturally specific words like "bodhisattva" and "wabi-sabi." This is important as computational tools are never neutral; they carry the assumptions and bias of the context they were built from.
 

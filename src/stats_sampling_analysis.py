@@ -959,6 +959,7 @@ def main():
     if not temporal_coverage_df.empty:
         print("\nTemporal lexical coverage analysis (1800 cutoff):")
         print(temporal_coverage_df.to_string(index=False))
+<<<<<<< Updated upstream
 
     if not temporal_happiness_df.empty:
         print("\nTemporal happiness analysis (1800 cutoff):")
@@ -967,3 +968,13 @@ def main():
 
 if __name__ == "__main__":
     main()
+=======
+
+    if not temporal_happiness_df.empty:
+        print("\nTemporal happiness analysis (1800 cutoff):")
+        print(temporal_happiness_df.to_string(index=False))
+
+
+if __name__ == "__main__":
+    main()
+>>>>>>> Stashed changes

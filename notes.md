@@ -100,19 +100,13 @@ This dataset consists of artworks from the Metropolitan Museum of Art's collecti
 
 | Column | Type | Description | Missing |
 |--------|------|-------------|---------|
-| `object_id` | integer | Unique Met Museum object identifier | 0 |
-| `title` | string | Artwork title (raw, as provided by API) | 0 |
-| `category` | string | "eastern" or "western" | 0 |
-| `department` | string | Met curatorial department | 0 |
-| `culture` | string | Cultural attribution (e.g., "Japanese") | 24 (18%) |
-| `period` | string | Historical period (e.g., "Edo period") | 29 (22%) |
-| `artist_name` | string | Artist display name | 33 (25%) |
-| `object_date` | string | Object date description | 0 |
-| `object_begin` | float | Machine-readable start date | 24 (18%) |
-| `score` | float | Happiness score (1-9) from labMT | 13 (9.8%) |
-| `matched` | integer | Words matched to labMT | 0 |
-| `total` | integer | Total words in cleaned title | 0 |
-| `coverage` | float | matched / total | 0 |
+| object_id | int64 | Unique Met object identifier | 0.0% |
+| title | object | Artwork title | 0.0% |
+| category | object | Eastern or Western | 0.0% |
+| culture | object | Cultural attribution | 57.6% |
+| object_begin | int64 | Year (machine-readable) | 0.0% |
+| score | float64 | Happiness score (1-9) from labMT | 9.8% |
+| coverage | float64 | matched / total words | 0.0% |
 
 In addition to supporting chronological description, the `object_begin` field was also used as a temporal variable in the supplementary analysis. We grouped artworks into two broad historical periods using an 1800 cutoff (`Pre-1800` vs. `Post-1800`) for additional comparisons of happiness scores and lexical coverage over time.
 
@@ -240,7 +234,7 @@ The high median coverage (66.7%) indicates that most artwork titles are largely 
 | Median coverage | 66.7% | Half of titles exceed 67% coverage |
 | No matches | 13 | 9.8% of titles unscorable |
 
-The table below shows out-of-vocabulary (OOV) words that appeared most frequently in our dataset but were absent from the labMT lexicon. We selected words with frequency ≥ 2 to focus on recurring patterns rather than one-off occurrences, ensuring that our analysis captures systematic blind spots rather than random noise. These OOV words cluster into distinct categories that reveal the cultural and domain-specific biasesembedded in general purpose sentiment tools:
+The table below shows out-of-vocabulary (OOV) words that appeared most frequently in our dataset but were absent from the labMT lexicon. We selected words with frequency ≥ 2 to focus on recurring patterns rather than one-off occurrences, ensuring that our analysis captures systematic blind spots rather than random noise. These OOV words cluster into distinct categories that reveal the cultural and domain-specific biases embedded in general purpose sentiment tools:
 
 | Category | Examples | Frequency | Why They're Missing | Impact on Measurement | What This Reveals |
 |----------|----------|-----------|---------------------|----------------------|-------------------|
@@ -258,6 +252,18 @@ These omissions are not accidental—they reflect the underlying assumptions of 
 
 When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for the Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they might be systematically underrepresented in our measurements. The coverage statistics help us identify when this is happening.
 
+### Coverage as a Diagnostic Tool
+
+This is why coverage (matched words / total words) becomes essential:
+
+| Scenario | What It Means | Cultural Implication |
+|----------|---------------|---------------------|
+| **Low coverage + Low score** | The measurement tool cannot read key vocabulary | Eastern titles are more likely to fall here due to non-English terms |
+| **Low coverage + High score** | Few readable words happen to be positive, but most meaning is missed | We're over-interpreting based on limited data |
+| **High coverage + Low score** | Greater confidence that title is genuinely neutral/negative | Western titles more likely here due to better coverage |
+
+In our data, Eastern titles show **systematically lower coverage**. It is not because they contain less emotional content, but because they use vocabulary that falls outside labMT's English-centric, general-purpose, secular design.
+
 ### Hypothetical Scoring: What Would These Words Score?
 
 If we were to estimate happiness scores for these missing words based on their semantic context:
@@ -272,18 +278,6 @@ If we were to estimate happiness scores for these missing words based on their s
 | **blossoms** | 3 | Nature, often symbolic | High (7.0–8.0) | Associated with beauty, spring, renewal—its absence suggests preprocessing inconsistency |
 
 **Key insight**: Most missing Eastern aesthetic terms would score moderate to high if included. Their absence artificially depresses Eastern scores, creating the illusion that Eastern titles are less emotionally charged.
-
-### Coverage as a Diagnostic Tool
-
-This is why coverage (matched words / total words) becomes essential:
-
-| Scenario | What It Means | Cultural Implication |
-|----------|---------------|---------------------|
-| **Low coverage + Low score** | The measurement tool cannot read key vocabulary | Eastern titles are more likely to fall here due to non-English terms |
-| **Low coverage + High score** | Few readable words happen to be positive, but most meaning is missed | We're over-interpreting based on limited data |
-| **High coverage + Low score** | Greater confidence that title is genuinely neutral/negative | Western titles more likely here due to better coverage |
-
-In our data, Eastern titles show **systematically lower coverage**. It is not because they contain less emotional content, but because they use vocabulary that falls outside labMT's English-centric, general-purpose, secular design.
 
 ### Illustrative Title Examples
 

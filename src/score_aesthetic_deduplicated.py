@@ -339,3 +339,61 @@ plot_score_distribution(df_scored)
 print("\n" + "="*60)
 print("ALL PROCESSING COMPLETE")
 print("="*60)
+
+# ============================================================================
+# CREATE SIMPLE DATA DICTIONARY 
+# ============================================================================
+
+print("\n" + "="*60)
+print("CREATING DATA DICTIONARY")
+print("="*60)
+
+def create_simple_data_dictionary(df_scored):
+    """
+    Create a minimalist data dictionary with only the most essential columns.
+    Missing values shown as percentages.
+    """
+    # Define the absolute core columns
+    essential_columns = [
+        'object_id', 'title', 'category', 'culture', 
+        'object_begin', 'score', 'coverage'
+    ]
+    
+    # Filter to available columns
+    available = [col for col in essential_columns if col in df_scored.columns]
+    
+    # Create dictionary
+    dict_data = []
+    for col in available:
+        missing_count = df_scored[col].isna().sum()
+        missing_pct = (missing_count / len(df_scored)) * 100
+        
+        dict_data.append({
+            'Column': col,
+            'Type': str(df_scored[col].dtype),
+            'Description': {
+                'object_id': 'Unique Met object identifier',
+                'title': 'Artwork title',
+                'category': 'Eastern or Western',
+                'culture': 'Cultural attribution',
+                'object_begin': 'Year (machine-readable)',
+                'score': 'Happiness score (1-9)',
+                'coverage': 'matched/total words'
+            }.get(col, ''),
+            'Missing': f"{missing_pct:.1f}%"
+        })
+    
+    # Create DataFrame and save
+    dict_df = pd.DataFrame(dict_data)
+    dict_df.to_csv(TABLES_DIR / "data_dictionary_simple.csv", index=False)
+    print(f"  Data dictionary saved to: {TABLES_DIR / 'data_dictionary_simple.csv'}")
+    
+    # Print to console
+    print("\n  Data Dictionary:")
+    for _, row in dict_df.iterrows():
+        print(f"    • {row['Column']}: {row['Type']} - {row['Description']} (missing: {row['Missing']})")
+    
+    return dict_df
+
+# Call the function
+create_simple_data_dictionary(df_scored)

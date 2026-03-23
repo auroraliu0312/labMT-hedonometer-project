@@ -230,7 +230,7 @@ We kept every word that matched the labMT dictionary. No words were filtered out
 
 - Coverage = matched words / total words tells us how much of each title we're actually measuring. A high coverage score (like 80%) is based on most of the words and can be trusted. A low coverage score (like 30%) might miss important emotional content carried by specialized vocabulary. When comparing Eastern and Western artworks, we need to check whether one group systematically has lower coverage – if so, any observed differences might reflect dictionary coverage rather than real emotional differences.
 
-### Illustrative Title Examples
+**Illustrative Title Examples**
 
 | Title | Category | Score | Note |
 |-------|----------|-------|------|

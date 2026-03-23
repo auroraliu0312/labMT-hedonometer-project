@@ -64,7 +64,7 @@ We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github
 - **Western** (10 terms): beauty, sublime, pastoral, romantic, ideal, grace, glory, divine, harmony, splendor
 - **Eastern** (14 terms): zen, ukiyo, wabi sabi, mono no aware, feng shui, simplicity, impermanence, emptiness, enlightenment, meditation, bamboo, cherry blossom, lotus, nirvana
   
-The selection of search terms was guided by the principles of cultural representativeness, though we acknowledge the inherent challenges of applying Western academic frameworks to non-Western aesthetic traditions. For Western terms, we selected ten concepts central to Western aesthetic philosophy from the eighteenth century onward. These terms appear repeatedly in foundational texts (e.g., Burke, Kant) and art historical discourse, capturing the emotional and conceptual vocabulary through which Western art has been described. For Eastern terms, we faced a greater challenge, as many Eastern aesthetic concepts lack direct English equivalents. We selected fourteen terms that have gained recognition in Western art historical scholarship, acknowledging that this choice itself reflects a Western academic framing. These terms were chosen because they represent culturally distinct aesthetic values, for example, zen emphasizes spontaneous simplicity, wabi sabi embraces imperfection and transience, mono no aware captures the bittersweet awareness of impermanence.
+The selection of search terms was guided by the principles of cultural representativeness, though we acknowledge the inherent challenges of applying Western academic frameworks to non-Western aesthetic traditions. For Western terms, we selected ten concepts central to Western aesthetic philosophy from the eighteenth century onward. These terms appear repeatedly in foundational texts (e.g., Burke, Kant) and art historical discourse, capturing the emotional and conceptual vocabulary through which Western art has been described. For Eastern terms, we faced a greater challenge, as many Eastern aesthetic concepts lack direct English equivalents. We selected fourteen terms that have gained recognition in Western art historical scholarship, acknowledging that this choice itself reflects a Western academic framing. These terms were chosen because they represent culturally distinct aesthetic values. For example, zen emphasizes spontaneous simplicity, wabi sabi embraces imperfection and transience, mono no aware captures the bittersweet awareness of impermanence.
 
 We recognize that this selection carries inherent biases. The terms reflect Western academic categories for organizing non-Western aesthetics. A researcher from within these traditions might select different concepts entirely. Additionally, searching for these terms in an English-language API assumes that the English transliteration adequately captures the original concept—an assumption we treat with caution. The presence of these terms in the Met's English titles is itself a product of curatorial translation choices, not a reflection of how these concepts appear in their source cultures.
 
@@ -79,7 +79,7 @@ We recognize that this selection carries inherent biases. The terms reflect West
 
 **Date of access:** March 2026
 
-### Ethics and Limitations
+**Ethics and Limitations**
 
 - Only public artwork metadata was collected; no personal data
 - The Met collection overrepresents Western art; non-Western cultures are underrepresented
@@ -87,7 +87,7 @@ We recognize that this selection carries inherent biases. The terms reflect West
 - Titles may be curatorial additions rather than artist-given
 - The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art
 
-### Dataset Characteristics
+**Dataset Characteristics**
 
 After duplicate removal, the final dataset contains **132 unique artworks**:
 
@@ -96,11 +96,11 @@ After duplicate removal, the final dataset contains **132 unique artworks**:
 
 Because the same artwork may appear under multiple search terms, duplicate objects were removed using the `object_id` field before analysis (double-checked).
 
-### Population Context
+**Population Context**
 
 This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English-language titles, as provided by the museum, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, given above limitations, our analysis cannot make strong claims about the original artists' intent, how people from those cultures actually experience the art, or the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
 
-### Data Dictionary
+**Data Dictionary**
 
 | Column | Type | Description | Missing |
 |--------|------|-------------|---------|
@@ -207,7 +207,7 @@ For each artwork title, we followed the standard hedonometer scoring procedure:
 2. Look up each word in the labMT dictionary
 3. Take the average of all matched words
 
-**Simple Example:** "love" (8.42) + "painting" (5.20) → (8.42 + 5.20) ÷ 2 = 6.81
+Simple Example: "love" (8.42) + "painting" (5.20) → (8.42 + 5.20) ÷ 2 = 6.81
 
 **Tokenization**
 
@@ -280,13 +280,13 @@ If we estimate hypothetical happiness scores for these missing words based on th
 | **sphinx** | 3 | Mythological figure | Neutral (5.0–5.5) | Context-dependent, often symbolic rather than emotional |
 | **blossoms** | 3 | Nature, often symbolic | High (7.0–8.0)| Associated with beauty, spring, renewal |
 
-**Key insight:** Most missing Eastern aesthetic terms would score moderate to high if included. Their absence from the lexicon means these positive emotional contributions are systematically excluded from Eastern titles' happiness scores. Western titles, which contain fewer such terms, are less affected.
+Most missing Eastern aesthetic terms would score moderate to high if included. Their absence from the lexicon means these positive emotional contributions are systematically excluded from Eastern titles' happiness scores. Western titles, which contain fewer such terms, are less affected.
 
 Therefore, the bias is **directional and systematic**:
 
-- **Predicted direction:** Eastern titles are systematically under-scored relative to their true emotional content
-- **Predicted effect:** The observed similarity between Eastern and Western average scores may actually mask an underlying Eastern advantage that the tool cannot detect
-- **Predicted consequence:** When we see low coverage for an Eastern title, it likely indicates the presence of culturally meaningful vocabulary that the tool cannot read, rather than emotional neutrality.
+- Predicted direction: Eastern titles are systematically under-scored relative to their true emotional content
+- Predicted effect: The observed similarity between Eastern and Western average scores may actually mask an underlying Eastern advantage that the tool cannot detect
+- Predicted consequence: When we see low coverage for an Eastern title, it likely indicates the presence of culturally meaningful vocabulary that the tool cannot read, rather than emotional neutrality.
 
 **Why Coverage Matters for Our Comparison**
 
@@ -294,9 +294,9 @@ When we see a low happiness score or low coverage for a particular artwork, it m
 
 | Scenario | What It Means | Cultural Implication |
 |----------|---------------|---------------------|
-| **Low coverage + Low score** | Title may lack emotional content, OR tool cannot read key vocabulary | Eastern titles more likely to fall here due to non-English and culturally specific terms |
-| **Low coverage + High score** | Few readable words happen to be positive, but most meaning is missed | We're over-interpreting based on limited data |
-| **High coverage + Low score** | Greater confidence that title is genuinely neutral/negative | Western titles more likely here due to better coverage |
+| Low coverage + Low score | Title may lack emotional content, OR tool cannot read key vocabulary | Eastern titles more likely to fall here due to non-English and culturally specific terms |
+| Low coverage + High score | Few readable words happen to be positive, but most meaning is missed | We're over-interpreting based on limited data |
+| High coverage + Low score | Greater confidence that title is genuinely neutral/negative | Western titles more likely here due to better coverage |
 
 In our data, Eastern titles show systematically lower coverage. It is not because they contain less emotional content, but because they use vocabulary that falls outside labMT's English-centric and general-purpose design.
 

@@ -79,6 +79,14 @@ We recognize that this selection carries inherent biases. The terms reflect West
 
 **Date of access:** March 2026
 
+### Ethics and Limitations
+
+- Only public artwork metadata was collected; no personal data
+- The Met collection overrepresents Western art; non-Western cultures are underrepresented
+- Only English titles are available; translations may lose cultural and emotional nuance
+- Titles may be curatorial additions rather than artist-given
+- The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art
+
 ### Dataset Characteristics
 
 After duplicate removal, the final dataset contains **132 unique artworks**:
@@ -87,14 +95,6 @@ After duplicate removal, the final dataset contains **132 unique artworks**:
 - **Eastern aesthetic concepts**: 70 artworks
 
 Because the same artwork may appear under multiple search terms, duplicate objects were removed using the `object_id` field before analysis (double-checked).
-
-### Ethics and Limitations
-
-- Only public artwork metadata was collected; no personal data
-- The Met collection overrepresents Western art; non-Western cultures are underrepresented
-- Only English titles are available; translations may lose cultural and emotional nuance
-- Titles may be curatorial additions rather than artist-given
-- The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art
 
 ### Population Context
 

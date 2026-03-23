@@ -112,7 +112,7 @@ This dataset consists of artworks from the Metropolitan Museum of Art's collecti
 | score | float64 | Happiness score (1-9) from labMT | 9.8% |
 | coverage | float64 | matched / total words | 0.0% |
 
-In addition to supporting chronological description, the `object_begin` field was also used as a temporal variable in the supplementary analysis. We grouped artworks into two broad historical periods using an 1800 cutoff (`Pre-1800` vs. `Post-1800`) for additional comparisons of happiness scores and lexical coverage over time.
+From the Met Museum corpus, we rely on several key variables. `category` (Eastern or Western) serves as the primary variable for cultural comparison, assigned based on the search term used to retrieve each artwork. `object_begin` provides a machine readable start date, which we use to group artworks into Pre-1800 and Post-1800 periods for temporal analysis. `score` is the happiness score computed for each artwork title by averaging the `happiness_average` values of all words successfully matched to the labMT lexicon. Finally, `coverage` measures the proportion of title words matched to labMT, serving as a diagnostic metric to assess measurement reliability across cultural categories. In addition to supporting chronological description, the `object_begin` field was also used as a temporal variable in the supplementary analysis. We grouped artworks into two broad historical periods using a 1800 cutoff (`Pre-1800` vs. `Post-1800`) for additional comparisons of happiness scores and lexical coverage over time.
 
 ## Measurement and Operationalization
 

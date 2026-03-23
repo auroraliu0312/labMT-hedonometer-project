@@ -267,7 +267,7 @@ These omissions are not accidental—they reflect the underlying assumptions of 
 - It was developed in a Western, secular academic context* that shapes what counts as "emotional."
 - It assumes linguistic homogeneity across cultures
 
-### The Direction of Bias
+**The Direction of Bias**
 
 If we estimate hypothetical happiness scores for these missing words based on their semantic context, we can predict the direction of bias:
 
@@ -288,7 +288,7 @@ Therefore, the bias is **directional and systematic**:
 - **Predicted effect:** The observed similarity between Eastern and Western average scores may actually mask an underlying Eastern advantage that the tool cannot detect
 - **Predicted consequence:** When we see low coverage for an Eastern title, it likely indicates the presence of culturally meaningful vocabulary that the tool cannot read, rather than emotional neutrality.
 
-### Why Coverage Matters for Our Comparison
+**Why Coverage Matters for Our Comparison**
 
 When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they will be systematically underrepresented in our measurements.
 

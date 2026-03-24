@@ -312,6 +312,27 @@ The distribution is centered very close to zero, and the 95% interval spans both
 
 Bootstrap therefore confirms that the similarity between categories is not an artifact of a single sample draw.
 
+### Temporal Happiness Comparison
+
+Artworks were divided into two broad historical periods using an **1800 cutoff**:
+
+- **Pre-1800**
+- **Post-1800**
+
+This temporal split allows us to examine whether the relationship between Eastern and Western aesthetic language changes across historical periods. In particular, we ask whether the **difference in happiness scores between Eastern and Western titles remains stable over time**, or whether it shifts between earlier and later artworks.
+
+The figure below compares the East–West difference in mean happiness scores before and after 1800. The central line and points show the estimated difference between Eastern and Western titles (Eastern − Western), while the error bars indicate 95% confidence intervals.
+
+![East–West Happiness Difference by Period](figures/east_west_difference_1800_cutoff.png)
+
+> *East–West difference in mean happiness scores across historical periods using an 1800 cutoff. Positive values indicate higher average happiness scores for Eastern titles, while negative values indicate higher average scores for Western titles. Error bars show 95% confidence intervals.*
+
+In the **Pre-1800** subset, the estimated East–West difference is very close to zero, suggesting that the average happiness scores of Eastern and Western titles are nearly identical in earlier artworks. In the **Post-1800** subset, the difference becomes slightly positive, indicating somewhat higher average happiness scores for Eastern titles.
+
+However, the confidence intervals are wide and overlap substantially, especially in the post-1800 period where the sample size is smaller. This means the apparent increase should be interpreted cautiously. The figure is useful not because it proves a strong historical shift, but because it shows that any temporal change in the East–West happiness gap is modest and uncertain within the current dataset.
+
+This temporal comparison therefore functions as an exploratory extension of the main analysis. It suggests that the East–West relationship in title sentiment may not be completely static across time, but the evidence is not strong enough to support a definitive claim of historical divergence.
+
 ### Coverage and Out-of-Vocabulary Analysis
 
 The high median coverage (66.7%) indicates that most artwork titles are largely composed of everyday English words. Despite being about art, they use language that overlaps substantially with general vocabulary. This gives us confidence that the happiness scores are based on a solid sample of words. The 13 unscorable titles are worth examining separately. They likely contain specialized terminology (like "statuette" or "verso") that a general dictionary misses.
@@ -371,6 +392,22 @@ When we see a low happiness score or low coverage for a particular artwork, it m
 
 In our data, Eastern titles show systematically lower coverage. It is not because they contain less emotional content, but because they use vocabulary that falls outside labMT's English-centric and general-purpose design.
 
+### Temporal Lexical Coverage
+
+In addition to comparing happiness scores, we examined whether the **lexical coverage of the hedonometer varies across historical periods**. Coverage measures the proportion of title words that appear in the labMT sentiment lexicon and can therefore contribute to the happiness score.
+
+If coverage differs substantially between periods or categories, observed sentiment differences might partly reflect dictionary fit rather than genuine emotional variation.
+
+![Lexical Coverage by Time Period](figures/lexical_coverage_by_time_period_1800.png)
+
+> *Lexical coverage by time period (1800 cutoff) and category. Bars show mean lexical coverage for Eastern and Western titles, error bars indicate 95% confidence intervals, and the line shows the East–West coverage difference within each period.*
+
+The coverage analysis shows that Western titles tend to have higher average lexical coverage overall, although the size of the gap changes across historical periods. In the **Pre-1800** subset, Western titles display noticeably higher coverage than Eastern titles, suggesting that earlier Eastern titles contain more words that fall outside the labMT lexicon. In the **Post-1800** subset, the difference becomes smaller, although Western titles still retain a slight advantage in average coverage.
+
+Because the post-1800 group contains fewer observations, uncertainty is larger in that period, and the gap should not be overstated. Still, the figure highlights an important methodological point: the hedonometer does not engage all titles equally well across time and category.
+
+These temporal coverage patterns likely reflect the continued presence of culturally specific, transliterated, or art-historical terms in Eastern titles, which are less likely to appear in a general English sentiment lexicon. For this reason, the temporal coverage analysis strengthens the project by showing that lexical fit itself has a historical dimension.
+
 ### Coverage Sensitivity Analysis
 
 In addition to the main inferential analysis, we conducted a sampling and robustness audit to evaluate how stable the results are under different assumptions about measurement quality and sample composition.
@@ -417,43 +454,6 @@ Both categories show moderate coverage overall, but Eastern titles display sligh
 The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
 
 To further investigate whether the emotional language associated with aesthetic concepts varies historically, we introduced a temporal dimension based on the `object_begin` metadata field.
-
-### Temporal Happiness Comparison
-
-Artworks were divided into two broad historical periods using an **1800 cutoff**:
-
-- **Pre-1800**
-- **Post-1800**
-
-This temporal split allows us to examine whether the relationship between Eastern and Western aesthetic language changes across historical periods. In particular, we ask whether the **difference in happiness scores between Eastern and Western titles remains stable over time**, or whether it shifts between earlier and later artworks.
-
-The figure below compares the East–West difference in mean happiness scores before and after 1800. The central line and points show the estimated difference between Eastern and Western titles (Eastern − Western), while the error bars indicate 95% confidence intervals.
-
-![East–West Happiness Difference by Period](figures/east_west_difference_1800_cutoff.png)
-
-> *East–West difference in mean happiness scores across historical periods using an 1800 cutoff. Positive values indicate higher average happiness scores for Eastern titles, while negative values indicate higher average scores for Western titles. Error bars show 95% confidence intervals.*
-
-In the **Pre-1800** subset, the estimated East–West difference is very close to zero, suggesting that the average happiness scores of Eastern and Western titles are nearly identical in earlier artworks. In the **Post-1800** subset, the difference becomes slightly positive, indicating somewhat higher average happiness scores for Eastern titles.
-
-However, the confidence intervals are wide and overlap substantially, especially in the post-1800 period where the sample size is smaller. This means the apparent increase should be interpreted cautiously. The figure is useful not because it proves a strong historical shift, but because it shows that any temporal change in the East–West happiness gap is modest and uncertain within the current dataset.
-
-This temporal comparison therefore functions as an exploratory extension of the main analysis. It suggests that the East–West relationship in title sentiment may not be completely static across time, but the evidence is not strong enough to support a definitive claim of historical divergence.
-
-### Temporal Lexical Coverage
-
-In addition to comparing happiness scores, we examined whether the **lexical coverage of the hedonometer varies across historical periods**. Coverage measures the proportion of title words that appear in the labMT sentiment lexicon and can therefore contribute to the happiness score.
-
-If coverage differs substantially between periods or categories, observed sentiment differences might partly reflect dictionary fit rather than genuine emotional variation.
-
-![Lexical Coverage by Time Period](figures/lexical_coverage_by_time_period_1800.png)
-
-> *Lexical coverage by time period (1800 cutoff) and category. Bars show mean lexical coverage for Eastern and Western titles, error bars indicate 95% confidence intervals, and the line shows the East–West coverage difference within each period.*
-
-The coverage analysis shows that Western titles tend to have higher average lexical coverage overall, although the size of the gap changes across historical periods. In the **Pre-1800** subset, Western titles display noticeably higher coverage than Eastern titles, suggesting that earlier Eastern titles contain more words that fall outside the labMT lexicon. In the **Post-1800** subset, the difference becomes smaller, although Western titles still retain a slight advantage in average coverage.
-
-Because the post-1800 group contains fewer observations, uncertainty is larger in that period, and the gap should not be overstated. Still, the figure highlights an important methodological point: the hedonometer does not engage all titles equally well across time and category.
-
-These temporal coverage patterns likely reflect the continued presence of culturally specific, transliterated, or art-historical terms in Eastern titles, which are less likely to appear in a general English sentiment lexicon. For this reason, the temporal coverage analysis strengthens the project by showing that lexical fit itself has a historical dimension.
 
 ## Critical Reflection and Future Directions
 

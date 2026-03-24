@@ -56,7 +56,7 @@ The selection of search terms was guided by the principles of cultural represent
 4. Duplicate removal using `object_id` (same artwork may appear under multiple terms)
 5. Rate limiting: 0.3-second delays between requests to respect API limits (80 requests/second)
 
-**Raw data:** `data/raw/met_raw_data.csv` can be fetched from running `src/met_fetch.py`
+**Raw data:** `data/raw/met_raw_data.csv` 
 
 **Date of access:** March 2026
 
@@ -551,10 +551,10 @@ python3 -m venv .venv
 source .venv/bin/activate  # On Mac/Linux
 .venv\Scripts\activate  # On Windows
 pip install -r requirements.txt
-python3 src/data_analysis.py
-python3 src/met_fetch.py
-python3 src/score_aesthetic_deduplicated.py
-python3 src/stats_sampling_analysis.py
+python3 src/data_analysis.py # labMT lexicon analysis
+python3 src/met_fetch.py # Met's raw data acquisition
+python3 src/score_aesthetic_deduplicated.py # Applying hedonometer on artwork titles
+python3 src/stats_sampling_analysis.py # Statistical analysis and inference
 ```
 ## Credits and Citations
 

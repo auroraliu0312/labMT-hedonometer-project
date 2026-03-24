@@ -371,7 +371,7 @@ The data collection process was implemented in `src/met_fetch.py` and followed t
 - **Temporal**: Collection reflects Western collecting priorities over centuries
 - **Interpretation**: Titles may be curatorial additions, not artist-given
 
-### Population Context
+### Sample
 
 This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English-language titles, as provided by the museum, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, given above limitations, our analysis cannot make strong claims about the original artists' intent, how people from those cultures actually experience the art, or the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
 

@@ -29,7 +29,7 @@ Testing these hypotheses required us to first understand the instrument we were 
 
 ### Key Findings
 
-#### Comparative Sentiment Analysis Metrics
+#### Comparative Analysis Metrics
 | Metric | Eastern Aesthetic | Western Aesthetic | Result |
 | --- | --- | --- | --- |
 | Mean Score | 5.56 | 5.55 | No Significant Difference |

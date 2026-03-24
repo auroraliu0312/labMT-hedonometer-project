@@ -392,22 +392,6 @@ When we see a low happiness score or low coverage for a particular artwork, it m
 
 In our data, Eastern titles show systematically lower coverage. It is not because they contain less emotional content, but because they use vocabulary that falls outside labMT's English-centric and general-purpose design.
 
-### Temporal Lexical Coverage
-
-In addition to comparing happiness scores, we examined whether the **lexical coverage of the hedonometer varies across historical periods**. Coverage measures the proportion of title words that appear in the labMT sentiment lexicon and can therefore contribute to the happiness score.
-
-If coverage differs substantially between periods or categories, observed sentiment differences might partly reflect dictionary fit rather than genuine emotional variation.
-
-![Lexical Coverage by Time Period](figures/lexical_coverage_by_time_period_1800.png)
-
-> *Lexical coverage by time period (1800 cutoff) and category. Bars show mean lexical coverage for Eastern and Western titles, error bars indicate 95% confidence intervals, and the line shows the East–West coverage difference within each period.*
-
-The coverage analysis shows that Western titles tend to have higher average lexical coverage overall, although the size of the gap changes across historical periods. In the **Pre-1800** subset, Western titles display noticeably higher coverage than Eastern titles, suggesting that earlier Eastern titles contain more words that fall outside the labMT lexicon. In the **Post-1800** subset, the difference becomes smaller, although Western titles still retain a slight advantage in average coverage.
-
-Because the post-1800 group contains fewer observations, uncertainty is larger in that period, and the gap should not be overstated. Still, the figure highlights an important methodological point: the hedonometer does not engage all titles equally well across time and category.
-
-These temporal coverage patterns likely reflect the continued presence of culturally specific, transliterated, or art-historical terms in Eastern titles, which are less likely to appear in a general English sentiment lexicon. For this reason, the temporal coverage analysis strengthens the project by showing that lexical fit itself has a historical dimension.
-
 ### Coverage Sensitivity Analysis
 
 In addition to the main inferential analysis, we conducted a sampling and robustness audit to evaluate how stable the results are under different assumptions about measurement quality and sample composition.
@@ -454,6 +438,22 @@ Both categories show moderate coverage overall, but Eastern titles display sligh
 The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
 
 To further investigate whether the emotional language associated with aesthetic concepts varies historically, we introduced a temporal dimension based on the `object_begin` metadata field.
+
+### Temporal Lexical Coverage
+
+In addition to comparing happiness scores, we examined whether the **lexical coverage of the hedonometer varies across historical periods**. Coverage measures the proportion of title words that appear in the labMT sentiment lexicon and can therefore contribute to the happiness score.
+
+If coverage differs substantially between periods or categories, observed sentiment differences might partly reflect dictionary fit rather than genuine emotional variation.
+
+![Lexical Coverage by Time Period](figures/lexical_coverage_by_time_period_1800.png)
+
+> *Lexical coverage by time period (1800 cutoff) and category. Bars show mean lexical coverage for Eastern and Western titles, error bars indicate 95% confidence intervals, and the line shows the East–West coverage difference within each period.*
+
+The coverage analysis shows that Western titles tend to have higher average lexical coverage overall, although the size of the gap changes across historical periods. In the **Pre-1800** subset, Western titles display noticeably higher coverage than Eastern titles, suggesting that earlier Eastern titles contain more words that fall outside the labMT lexicon. In the **Post-1800** subset, the difference becomes smaller, although Western titles still retain a slight advantage in average coverage.
+
+Because the post-1800 group contains fewer observations, uncertainty is larger in that period, and the gap should not be overstated. Still, the figure highlights an important methodological point: the hedonometer does not engage all titles equally well across time and category.
+
+These temporal coverage patterns likely reflect the continued presence of culturally specific, transliterated, or art-historical terms in Eastern titles, which are less likely to appear in a general English sentiment lexicon. For this reason, the temporal coverage analysis strengthens the project by showing that lexical fit itself has a historical dimension.
 
 ## Critical Reflection and Future Directions
 

@@ -1,5 +1,7 @@
 # Eastern vs. Western Aesthetic Concepts in Met Museum Artwork Titles: A Digital Humanities Study Applying the labMT Hedonometer
 
+Summary: This study tests the cross-cultural validity of the labMT 1.0 hedonometer against 2,000 years of artwork, from the Metropolitan Museum Of Art. The central finding shows no statistically significant difference in average happiness scores, however, the data shows that Eastern aesthetic concepts show greater emotional variability with a 35% wider range in scores. The lexical coverage analysis shows a systematic directional bias where cultural words like bodhisattva and mono are missing. The tool cannot read the emotions in Eastern traditions, which ignores the unique eastern linguistics.
+
 ## Project Overview
 
 ### Research Question

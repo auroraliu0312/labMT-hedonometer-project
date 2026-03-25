@@ -54,7 +54,7 @@ We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github
 - **Western** (10 terms): beauty, sublime, pastoral, romantic, ideal, grace, glory, divine, harmony, splendor
 - **Eastern** (14 terms): zen, ukiyo, wabi sabi, mono no aware, feng shui, simplicity, impermanence, emptiness, enlightenment, meditation, bamboo, cherry blossom, lotus, nirvana
   
-The selection of search terms was guided by the principles of cultural representativeness, though we acknowledge the inherent challenges of applying Western academic frameworks to non-Western aesthetic traditions. For Western terms, we selected ten concepts central to Western aesthetic philosophy from the eighteenth century onward. These terms appear repeatedly in foundational texts (e.g., Burke, Kant) and art historical discourse, capturing the emotional and conceptual vocabulary through which Western art has been described. For Eastern terms, we faced a greater challenge, as many Eastern aesthetic concepts lack direct English equivalents. We selected fourteen terms that have gained recognition in Western art historical scholarship, acknowledging that this choice itself reflects a Western academic framing. These terms were chosen because they represent culturally distinct aesthetic values. For example, Zen emphasizes spontaneous simplicity, wabi sabi embraces imperfection and transience, and mono no aware captures the bittersweet awareness of impermanence.
+The selection of search terms was guided by the principles of cultural representativeness. For Western terms, we selected ten concepts central to Western aesthetic philosophy from the eighteenth century onward. These terms appear repeatedly in foundational texts (e.g., Burke, Kant) and art historical discourse, capturing the emotional and conceptual vocabulary through which Western art has been described. For Eastern terms, we faced a greater challenge, as many Eastern aesthetic concepts lack direct English equivalents. We selected fourteen terms that have gained recognition in Western art historical scholarship, acknowledging that this choice itself reflects a Western academic framing. These terms were chosen because they represent culturally distinct aesthetic values. For example, Zen emphasizes spontaneous simplicity, wabi sabi embraces imperfection and transience, and mono no aware captures the bittersweet awareness of impermanence.
 
 **Acquisition Pipeline:**
 1. API search with `q={term}` and `hasImages=true` to ensure objects with images
@@ -69,8 +69,8 @@ The selection of search terms was guided by the principles of cultural represent
 
 **Ethics and Limitations**
 
-- Only public artwork metadata was collected; no personal data
-- The Met collection overrepresents Western art; non-Western cultures are underrepresented
+- Only public artwork metadata was collected; no personal information or data
+- The Met collection may overrepresent Western art; non-Western cultures are underrepresented
 - Only English titles are available; translations may lose cultural and emotional nuance
 - Titles may be curatorial additions rather than artist-given
 - The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art
@@ -86,7 +86,7 @@ Because the same artwork may appear under multiple search terms, duplicate objec
 
 **Population Context**
 
-This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English-language titles, as provided by the museum, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, given above limitations, our analysis cannot make strong claims about the original artists' intent, how people from those cultures actually experience the art, or the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
+This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English language titles, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, given the limitations above, our analysis cannot make strong claims about the original artists' intent, how people from those cultures actually experience the art, or the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
 
 **Data Dictionary**
 
@@ -127,7 +127,7 @@ The dataset contains 10222 rows and 8 columns:
 
 Before applying the hedonometer to our Met corpus, we analyzed the labMT 1.0 dataset to understand what the instrument measures and where its limitations lie. We loaded the data using pandas `read_csv` with `skiprows=3` to bypass metadata lines and `na_values="--"` to treat '--' as missing values (`NaN`). Basic sanity checks confirmed no duplicate words to ensure data quality. 
 
-The processed dataset `labMT_cleaned.csv` (with cleaned happiness scores) and the plots below can be generated by running `data_analysis.py`.
+The processed dataset `labMT_cleaned.csv` and the plots below can be generated by running `data_analysis.py`.
 
 **Distribution of Happiness Scores**
 
@@ -196,7 +196,7 @@ This analysis of the labMT lexicon reveals three key points that inform our appl
 
 - The instrument captures meaningful variation in emotional language, with a roughly symmetric distribution and interpretable disagreement patterns.
 - The same word can have different frequencies and associations depending on context, which we must consider when interpreting titles from an art museum.
-- The lexicon has culturally specific, religious, and artistic terminology (like those we will encounter in Eastern titles) may fall outside its scope, a limitation we track through coverage analysis.
+- The lexicon has culturally specific, religious, and artistic terminology (like we will encounter in Eastern titles) that may fall outside its scope, a limitation we track through coverage analysis.
 
 With this understanding of what the hedonometer can and cannot measure, we now apply it to our corpus of Met artwork titles.
 
@@ -219,13 +219,13 @@ Before scoring, we cleaned each title to make sure words would match the diction
 3. Remove extra spaces – so "  hello   world " becomes "hello world"
 4. Split into words – using simple spaces as dividers
 
-We kept every word that matched the labMT dictionary. No words were filtered out, even common ones like "the", "and", or "of" that have neutral scores around 5. If we had removed neutral words, Scores would be pulled toward extremes (higher highs, lower lows). Moreover, short titles lose most words may not have a score. For instance, a title containing "The Garden of Earthly Delights" has 5 words, 3 of which are neutral ("the", "of", "delights" is neutral). Removing neutral words would leave only "garden" and "earthly", losing 60% of the text and potentially misrepresenting the title's emotional tone. On the other hand, different titles affected differently. Some titles have more neutral words than others may lead to unfair comparison. Therefore, by keeping all words, we are measuring the actual language used in titles, not an artificially filtered version. This means scores reflect real-world choices, including the subtle emotional baseline set by neutral words.
+We kept every word that matched the labMT dictionary. No words were filtered out, even common ones like "the", "and", or "of" that have neutral scores around 5. If we had removed neutral words, Scores would be pulled toward extremes (higher highs, lower lows). Moreover, short titles that lose most words may not have a score. For instance, a title containing "The Garden of Earthly Delights" has 5 words, 3 of which are neutral ("the", "of", "delights" is neutral). Removing neutral words would leave only "garden" and "earthly", losing 60% of the text and potentially misrepresenting the title's emotional tone. On the other hand, different titles affected differently. Some titles have more neutral words than others, which may lead to unfair comparison. Therefore, by keeping all words, we are measuring the actual language used in titles, not an artificially filtered version. This means scores reflect real-world choices, including the subtle emotional baseline set by neutral words.
 
 **Methodological choices**
 
 - Words that aren't in the labMT dictionary are simply ignored. They don't raise or lower the score. This is the standard approach (Dodds et al., 2011) because assigning arbitrary scores to unknown words would introduce bias. If an artwork title contains many specialized art terms or non-English words, its happiness score is based on fewer words. This doesn't make the score wrong, but it does mean we're measuring only part of the text. The coverage metric helps us track this.
 
-- Repeated words count multiple times, preserving natural emphasis. For instance, saying "love, love, love" expresses stronger emotion than saying "love" once. Our method preserves this natural emphasis.
+- Repeated words count multiple times, preserving natural emphasis. For instance, saying "love, love, love" expresses a stronger emotion than saying "love" once. Our method preserves this natural emphasis.
 
 - Neutral words are kept (including "the," "and," "of"). Removing them would pull scores toward extremes, unfairly affect short titles, and create inconsistent comparisons.
 
@@ -241,6 +241,8 @@ We kept every word that matched the labMT dictionary. No words were filtered out
 | The Death of Socrates | Eastern | 3.82 | Lowest overall |
 | War club | Western | 3.83 | Lowest Western |
 | The Death of the Buddha | Eastern | 4.11 | Buddhist concept of passing |
+
+The processed dataset `met_score_only` with key metadata can be generated by running `score_aesthetic_deduplicated`.
 
 ## Results and Statistical Analysis
 
@@ -260,7 +262,7 @@ The initial dataset contained 132 unique artworks retrieved from the Met API aft
 
 The distribution of happiness scores reveals several important characteristics of the dataset. The scores range from a minimum of 3.82 to a maximum of 7.92, with the majority of artworks clustering between 5.0 and 6.5. The distribution is roughly symmetric, as evidenced by the close alignment between the mean (5.56) and median (5.51), indicating that extreme values do not disproportionately skew the central tendency.
 
-The histogram shows a clear peak in the 5.5-6.0 range, where approximately 30% of the scored sample are concentrated. This clustering suggests that most artwork titles, regardless of cultural origin, tend to employ mildly positive language. The frequency gradually decreases on both sides of this central peak, with relatively few artworks scoring below 4.5 or above 7.0.
+The histogram shows a clear peak in the 5.5-6.0 range, where approximately 30% of the scored samples are concentrated. This clustering suggests that most artwork titles, regardless of cultural origin, tend to employ mildly positive language. The frequency gradually decreases on both sides of this central peak, with relatively few artworks scoring below 4.5 or above 7.0.
 
 The shape of the distribution confirms that the hedonometer captures meaningful variation in emotional language across the collection. The absence of extreme skewness supports the validity of parametric statistical comparisons between Eastern and Western categories. Furthermore, the spread of scores (±1 SD = 4.94 to 6.18) indicates that while most titles cluster around the neutral-to-positive range, there is sufficient variation to detect differences between groups.
 
@@ -280,7 +282,7 @@ The descriptive analysis reveals several important patterns in how emotional lan
 
 The descriptive analysis reveals a subtle but meaningful pattern in how emotional language differs between Eastern and Western aesthetic concepts in Met artwork titles. The Eastern artworks scored marginally higher on average (5.56 vs 5.55), but the difference is only 0.015 points. Both categories center around similar median values (Eastern 5.52, Western 5.49), confirming that the average difference is not driven by outliers and that the central tendency of emotional expression is virtually identical across both traditions.
 
-More interesting than the averages is the spread of scores. Eastern titles show greater variation (SD = 0.62) compared to Western titles (SD = 0.56), indicating that emotional language in Eastern aesthetic concepts ranges more widely from very positive to less positive. This broader variability is further illustrated by the ranges: Eastern scores span 4.10 points (from 3.82 to 7.92), while Western scores span only 3.03 points (from 3.83 to 6.86). The Eastern range is approximately 35% wider, suggesting that the vocabulary and descriptive language associated with Eastern aesthetic concepts allows for more expansive emotional expression.
+More interesting than the averages is the spread of scores. Eastern titles show greater variation (SD = 0.62) compared to Western titles (SD = 0.56), indicating that emotional language in Eastern aesthetic concepts ranges more widely from very positive to less positive. This broader variability is further illustrated by the ranges: Eastern scores span 4.10 points (from 3.82 to 7.92), while Western scores span only 3.03 points (from 3.83 to 6.86). The Eastern range is approximately 35% wider, suggesting that the vocabulary and descriptive language associated with Eastern aesthetic concepts allow for more expansive emotional expression.
 
 The extreme values are particularly revealing. The highest overall score (7.92) belongs to an Eastern artwork, as does the lowest (3.82), suggesting that Eastern aesthetic concepts encompass both more intensely positive and more intensely negative expressions than their Western counterparts. Western titles, by contrast, are more tightly clustered around the average, with no scores above 6.86 or below 3.83. This consistency may reflect a more uniform curatorial voice, a narrower range of emotional expression within Western aesthetic terminology, or potentially institutional biases in how the Metropolitan Museum catalogs and describes artworks from different cultural traditions. These patterns suggest that while Eastern and Western aesthetic concepts are described with similar average emotional valence, Eastern traditions embrace a wider emotional palette—capturing both higher peaks of positivity and deeper troughs of contemplation or sorrow, while Western descriptions remain more consistently moderate.
 
@@ -321,7 +323,7 @@ Bootstrap therefore confirms that the similarity between categories is not an ar
 
 ### Temporal Happiness Comparison
 
-Artworks were divided into two broad historical periods using an **1800 cutoff**:
+Artworks were divided into two broad historical periods using a **1800 cutoff**:
 
 - **Pre-1800**
 - **Post-1800**
@@ -332,11 +334,11 @@ The figure below compares the East–West difference in mean happiness scores be
 
 ![East–West Happiness Difference by Period](figures/east_west_difference_1800_cutoff.png)
 
-> *East–West difference in mean happiness scores across historical periods using an 1800 cutoff. Positive values indicate higher average happiness scores for Eastern titles, while negative values indicate higher average scores for Western titles. Error bars show 95% confidence intervals.*
+> *East–West difference in mean happiness scores across historical periods using a 1800 cutoff. Positive values indicate higher average happiness scores for Eastern titles, while negative values indicate higher average scores for Western titles. Error bars show 95% confidence intervals.*
 
 In the **Pre-1800** subset, the estimated East–West difference is very close to zero, suggesting that the average happiness scores of Eastern and Western titles are nearly identical in earlier artworks. In the **Post-1800** subset, the difference becomes slightly positive, indicating somewhat higher average happiness scores for Eastern titles.
 
-However, the confidence intervals are wide and overlap substantially, especially in the post-1800 period where the sample size is smaller. This means the apparent increase should be interpreted cautiously. The figure is useful not because it proves a strong historical shift, but because it shows that any temporal change in the East–West happiness gap is modest and uncertain within the current dataset.
+However, the confidence intervals are wide and overlap substantially, especially in the post-1800 period, where the sample size is smaller. This means the apparent increase should be interpreted cautiously. The figure is useful not because it proves a strong historical shift, but because it shows that any temporal change in the East–West happiness gap is modest and uncertain within the current dataset.
 
 This temporal comparison therefore functions as an exploratory extension of the main analysis. It suggests that the East–West relationship in title sentiment may not be completely static across time, but the evidence is not strong enough to support a definitive claim of historical divergence.
 
@@ -359,12 +361,12 @@ The table below shows out-of-vocabulary (OOV) words that appeared most frequentl
 | **Non-English words** | mono (from Japanese "mono no aware") | 3 | labMT is English-only by design | Eastern aesthetics are systematically underrepresented | **Linguistic bias**: English-centric tools erase non-Western conceptual frameworks |
 | **Proper nouns** | garcini (artist name), sphinx | 2, 3 | Names are intentionally excluded from sentiment lexicons | Artist attributions don't contribute to measurable content | **Referential bias**: The tool cannot distinguish between descriptive and referential language |
 
-The key insight is that the bias is not random, it is directional and systematic. Eastern titles which more frequently contain non-English terms (like "mono") and culturally specific concepts (like "bodhisattva"), are more likely to have meaningful content rendered invisible. This means our measurements systematically **under-represent Eastern aesthetic vocabulary**, creating the appearance that Eastern titles are less emotionally charged when the limitation is actually in the tool, not the texts.
-
 These omissions are not accidental—they reflect the underlying assumptions of how the labMT lexicon was constructed:
 - It prioritizes frequent, general use of English over specialized vocabulary
 - It was developed in a Western, secular academic context* that shapes what counts as "emotional."
 - It assumes linguistic homogeneity across cultures
+
+This means our measurements systematically **under-represent Eastern aesthetic vocabulary**, creating the appearance that Eastern titles are less emotionally charged when the limitation is actually in the tool, rather than the texts.
 
 **The Direction of Bias**
 
@@ -381,7 +383,7 @@ If we estimate hypothetical happiness scores for these missing words based on th
 
 Most missing Eastern aesthetic terms would score moderate to high if included. Their absence from the lexicon means these positive emotional contributions are systematically excluded from Eastern titles' happiness scores. Western titles, which contain fewer such terms, are less affected.
 
-Therefore, the bias is **directional and systematic**:
+Therefore, the bias is directional and systematic:
 
 - Predicted direction: Eastern titles are systematically under-scored relative to their true emotional content
 - Predicted effect: The observed similarity between Eastern and Western average scores may actually mask an underlying Eastern advantage that the tool cannot detect
@@ -389,11 +391,11 @@ Therefore, the bias is **directional and systematic**:
 
 **Why Coverage Matters for Our Comparison**
 
-When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they will be systematically underrepresented in our measurements.
+When we see a low happiness score or low coverage for a particular artwork, it may not mean the title is emotionally neutral. It could mean the title is using vocabulary that falls outside the labMT's scope. This is especially relevant for the Eastern vs Western comparison. If Eastern titles use more non-English or culturally specific terms, they will be systematically underrepresented in our measurements.
 
 | Scenario | What It Means | Cultural Implication |
 |----------|---------------|---------------------|
-| Low coverage + Low score | Title may lack emotional content, OR tool cannot read key vocabulary | Eastern titles more likely to fall here due to non-English and culturally specific terms |
+| Low coverage + Low score | Title may lack emotional content, or tool cannot read key vocabulary | Eastern titles are more likely to fall here due to non-English and culturally specific terms |
 | Low coverage + High score | Few readable words happen to be positive, but most meaning is missed | We're over-interpreting based on limited data |
 | High coverage + Low score | Greater confidence that title is genuinely neutral/negative | Western titles more likely here due to better coverage |
 
@@ -545,8 +547,8 @@ labMT-hedonometer-project/
 │   │   └── Data_Set_S1.txt 
 │   └── processed/
 │       ├── labMT_cleaned.csv 
-│       └── met_aesthetic_scored132.csv # Scoring results with full metadata
-│       └── met_score_only.csv # Core columns only
+│       └── met_aesthetic_scored132.csv
+│       └── met_score_only.csv
 ├── figures/
 └── tables/
 ```

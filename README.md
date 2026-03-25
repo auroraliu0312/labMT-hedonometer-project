@@ -2,7 +2,7 @@
 
 **Summary**: This project tests the cross-cultural validity of the labMT 1.0 hedonometer (built on American English) against 2000 years of artwork, from the Metropolitan Museum Of Art. The central finding shows no statistically significant difference in average happiness scores, however, the data shows that Eastern aesthetic concepts show greater emotional variability with a 35% wider range in scores. The lexical coverage analysis shows a systematic directional bias where cultural words like bodhisattva and mono are missing. LabMT 1.0 Hedonometer cannot read the emotions in Eastern traditions, which ignores the unique eastern linguistics.
 
-## Overview
+## Project Overview
 
 ### Research Question
 
@@ -12,7 +12,7 @@ This project investigates how emotional language differs across cultural traditi
 
 This question addresses a fundamental challenge, in which a general sentiment lexicon built from contemporary American English can meaningfully capture emotional expression in culturally and historically diverse texts. In global digital heritage projects, researchers frequently apply computational tools developed in one cultural context to texts from another. This makes methodological transparency essential. We need to know whether instruments like the labMT hedonometer remain valid when they cross cultural boundaries. Our project directly tests this assumption.
 
-### Relevant
+### Relevance
 
 Digital Humanities research often uses sentiment analysis without questioning how the tool itself works across different cultures and contexts. Our project asks a basic question: Does a happiness lexicon built from American English actually capture how Eastern and Western art is described? By comparing scores across cultural traditions and historical periods, we show that the tool works differently for Eastern and Western titles. It is not because the art is different, but because the tool misses culturally specific words like "bodhisattva" and "wabi-sabi." Also, we chose to compare artwork titles from the pre-1800s and post-1800s as the lexicon draws mainly from texts after 1800. By comparing these periods, we are able to test if the tool has historical bias, shaped by the uneven records from which the training data was drawn. This is important as computational tools are never neutral; they carry the assumptions and biases of the context upon which they were built.
 

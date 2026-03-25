@@ -542,10 +542,11 @@ labMT-hedonometer-project/
 ├── data/
 │   ├── raw/
 │   │   ├── met_raw_data.csv
-│   │   └── Data_Set_S1.txt
+│   │   └── Data_Set_S1.txt 
 │   └── processed/
-│       ├── met_aesthetic_scored132.csv
-│       └── labMT_cleaned.csv
+│       ├── labMT_cleaned.csv 
+│       └── met_aesthetic_scored132.csv # Scoring results with full metadata
+│       └── met_score_only.csv # Core columns only
 ├── figures/
 └── tables/
 ```

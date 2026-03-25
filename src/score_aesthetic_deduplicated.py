@@ -216,6 +216,49 @@ print("\nTop 10 most common words NOT in labMT dictionary:")
 print("(These are typically proper nouns, foreign terms, or domain-specific vocabulary)")
 for word, freq in oov_words[:10]:
     print(f"  '{word}': appears {freq} times")
+# -----------------------------------------------------------------------------
+# Select only core columns and save
+# -----------------------------------------------------------------------------
+print("\n" + "="*60)
+print("SAVING CORE SCORED DATA")
+print("="*60)
+
+# Define the columns you want to keep
+core_columns = [
+    'title',           # Artwork title
+    'category',        # Eastern or Western
+    'object_begin',    # Year (machine-readable)
+    'score',           # Happiness score (1-9)
+    'matched',         # Number of words matched
+    'total',           # Total words in cleaned title
+    'coverage'         # matched / total
+]
+
+# Filter to only columns that exist
+existing_columns = [col for col in core_columns if col in df_scored.columns]
+df_core = df_scored[existing_columns].copy()
+
+# Format decimals to 2 decimal places
+if 'score' in df_core.columns:
+    df_core['score'] = df_core['score'].round(2)
+    print(f"  Rounded 'score' to 2 decimal places")
+
+if 'coverage' in df_core.columns:
+    df_core['coverage'] = df_core['coverage'].round(2)
+    print(f"  Rounded 'coverage' to 2 decimal places")
+
+# Convert object_begin to integer if it's float
+if 'object_begin' in df_core.columns and df_core['object_begin'].dtype == 'float64':
+    df_core['object_begin'] = df_core['object_begin'].round(0).astype('Int64')
+    print(f"  Converted 'object_begin' to integer")
+
+# Save
+output_path = PROCESSED_DIR / "met_score_only.csv"
+df_core.to_csv(output_path, index=False)
+
+print(f"\n✅ Core scored data saved to: {output_path}")
+print(f"   Columns: {existing_columns}")
+print(f"   Shape: {df_core.shape[0]} rows × {df_core.shape[1]} columns")
 
 # -----------------------------------------------------------------------------
 # Save scored data

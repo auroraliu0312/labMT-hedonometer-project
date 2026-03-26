@@ -484,6 +484,13 @@ Despite our hypothesis, no statistically significant difference emerged between 
 
 ### What We Cannot Claim
 
+| Bias | The Source | The Consequence |
+| --- | --- | --- |
+| **Institutional and Collection Bias** | The Metropolitan Museum of Art is itself a product of Western institutional history. | Our comparison is between how these two categories are represented in a Western context. |
+| **Translation as Transformation** | The API returns only English titles, which loses cultural and emotional nuance. | The absence of these words from our analysis is therefore systematic and culturally patterned. |
+| **Curatorial Voice** | The existing title was assigned by a curator, often decades or centuries after the arts creation. | We are measuring the emotional valence of curatorial description, not necessarily the emotional content of the artwork itself. |
+| **Lexicon Bias** | The labMT ratings themselves reflect the emotional associations of a specific population. | The problem is not random missingness but systematic, culturally patterned absence. |
+| **Temporal Bias** | The Met's collection is not temporally neutral. | This temporal and cultural stratification interacts with our analysis in ways we cannot fully disentangle. |
 
 **Institutional and Collection Bias**
 
@@ -506,6 +513,16 @@ The labMT lexicon, while valuable for general English sentiment analysis, exhibi
 The Met's collection is not temporally neutral. It overrepresents certain periods such as 19th-century European painting and ancient Egyptian art while underrepresenting others, including contemporary non-Western art and ephemeral or performance-based traditions. More importantly, the availability of English titles varies dramatically by period and culture. This temporal and cultural stratification interacts with our analysis in ways we cannot fully disentangle. A 12th-century Buddhist sculpture and a 19th-century Japanese print are both categorized as "Eastern," but they come from radically different historical contexts, with different relationships to language, naming practices, and curatorial documentation.
 
 ### Future Directions
+
+### For Future Research
+
+| Focus Area | Proposed Approach | Intended Goal |
+| --- | --- | --- |
+| **Institutional Diversity** | Sample from multiple museums across different cultural contexts. | Isolate institutional bias from cultural difference. |
+| **Multilingual Analysis** | Collect titles in original languages, rather than just English translations. | Preserve the original cultural and emotion. |
+| **Curatorial Voice** | Distinguish between artist given titles and curators. | Ground the analysis in indigenous knowledge systems. |
+| **Temporal Stratification** | Stratify analysis by historical period rather than treating "Eastern art" as a monolithic category. | Separate original artwork titles from museum descriptions. |
+| **Instrument Development** | Develop multilingual lexicons built from the ground up. | Make sentiment analysis more sensitive to cultural specificity. |
 
 **Institutional Diversity** 
 

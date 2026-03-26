@@ -365,7 +365,7 @@ The table below shows out-of-vocabulary (OOV) words that appeared most frequentl
 
 These omissions are not accidental—they reflect the underlying assumptions of how the labMT lexicon was constructed:
 - It prioritizes frequent, general use of English over specialized vocabulary
-- It was developed in a Western, secular academic context* that shapes what counts as "emotional."
+- It was developed in a Western, secular academic context that shapes what counts as "emotional."
 - It assumes linguistic homogeneity across cultures
 
 This means our measurements systematically **under-represent Eastern aesthetic vocabulary**, creating the appearance that Eastern titles are less emotionally charged when the limitation is actually in the tool, rather than the texts.

@@ -63,7 +63,7 @@ The selection of search terms was guided by the principles of cultural represent
 4. Duplicate removal using `object_id` (same artwork may appear under multiple terms)
 5. Rate limiting: 0.3-second delays between requests to respect API limits (80 requests/second)
 
-**Raw data:** `data/raw/met_raw_data.csv`
+**Raw data:** `data/raw/met_raw_data.csv` can be fetched by running `src/met_fetch.py`
 
 **Date of access:** March 2026
 
@@ -408,7 +408,7 @@ In our data, Eastern titles show systematically lower coverage. It is not becaus
 In addition to the main inferential analysis, we conducted a sampling and robustness audit to evaluate how stable the results are under different assumptions about measurement quality and sample composition.
 
 This additional analysis was implemented in the script:
-src/stats_sampling_analysis.py
+`src/stats_sampling_analysis.py`
 
 The goal of this step was not to replace the main analysis, but to validate the reliability of the comparison between Eastern and Western titles.
 
@@ -567,6 +567,17 @@ python3 src/met_fetch.py  # Met's raw data acquisition
 python3 src/score_aesthetic_deduplicated.py # Applying hedonometer score to artwork titles
 python3 src/stats_sampling_analysis.py # Statistical analysis and inference
 ```
+**From Raw Input to Final Output**
+
+| Script | Input | Key Output |
+|--------|-------|------------|
+| `data_analysis.py` | `data/raw/Data_Set_S1.txt` | `data/processed/labMT_cleaned.csv`; labMT figures and tables |
+| `met_fetch.py` | Met API | `data/raw/met_raw_data.csv` |
+| `score_aesthetic_deduplicated.py` | Raw data + labMT lexicon | `data/processed/met_score_only.csv` (core columns), `data/processed/met_aesthetic_scored132.csv` (full columns); summary tables; score distribution plot |
+| `stats_sampling_analysis.py` | Scored data | Bootstrap results, coverage analysis, temporal figures and tables |
+
+All outputs are saved in the `data/processed/`, `tables/`, and `figures/` directories. The pipeline is fully reproducible: deleting any output and rerunning the corresponding script regenerates it from the original inputs.
+
 ## Credits and Citations
 
 ### Team Roles

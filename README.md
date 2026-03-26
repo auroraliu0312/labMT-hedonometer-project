@@ -1,6 +1,6 @@
 # Eastern vs. Western Aesthetic Concepts in Met Museum Artwork Titles: A Digital Humanities Study Applying the labMT Hedonometer
 
-**Summary**: This project tests the cross-cultural validity of the labMT 1.0 hedonometer (built on American English) against 2000 years of artwork, from the Metropolitan Museum Of Art. The central finding shows no statistically significant difference in average happiness scores, however, the data shows that Eastern aesthetic concepts show greater emotional variability with a 35% wider range in scores. The lexical coverage analysis shows a systematic directional bias where cultural words like bodhisattva and mono are missing. LabMT 1.0 Hedonometer cannot read the emotions in Eastern traditions, which ignores the unique eastern linguistics.
+**Summary**: This project tests the cross-cultural validity of the labMT 1.0 hedonometer (built on American English) against 2000 years of artwork from the Metropolitan Museum of Art. The central finding shows no statistically significant difference between Eastern and Western artwork titles in average happiness scores, however, the data show that Eastern aesthetic concepts show greater emotional variability with a 35% wider range in scores. The lexical coverage analysis shows a systematic directional bias where cultural words like bodhisattva and mono are missing. LabMT 1.0 Hedonometer cannot read the emotions in Eastern traditions, which ignores the unique Eastern linguistics.
 
 ## Project Overview
 
@@ -45,7 +45,7 @@ More importantly, our analysis reveals that the labMT lexicon systematically mis
 
 ### The Met Museum Corpus
 
-To test our research question, we collected artwork titles from the Metropolitan Museum of Art using their public API. We selected search terms representing Western and Eastern aesthetic concepts based on a review of aesthetic philosophy literature, though we recognize that these terms reflect Western academic frameworks for categorizing aesthetic concepts and may not map neatly onto how these traditions conceptualize aesthetic experience.
+To test our research question, we collected artwork titles from the Metropolitan Museum of Art using their public API. We selected search terms representing Western and Eastern aesthetic concepts based on a review of aesthetic philosophy literature, though we recognize that these terms reflect Western academic frameworks for categorizing aesthetic concepts and may not map neatly onto how these traditions conceptualize aesthetic experience. 
 
 We used the [Metropolitan Museum of Art Collection API](https://metmuseum.github.io/) to search for artwork titles that contain aesthetic concepts from both Western and Eastern traditions.
 
@@ -63,7 +63,7 @@ The selection of search terms was guided by the principles of cultural represent
 4. Duplicate removal using `object_id` (same artwork may appear under multiple terms)
 5. Rate limiting: 0.3-second delays between requests to respect API limits (80 requests/second)
 
-**Raw data:** `data/raw/met_raw_data.csv` can be fetched by running `src/met_fetch.py`
+**Raw data:** `data/raw/met_raw_data.csv` 
 
 **Date of access:** March 2026
 
@@ -77,7 +77,7 @@ The selection of search terms was guided by the principles of cultural represent
 
 **Dataset Characteristics**
 
-After duplicate removal, the final dataset contains **132 unique artworks**:
+The final dataset contains **132 unique artworks**:
 
 - **Western aesthetic concepts**: 62 artworks
 - **Eastern aesthetic concepts**: 70 artworks
@@ -86,7 +86,7 @@ Because the same artwork may appear under multiple search terms, duplicate objec
 
 **Population Context**
 
-This dataset consists of artworks from the Metropolitan Museum of Art's collection that were retrieved using search terms related to Eastern and Western aesthetic concepts. The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English language titles, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, given the limitations above, our analysis cannot make strong claims about the original artists' intent, how people from those cultures actually experience the art, or the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
+The dataset represents artworks in the Met's collection that contain specific aesthetic keywords in their English language titles, offering a snapshot of how one major Western institution catalogues and presents art from different cultural traditions. However, given the limitations above, our analysis cannot make strong claims about the original artists' intent, how people from those cultures actually experience the art, or the full diversity of Eastern or Western aesthetic traditions more broadly. The dataset represents the Met's collection and its curatorial framing, not a balanced sample of global art.
 
 **Data Dictionary**
 

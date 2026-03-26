@@ -323,6 +323,8 @@ Bootstrap therefore confirms that the similarity between categories is not an ar
 
 ### Temporal Happiness Comparison
 
+To further investigate whether the emotional language associated with aesthetic concepts varies historically, we introduced a temporal dimension based on the `object_begin` metadata field.
+
 Artworks were divided into two broad historical periods using a **1800 cutoff**:
 
 - **Pre-1800**
@@ -445,8 +447,6 @@ Coverage measures the proportion of title words that were successfully matched t
 Both categories show moderate coverage overall, but Eastern titles display slightly greater variability. This likely reflects the presence of transliterated cultural concepts or non-English terms that do not appear in the hedonometer lexicon.
 
 The coverage analysis highlights an important limitation of lexical sentiment methods when applied to culturally specific terminology.
-
-To further investigate whether the emotional language associated with aesthetic concepts varies historically, we introduced a temporal dimension based on the `object_begin` metadata field.
 
 ### Temporal Lexical Coverage
 
